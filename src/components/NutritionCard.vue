@@ -29,7 +29,7 @@
   
   <script setup>
   import { computed } from 'vue'
-import Icon from '@/components/IconsLibrary.vue'
+  import Icon from '@/components/IconsLibrary.vue'
   
   const props = defineProps({
     title: {

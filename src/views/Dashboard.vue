@@ -52,27 +52,9 @@
         </div>
 
         <div class="record-meal-section">
-          <button 
-            @click="startVoiceRecording" 
-            class="record-btn"
-            :class="{ 'recording': isRecording }"
-          >
-            <MicIcon />
-            <span>{{ isRecording ? 'Recording...' : 'Record Meal' }}</span>
-          </button>
-          <div v-if="transcription" class="transcription-display">
-            "{{ transcription }}"
-          </div>
-          <div class="quick-add-options">
-            <button 
-              v-for="(meal, index) in quickAddMeals" 
-              :key="index" 
-              @click="quickAddMeal(meal)"
-              class="quick-add-btn"
-            >
-              {{ meal.name }}
-            </button>
-          </div>
+          <h2>Record Your Meal</h2>
+          <p class="voice-instructions">Tap the button and describe what you ate, like "I had a chicken salad with olive oil for lunch"</p>
+          <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 
         <div class="recent-meals-section">
@@ -92,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   getAuth, 
@@ -107,16 +89,15 @@ import {
   limit,
   deleteDoc,
   doc,
-  Timestamp
+  Timestamp 
 } from 'firebase/firestore'
 
 import { db } from '@/firebase'
 import MealList from '@/components/MealList.vue'
-import Icon from '@/components/IconsLibrary.vue'
-import Sidebar from '@/components/Sidebar.vue'
+import VoiceRecorder from '@/components/VoiceRecorder.vue'
+import NutritionCard from '@/components/NutritionCard.vue'
 import DateSelector from '@/components/DateSelector.vue'
-import { aiProcessMeal } from '@/utils/aiMealProcessor'
-import { saveMealEntry } from '@/services/mealService'
+import Sidebar from '@/components/Sidebar.vue'
 import { useNutritionTracking } from '@/services/nutritionService'
 
 const router = useRouter()
@@ -125,16 +106,8 @@ const totalProtein = ref(0)
 const totalCarbs = ref(0)
 const totalFat = ref(0)
 const recentMeals = ref([])
-const isRecording = ref(false)
-const transcription = ref('')
 const selectedDate = ref(new Date())
 const { dailyGoals } = useNutritionTracking()
-
-const quickAddMeals = [
-  { name: 'Protein Shake', calories: 200, protein: 25, carbs: 5, fat: 3 },
-  { name: 'Chicken & Rice', calories: 350, protein: 30, carbs: 45, fat: 5 },
-  { name: 'Greek Yogurt', calories: 150, protein: 15, carbs: 8, fat: 0 }
-]
 
 const logout = async () => {
   const auth = getAuth()
@@ -151,57 +124,9 @@ const updateSelectedDate = (date) => {
   fetchDailyNutrition()
 }
 
-const startVoiceRecording = async () => {
-  if ('webkitSpeechRecognition' in window) {
-    const recognition = new webkitSpeechRecognition()
-    recognition.continuous = false
-    recognition.interimResults = false
-    recognition.lang = 'en-US'
-
-    recognition.onstart = () => {
-      isRecording.value = true
-      transcription.value = ''
-    }
-
-    recognition.onend = () => {
-      isRecording.value = false
-    }
-
-    recognition.onresult = async (event) => {
-      const transcript = event.results[0][0].transcript
-      transcription.value = transcript
-      await processMealInput(transcript)
-    }
-
-    recognition.start()
-  } else {
-    alert('Speech recognition is not supported in your browser')
-  }
-}
-
-const processMealInput = async (transcript) => {
-  try {
-    const mealDetails = await aiProcessMeal(transcript)
-    await saveMealEntry(mealDetails)
-    await fetchDailyNutrition()
-    transcription.value = ''
-  } catch (error) {
-    console.error('Error processing meal:', error)
-  }
-}
-
-const quickAddMeal = async (meal) => {
-  try {
-    const mealEntry = {
-      ...meal,
-      description: meal.name,
-      timestamp: new Date(),
-    }
-    await saveMealEntry(mealEntry)
-    await fetchDailyNutrition()
-  } catch (error) {
-    console.error('Error adding quick meal:', error)
-  }
+const handleMealSaved = async (meal) => {
+  // Reload nutrition data after a meal is saved
+  await fetchDailyNutrition()
 }
 
 const fetchDailyNutrition = async () => {
@@ -336,64 +261,10 @@ onMounted(async () => {
   margin-top: 1rem;
 }
 
-.record-btn {
-  width: 100%;
-  padding: 1rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.record-btn:hover {
-  background-color: #3b77db;
-}
-
-.record-btn.recording {
-  background-color: #d32f2f;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-.transcription-display {
-  margin: 1rem 0;
-  padding: 0.75rem;
-  background-color: #f5f5f5;
-  border-radius: var(--border-radius);
-  font-style: italic;
-}
-
-.quick-add-options {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-}
-
-.quick-add-btn {
-  background-color: #f0f2f5;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.quick-add-btn:hover {
-  background-color: #e0e0e0;
+.voice-instructions {
+  margin-bottom: 1rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
 }
 
 .section-header {

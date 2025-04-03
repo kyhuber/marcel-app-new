@@ -1,7 +1,7 @@
 <template>
   <div class="voice-recorder">
     <button 
-      @click="startRecording" 
+      @click="toggleRecording" 
       :class="['record-btn', { 'recording': isRecording }]"
       :disabled="isProcessing"
     >
@@ -10,18 +10,49 @@
     </button>
     
     <div v-if="transcription" class="transcription-display">
-      "{{ transcription }}"
+      <p>"{{ transcription }}"</p>
       <div class="processing-indicator" v-if="isProcessing">
         <div class="spinner"></div>
         <span>Analyzing...</span>
       </div>
+    </div>
+    
+    <div v-if="mealData && !isProcessing" class="meal-result">
+      <div class="meal-result-header">
+        <h3>Meal Analysis Results</h3>
+      </div>
+      <div class="meal-result-content">
+        <div class="meal-item">
+          <span class="meal-label">Meal Type:</span>
+          <span class="meal-value">{{ mealData.mealType || 'Unknown' }}</span>
+        </div>
+        <div class="meal-item">
+          <span class="meal-label">Calories:</span>
+          <span class="meal-value">{{ mealData.calories || 0 }}</span>
+        </div>
+        <div class="meal-item">
+          <span class="meal-label">Protein:</span>
+          <span class="meal-value">{{ mealData.protein || 0 }}g</span>
+        </div>
+        <div class="meal-foods" v-if="mealData.foodItems && mealData.foodItems.length">
+          <h4>Food Items:</h4>
+          <ul>
+            <li v-for="(item, index) in mealData.foodItems" :key="index">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button @click="saveMeal" class="save-btn">Save Meal</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import MicIcon from './icons/MicIcon.vue'
+import MicIcon from './IconsLibrary.vue'
+import { aiProcessMeal } from '@/utils/aiMealProcessor'
+import { saveMealEntry } from '@/services/mealService'
 
 const props = defineProps({
   disabled: {
@@ -30,68 +61,101 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['meal-recorded'])
+const emit = defineEmits(['meal-saved'])
 
 const isRecording = ref(false)
 const isProcessing = ref(false)
 const transcription = ref('')
+const recognition = ref(null)
+const mealData = ref(null)
 
 const buttonText = computed(() => {
-  if (isRecording.value) return 'Recording...'
+  if (isRecording.value) return 'Stop Recording'
   if (isProcessing.value) return 'Processing...'
   return 'Record Meal'
 })
 
-const startRecording = async () => {
-  if (props.disabled || isProcessing.value) return
+function toggleRecording() {
+  if (props.disabled) return
   
-  if ('webkitSpeechRecognition' in window) {
-    const recognition = new webkitSpeechRecognition()
-    recognition.continuous = false
-    recognition.interimResults = false
-    recognition.lang = 'en-US'
+  if (isRecording.value) {
+    stopRecording()
+  } else {
+    startRecording()
+  }
+}
 
-    recognition.onstart = () => {
+function startRecording() {
+  if ('webkitSpeechRecognition' in window) {
+    recognition.value = new webkitSpeechRecognition()
+    recognition.value.continuous = false
+    recognition.value.interimResults = false
+    recognition.value.lang = 'en-US'
+
+    recognition.value.onstart = () => {
       isRecording.value = true
       transcription.value = ''
+      mealData.value = null
     }
 
-    recognition.onend = () => {
+    recognition.value.onend = () => {
       isRecording.value = false
     }
 
-    recognition.onerror = (event) => {
+    recognition.value.onerror = (event) => {
       isRecording.value = false
       console.error('Speech recognition error:', event.error)
+      alert(`Speech recognition error: ${event.error}`)
     }
 
-    recognition.onresult = async (event) => {
+    recognition.value.onresult = async (event) => {
       const transcript = event.results[0][0].transcript
       transcription.value = transcript
       await processMeal(transcript)
     }
 
-    recognition.start()
+    recognition.value.start()
   } else {
     alert('Speech recognition is not supported in your browser')
   }
 }
 
-const processMeal = async (transcript) => {
+function stopRecording() {
+  if (recognition.value) {
+    recognition.value.stop()
+  }
+}
+
+async function processMeal(transcript) {
   try {
     isProcessing.value = true
     
-    // Emit event to let parent component handle processing
-    emit('meal-recorded', transcript)
+    const result = await aiProcessMeal(transcript)
+    mealData.value = result
     
-    // Clear transcription after processing is complete
-    setTimeout(() => {
-      transcription.value = ''
-      isProcessing.value = false
-    }, 2000)
+    isProcessing.value = false
   } catch (error) {
     console.error('Error processing meal:', error)
+    alert('Error processing meal: ' + error.message)
     isProcessing.value = false
+  }
+}
+
+async function saveMeal() {
+  try {
+    if (!mealData.value) return
+    
+    await saveMealEntry(mealData.value)
+    emit('meal-saved', mealData.value)
+    
+    // Reset the state
+    transcription.value = ''
+    mealData.value = null
+    
+    alert('Meal saved successfully!')
+  } catch (error) {
+    console.error('Error saving meal:', error)
+    alert('Error saving meal: ' + error.message)
   }
 }
 </script>
@@ -168,5 +232,75 @@ const processMeal = async (transcript) => {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.meal-result {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: var(--border-radius);
+  border: 1px solid #eaeaea;
+}
+
+.meal-result-header {
+  margin-bottom: 0.75rem;
+}
+
+.meal-result-header h3 {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.meal-result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meal-label {
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.meal-value {
+  font-weight: 600;
+}
+
+.meal-foods {
+  margin-top: 0.75rem;
+}
+
+.meal-foods h4 {
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.meal-foods ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.save-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+  background-color: #2d964a;
 }
 </style>

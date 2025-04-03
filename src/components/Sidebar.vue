@@ -13,7 +13,7 @@
             <DashboardIcon />
             <span v-if="!isCollapsed">Dashboard</span>
           </router-link>
-          <router-link to="/meals" class="nav-item">
+          <router-link to="/MealHistory" class="nav-item">
             <MealsIcon />
             <span v-if="!isCollapsed">Meal History</span>
           </router-link>
