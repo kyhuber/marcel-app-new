@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import { auth } from '../firebase'
+import { createRouter, createWebHistory } from 'vue-router'
+import { getAuth } from 'firebase/auth'
 
 // Import components
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
-import NutritionDashboard from '../components/NutritionDashboard.vue'
-
-Vue.use(VueRouter)
+import MealHistory from '../views/MealHistory.vue'
+import Analytics from '../views/Analytics.vue'
+import Goals from '../views/Goals.vue'
+import Settings from '../views/Settings.vue'
 
 const routes = [
   {
@@ -19,30 +19,57 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: NutritionDashboard,
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/meals',
+    name: 'MealHistory',
+    component: MealHistory,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/analytics',
+    name: 'Analytics',
+    component: Analytics,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/goals',
+    name: 'Goals',
+    component: Goals,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
     meta: { requiresAuth: true }
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes
 })
 
 // Navigation guards
 router.beforeEach((to, from, next) => {
+  const auth = getAuth()
   const currentUser = auth.currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
 
+  // Handle auth required routes
   if (requiresAuth && !currentUser) {
-    // Redirect to login if not authenticated
-    next('/')
-  } else if (requiresGuest && currentUser) {
-    // Redirect to dashboard if already logged in
-    next('/dashboard')
-  } else {
+    next({ name: 'Login' })
+  } 
+  // Handle guest only routes
+  else if (requiresGuest && currentUser) {
+    next({ name: 'Dashboard' })
+  } 
+  // Allow navigation
+  else {
     next()
   }
 })

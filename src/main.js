@@ -4,6 +4,9 @@ import App from './App.vue'
 import Login from './views/Login.vue'
 import Dashboard from './views/Dashboard.vue'
 import './style.css' // Import global styles
+import { getAuth } from 'firebase/auth'
+import { initializeApp } from 'firebase/app'
+import './firebase' // Import to ensure Firebase is initialized
 
 const routes = [
   { 
@@ -22,11 +25,13 @@ const router = createRouter({
   routes
 })
 
+// Get the Auth instance that's already initialized in firebase.js
+const auth = getAuth()
+
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const isAuthenticated = localStorage.getItem('user')
-
-  if (requiresAuth && !isAuthenticated) {
+  
+  if (requiresAuth && !auth.currentUser) {
     next('/')
   } else {
     next()
