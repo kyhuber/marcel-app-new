@@ -20,16 +20,16 @@
         </div>
         <div class="meal-nutrients">
           <span class="calories">
-            <icon="calories" class="icon-small" /> {{ meal.calories || 0 }} cal
+            <Icon="calories" class="icon-small" /> {{ meal.calories || 0 }} cal
           </span>
           <span class="protein">
-            <icon="protein" class="icon-small" /> {{ meal.protein || 0 }}g
+            <Icon="protein" class="icon-small" /> {{ meal.protein || 0 }}g
           </span>
           <span v-if="meal.carbs" class="carbs">
-            <icon="carbs" class="icon-small" /> {{ meal.carbs }}g
+            <Icon="carbs" class="icon-small" /> {{ meal.carbs }}g
           </span>
           <span v-if="meal.fat" class="fat">
-            <icon="fat" class="icon-small" /> {{ meal.fat }}g
+            <Icon="fat" class="icon-small" /> {{ meal.fat }}g
           </span>
         </div>
         <div v-if="hasFoodItems(meal)" class="food-items">

@@ -22,7 +22,7 @@
               :target="2000" 
               unit="cal" 
               color="#4285F4" 
-              icon="calories"
+              Icon="calories"
             />
             <NutritionCard 
               title="Protein" 
@@ -30,7 +30,7 @@
               :target="100" 
               unit="g" 
               color="#34A853" 
-              icon="protein"
+              Icon="protein"
             />
             <NutritionCard 
               title="Carbs" 
@@ -38,7 +38,7 @@
               :target="250" 
               unit="g" 
               color="#FBBC05" 
-              icon="carbs"
+              Icon="carbs"
             />
             <NutritionCard 
               title="Fat" 
@@ -46,7 +46,7 @@
               :target="70" 
               unit="g" 
               color="#EA4335" 
-              icon="fat"
+              Icon="fat"
             />
           </div>
         </div>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, h } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   getAuth, 
@@ -85,11 +85,9 @@ import {
   query, 
   where, 
   getDocs, 
-  orderBy, 
-  limit,
+  orderBy,
   deleteDoc,
-  doc,
-  Timestamp 
+  doc
 } from 'firebase/firestore'
 
 import { db } from '@/firebase'
@@ -110,8 +108,6 @@ const recentMeals = ref([])
 const selectedDate = ref(new Date())
 const { dailyGoals } = useNutritionTracking()
 
-const LogoutIcon = (props) => h(Icon, { name: 'logout', ...props })
-
 const logout = async () => {
   const auth = getAuth()
   try {
@@ -119,6 +115,8 @@ const logout = async () => {
     router.push('/')
   } catch (error) {
     console.error('Logout error', error)
+    // Consider adding a user-friendly error notification
+    alert('Error logging out. Please try again.')
   }
 }
 
@@ -128,13 +126,18 @@ const updateSelectedDate = (date) => {
 }
 
 const handleMealSaved = async (meal) => {
-  // Reload nutrition data after a meal is saved
   await fetchDailyNutrition()
 }
 
 const fetchDailyNutrition = async () => {
-  const user = getAuth().currentUser
-  if (!user) return
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  // Redirect to login if no user is authenticated
+  if (!user) {
+    router.push('/')
+    return
+  }
 
   // Set start and end of the selected day
   const startDate = new Date(selectedDate.value)
@@ -153,6 +156,7 @@ const fetchDailyNutrition = async () => {
   try {
     const querySnapshot = await getDocs(q)
     
+    // Reset values
     totalCalories.value = 0
     totalProtein.value = 0
     totalCarbs.value = 0
@@ -170,16 +174,17 @@ const fetchDailyNutrition = async () => {
       totalCarbs.value += meal.carbs || 0
       totalFat.value += meal.fat || 0
       
-      // Add to recent meals
       recentMeals.value.push(meal)
     })
   } catch (error) {
     console.error('Error fetching nutrition data:', error.code, error.message)
+    // Consider adding user-friendly error handling
+    alert('Failed to fetch meals. Please try again.')
   }
 }
 
 const editMeal = (mealId) => {
-  // Implement edit functionality
+  // TODO: Implement edit functionality
   console.log('Edit meal:', mealId)
 }
 
@@ -189,11 +194,12 @@ const deleteMeal = async (mealId) => {
     await fetchDailyNutrition()
   } catch (error) {
     console.error('Error deleting meal:', error)
+    alert('Failed to delete meal. Please try again.')
   }
 }
 
 const showAllMeals = () => {
-  router.push('/meals')
+  router.push('/mealhistory')
 }
 
 onMounted(async () => {

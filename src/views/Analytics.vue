@@ -20,7 +20,7 @@
                 :target="dailyGoals.calories" 
                 unit="cal" 
                 color="#4285F4"
-                icon="calories"
+                Icon="calories"
               />
               <NutritionCard 
                 title="Total Protein" 
@@ -28,7 +28,7 @@
                 :target="dailyGoals.protein" 
                 unit="g" 
                 color="#34A853"
-                icon="protein"
+                Icon="protein"
               />
               <NutritionCard 
                 title="Total Carbs" 
@@ -36,7 +36,7 @@
                 :target="dailyGoals.carbs" 
                 unit="g" 
                 color="#FBBC05"
-                icon="carbs"
+                Icon="carbs"
               />
               <NutritionCard 
                 title="Total Fat" 
@@ -44,7 +44,7 @@
                 :target="dailyGoals.fat" 
                 unit="g" 
                 color="#EA4335"
-                icon="fat"
+                Icon="fat"
               />
             </div>
           </div>

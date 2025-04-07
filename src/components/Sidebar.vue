@@ -43,54 +43,75 @@
   </aside>
 </template>
   
-  <script setup>
-  import { ref, computed, onMounted, h } from 'vue'
-  import { getAuth } from 'firebase/auth'
-  import Icon from '@/components/IconsLibrary.vue'
+<script setup>
+import { ref, computed, onMounted, h } from 'vue'
+import { getAuth } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
+import Icon from '@/components/IconsLibrary.vue'
+
+const isCollapsed = ref(false)
+const displayName = ref('')
+const username = ref('')
+
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value
+  localStorage.setItem('sidebarCollapsed', isCollapsed.value)
+}
+
+const userInitials = computed(() => {
+  if (!displayName.value) return '?'
   
-  const isCollapsed = ref(false)
-  const displayName = ref('')
+  const names = displayName.value.split(' ')
+  if (names.length >= 2) {
+    return `${names[0][0]}${names[1][0]}`
+  }
+  return displayName.value[0] || '?'
+})
+
+const loadUserProfile = async () => {
+  const auth = getAuth()
+  const currentUser = auth.currentUser
   
-  const toggleSidebar = () => {
-    isCollapsed.value = !isCollapsed.value
-    localStorage.setItem('sidebarCollapsed', isCollapsed.value)
+  if (!currentUser) return
+  
+  try {
+    const profileDocRef = doc(db, 'userProfiles', currentUser.uid)
+    const profileDoc = await getDoc(profileDocRef)
+    
+    if (profileDoc.exists()) {
+      const profileData = profileDoc.data()
+      
+      // Prioritize display name, fall back to username or email
+      displayName.value = profileData.displayName || 
+                           profileData.username || 
+                           currentUser.email || 
+                           'User'
+      
+      username.value = profileData.username || ''
+    } else {
+      // Fallback if no profile document exists
+      displayName.value = currentUser.displayName || 
+                           currentUser.email || 
+                           'User'
+    }
+  } catch (error) {
+    console.error('Error loading profile:', error)
+    displayName.value = currentUser.email || 'User'
+  }
+}
+
+onMounted(() => {
+  // Check if sidebar state was saved
+  const savedState = localStorage.getItem('sidebarCollapsed')
+  if (savedState !== null) {
+    isCollapsed.value = savedState === 'true'
   }
   
-  const userInitials = computed(() => {
-    if (!displayName.value) return '?'
-    
-    const names = displayName.value.split(' ')
-    if (names.length >= 2) {
-      return `${names[0][0]}${names[1][0]}`
-    }
-    return displayName.value[0] || '?'
-  })
-  
-  const DashboardIcon = (props) => h(Icon, { name: 'dashboard', ...props })
-  const MealsIcon = (props) => h(Icon, { name: 'meals', ...props })
-  const AnalyticsIcon = (props) => h(Icon, { name: 'analytics', ...props })
-  const GoalsIcon = (props) => h(Icon, { name: 'goals', ...props })
-  const SettingsIcon = (props) => h(Icon, { name: 'settings', ...props })
-  const CollapseIcon = (props) => h(Icon, { 
-    name: props.direction === 'right' ? 'chevron-right' : 'chevron-left', 
-    ...props 
-  })
-onMounted(() => {
-    // Check if sidebar state was saved
-    const savedState = localStorage.getItem('sidebarCollapsed')
-    if (savedState !== null) {
-      isCollapsed.value = savedState === 'true'
-    }
-    
-    // Get user info
-    const auth = getAuth()
-    const user = auth.currentUser
-    
-    if (user) {
-      displayName.value = user.displayName || user.email || 'User'
-    }
-  })
-  </script>
+  // Load user profile
+  loadUserProfile()
+})
+</script>
   
   <style scoped>
   .sidebar {
