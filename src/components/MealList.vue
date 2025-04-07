@@ -1,48 +1,56 @@
 <template>
   <div class="meal-list">
     <div v-if="meals.length === 0" class="empty-state">
-      <p>No meals recorded yet today</p>
+      <p>No meals recorded yet</p>
       <button @click="$emit('add-meal')" class="add-meal-btn">Add a meal</button>
     </div>
     <div 
       v-else
       v-for="meal in meals" 
       :key="meal.id" 
-      class="meal-item"
+      class="meal-card"
     >
-      <div class="meal-icon" :style="{ backgroundColor: getMealColor(meal.mealType) }">
-        {{ getMealIcon(meal.mealType) }}
+      <div class="meal-header">
+        <div class="meal-type-indicator" :style="{ backgroundColor: getMealColor(meal.mealType) }">
+          {{ getMealIcon(meal.mealType) }}
+        </div>
+        <div class="meal-info">
+          <div class="meal-type-time">
+            <h3 class="meal-type">{{ formatMealType(meal.mealType) }}</h3>
+            <span class="meal-time">{{ formatTime(meal.timestamp) }}</span>
+          </div>
+          <div class="meal-nutrients">
+            <span class="nutrient-pill">{{ meal.calories || 0 }} cal</span>
+            <span class="nutrient-pill">{{ meal.protein || 0 }}g protein</span>
+            <span v-if="meal.carbs" class="nutrient-pill">{{ meal.carbs }}g carbs</span>
+            <span v-if="meal.fat" class="nutrient-pill">{{ meal.fat }}g fat</span>
+          </div>
+        </div>
+        <div class="meal-actions">
+          <button @click="$emit('edit-meal', meal.id)" class="action-btn edit-btn">
+            <Icon name="edit" />
+          </button>
+          <button @click="confirmDelete(meal.id)" class="action-btn delete-btn">
+            <Icon name="delete" />
+          </button>
+        </div>
       </div>
-      <div class="meal-details">
-        <div class="meal-header">
-          <h3 class="meal-name">{{ meal.description || 'Unnamed meal' }}</h3>
-          <span class="meal-time">{{ formatTime(meal.timestamp) }}</span>
+      
+      <div class="meal-content">
+        <div class="food-items-list">
+          <div v-for="(item, index) in getFoodItemsArray(meal)" :key="index" class="food-item">
+            <span class="food-item-name">{{ item }}</span>
+          </div>
         </div>
-        <div class="meal-nutrients">
-          <span class="calories">
-            <Icon name="calories" class="icon-small" /> {{ meal.calories || 0 }} cal
-          </span>
-          <span class="protein">
-            <Icon name="protein" class="icon-small" /> {{ meal.protein || 0 }}g
-          </span>
-          <span v-if="meal.carbs" class="carbs">
-            <Icon name="carbs" class="icon-small" /> {{ meal.carbs }}g
-          </span>
-          <span v-if="meal.fat" class="fat">
-            <Icon name="fat" class="icon-small" /> {{ meal.fat }}g
-          </span>
+        
+        <div class="original-input">
+          <button @click="toggleOriginalInput(meal.id)" class="toggle-input-btn">
+            {{ isOriginalInputVisible(meal.id) ? 'Hide original input' : 'Show original input' }}
+          </button>
+          <div v-if="isOriginalInputVisible(meal.id)" class="input-text">
+            "{{ meal.description }}"
+          </div>
         </div>
-        <div v-if="hasFoodItems(meal)" class="food-items">
-          {{ formatFoodItems(meal.foodItems) }}
-        </div>
-      </div>
-      <div class="meal-actions">
-        <button @click="$emit('edit-meal', meal.id)" class="action-btn edit-btn">
-          <Icon name="edit" />
-        </button>
-        <button @click="confirmDelete(meal.id)" class="action-btn delete-btn">
-          <Icon name="delete" />
-        </button>
       </div>
     </div>
   </div>
@@ -60,6 +68,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['edit-meal', 'delete-meal', 'add-meal'])
+
+const visibleInputs = ref(new Set())
 
 const formatTime = (timestamp) => {
   if (!timestamp) return ''
@@ -114,21 +124,28 @@ const getMealIcon = (mealType) => {
   }
 }
 
-// Check if meal has valid food items array
-const hasFoodItems = (meal) => {
-  return meal.foodItems && Array.isArray(meal.foodItems) && meal.foodItems.length > 0
+const formatMealType = (type) => {
+  if (!type) return 'Meal'
+  return type.charAt(0).toUpperCase() + type.slice(1)
 }
 
-// Safely format food items
-const formatFoodItems = (foodItems) => {
-  if (!Array.isArray(foodItems)) {
-    return typeof foodItems === 'string' ? foodItems : 'Unknown food items'
+const getFoodItemsArray = (meal) => {
+  if (!meal.foodItems) return []
+  if (Array.isArray(meal.foodItems)) return meal.foodItems
+  if (typeof meal.foodItems === 'string') return [meal.foodItems]
+  return []
+}
+
+const toggleOriginalInput = (mealId) => {
+  if (visibleInputs.value.has(mealId)) {
+    visibleInputs.value.delete(mealId)
+  } else {
+    visibleInputs.value.add(mealId)
   }
-  
-  return foodItems.map(item => {
-    // Handle both string items and object items with a name property
-    return typeof item === 'object' && item !== null ? (item.name || 'Unknown item') : item
-  }).join(', ')
+}
+
+const isOriginalInputVisible = (mealId) => {
+  return visibleInputs.value.has(mealId)
 }
 
 const confirmDelete = (mealId) => {
@@ -142,7 +159,7 @@ const confirmDelete = (mealId) => {
 .meal-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .empty-state {
@@ -161,21 +178,27 @@ const confirmDelete = (mealId) => {
   cursor: pointer;
 }
 
-.meal-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: var(--border-radius);
+.meal-card {
   background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   transition: transform 0.2s ease;
 }
 
-.meal-item:hover {
+.meal-card:hover {
   transform: translateX(2px);
 }
 
-.meal-icon {
+.meal-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.meal-type-indicator {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -184,23 +207,25 @@ const confirmDelete = (mealId) => {
   justify-content: center;
   margin-right: 1rem;
   font-size: 1.25rem;
+  flex-shrink: 0;
 }
 
-.meal-details {
+.meal-info {
   flex: 1;
+  min-width: 0;
 }
 
-.meal-header {
+.meal-type-time {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
-.meal-name {
+.meal-type {
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
+  margin-right: 0.75rem;
 }
 
 .meal-time {
@@ -210,35 +235,70 @@ const confirmDelete = (mealId) => {
 
 .meal-nutrients {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.calories, .protein, .carbs, .fat {
+.nutrient-pill {
+  background-color: #f5f5f5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.meal-content {
+  padding: 1rem;
+}
+
+.food-items-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.food-item {
+  background-color: #f0f2f5;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.original-input {
+  margin-top: 0.5rem;
+  border-top: 1px dashed #eee;
+  padding-top: 0.5rem;
+}
+
+.toggle-input-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.875rem;
-  color: #555;
 }
 
-.icon-small {
-  width: 16px;
-  height: 16px;
-}
-
-.food-items {
-  font-size: 0.8rem;
+.input-text {
+  margin-top: 0.5rem;
+  font-style: italic;
   color: #757575;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 400px;
+  font-size: 0.875rem;
+  background-color: #f9f9f9;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
 }
 
 .meal-actions {
   display: flex;
   gap: 0.5rem;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .action-btn {
@@ -249,15 +309,52 @@ const confirmDelete = (mealId) => {
   padding: 0.25rem;
   border-radius: 4px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.edit-btn:hover {
+.action-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.action-btn.edit-btn:hover {
   color: var(--primary-color);
   background-color: rgba(66, 133, 244, 0.1);
 }
 
-.delete-btn:hover {
+.action-btn.delete-btn:hover {
   color: #d32f2f;
   background-color: rgba(211, 47, 47, 0.1);
+}
+
+@media (max-width: 768px) {
+  .meal-header {
+    flex-wrap: wrap;
+  }
+  
+  .meal-info {
+    width: calc(100% - 50px);
+    margin-bottom: 0.5rem;
+  }
+  
+  .meal-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+  
+  .meal-nutrients {
+    margin-bottom: 0.5rem;
+  }
+  
+  .food-items-list {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  
+  .food-item {
+    width: 100%;
+  }
 }
 </style>

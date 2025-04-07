@@ -15,34 +15,34 @@
             <NutritionCard 
               title="Calories" 
               :current="totalCalories" 
-              :target="2000" 
+              :target="dailyGoals.calories" 
               unit="cal" 
               color="#4285F4" 
-              Icon name="calories"
+              icon="calories"
             />
             <NutritionCard 
               title="Protein" 
               :current="totalProtein" 
-              :target="100" 
+              :target="dailyGoals.protein" 
               unit="g" 
               color="#34A853" 
-              Icon name="protein"
+              icon="protein"
             />
             <NutritionCard 
               title="Carbs" 
               :current="totalCarbs" 
-              :target="250" 
+              :target="dailyGoals.carbs" 
               unit="g" 
               color="#FBBC05" 
-              Icon name="carbs"
+              icon="carbs"
             />
             <NutritionCard 
               title="Fat" 
               :current="totalFat" 
-              :target="70" 
+              :target="dailyGoals.fat" 
               unit="g" 
               color="#EA4335" 
-              Icon name="fat"
+              icon="fat"
             />
           </div>
         </div>
@@ -62,6 +62,7 @@
             :meals="recentMeals" 
             @edit-meal="editMeal" 
             @delete-meal="deleteMeal"
+            @add-meal="goToRecordMeal"
           />
         </div>
       </section>
@@ -72,7 +73,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAuth} from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import { 
   collection, 
   query, 
@@ -90,7 +91,6 @@ import NutritionCard from '@/components/NutritionCard.vue'
 import DateSelector from '@/components/DateSelector.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import { useNutritionTracking } from '@/services/nutritionService'
-import Icon from '@/components/IconsLibrary.vue'
 
 const router = useRouter()
 const totalCalories = ref(0)
@@ -118,18 +118,13 @@ const fetchDailyNutrition = async () => {
   const auth = getAuth()
   const user = auth.currentUser
 
+  // Redirect to login if no
+
   // Redirect to login if no user is authenticated
   if (!user) {
     router.push('/')
     return
   }
-
-  // Detailed authentication logging
-  console.log('Fetching Nutrition - User Details:', {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName
-  })
 
   // Set start and end of the selected day
   const startDate = new Date(selectedDate.value)
@@ -146,18 +141,7 @@ const fetchDailyNutrition = async () => {
   )
 
   try {
-    console.log('Executing meal query with:', {
-      userId: user.uid,
-      startDate,
-      endDate
-    })
-
     const querySnapshot = await getDocs(q)
-    
-    console.log('Query Snapshot:', {
-      size: querySnapshot.size,
-      empty: querySnapshot.empty
-    })
 
     // Reset values
     totalCalories.value = 0
@@ -172,8 +156,6 @@ const fetchDailyNutrition = async () => {
         ...doc.data(),
       }
       
-      console.log('Found Meal:', meal)
-      
       totalCalories.value += meal.calories || 0
       totalProtein.value += meal.protein || 0
       totalCarbs.value += meal.carbs || 0
@@ -182,12 +164,7 @@ const fetchDailyNutrition = async () => {
       recentMeals.value.push(meal)
     })
   } catch (error) {
-    console.error('Detailed Nutrition Fetch Error:', {
-      message: error.message,
-      code: error.code,
-      name: error.name,
-      stack: error.stack
-    })
+    console.error('Error fetching meals:', error)
     alert(`Failed to fetch meals: ${error.message}`)
   }
 }
@@ -204,6 +181,10 @@ const deleteMeal = async (mealId) => {
 
 const showAllMeals = () => {
   router.push('/mealhistory')
+}
+
+const goToRecordMeal = () => {
+  router.push('/dashboard')
 }
 
 onMounted(async () => {
