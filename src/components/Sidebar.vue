@@ -264,23 +264,39 @@ onMounted(() => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     height: auto;
-    position: relative;
-  }
-  
-  .sidebar.collapsed {
-    width: 100%;
-    height: 60px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
   
   .sidebar-content {
-    display: block;
+    display: none;
   }
   
-  .sidebar.collapsed .sidebar-content,
-  .sidebar.collapsed .sidebar-footer {
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+  }
+  
+  .nav-item {
+    flex-direction: column;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  
+  .sidebar-header, .sidebar-footer {
     display: none;
   }
 }

@@ -418,9 +418,28 @@ onMounted(fetchMeals)
   .analytics-main {
     margin-left: 0;
     padding: 1rem;
+    padding-bottom: 5rem; /* Space for bottom navigation */
+  }
+
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .detailed-analytics {
+    grid-template-columns: 1fr;
+  }
+
+  .trend-charts {
+    grid-template-columns: 1fr;
   }
 
   .performance-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .nutrition-overview .overview-cards {
     grid-template-columns: 1fr;
   }
 }

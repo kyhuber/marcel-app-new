@@ -285,13 +285,29 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .goals-main {
-      margin-left: 0;
-      padding: 1rem;
-    }
-    
-    .goals-form {
-      grid-template-columns: 1fr;
-    }
+  .goals-main {
+    margin-left: 0;
+    padding: 1rem;
+    padding-bottom: 5rem; /* Space for bottom navigation */
   }
+  
+  .goals-form {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .goals-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .save-btn, .reset-btn {
+    width: 100%;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
   </style>

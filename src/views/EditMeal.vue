@@ -467,6 +467,12 @@
   .edit-meal-main {
     margin-left: 0;
     padding: 1rem;
+    padding-bottom: 5rem; /* Space for bottom navigation */
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .meal-context-row {
@@ -487,6 +493,15 @@
   .form-row {
     flex-direction: column;
     gap: 1.25rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
   }
 }
 </style>

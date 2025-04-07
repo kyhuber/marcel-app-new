@@ -283,10 +283,19 @@ onMounted(async () => {
   .dashboard-main {
     margin-left: 0;
     padding: 1rem;
+    padding-bottom: 5rem; /* Make room for bottom navigation */
   }
   
   .nutrition-cards {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  /* Stack sections vertically */
+  .dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 }
 </style>

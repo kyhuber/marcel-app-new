@@ -463,13 +463,39 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .settings-main {
-      margin-left: 0;
-      padding: 1rem;
-    }
-    
-    .option-buttons {
-      flex-direction: column;
-    }
+  .settings-main {
+    margin-left: 0;
+    padding: 1rem;
+    padding-bottom: 5rem; /* Space for bottom navigation */
   }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .option-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .option-btn {
+    width: 100%;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .danger-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
   </style>

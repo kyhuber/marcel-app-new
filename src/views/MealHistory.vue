@@ -483,20 +483,45 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .meal-history-main {
-      margin-left: 0;
-      padding: 1rem;
-    }
-    
-    .page-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-    
-    .filters {
-      flex-direction: column;
-      align-items: stretch;
-    }
+  .meal-history-main {
+    margin-left: 0;
+    padding: 1rem;
+    padding-bottom: 5rem; /* Space for bottom navigation */
   }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .filter-options {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .filter-options select {
+    width: 100%;
+  }
+  
+  .meal-day-group .date-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .pagination {
+    margin-bottom: 5rem; /* Ensure content doesn't get hidden behind bottom nav */
+  }
+}
   </style>
