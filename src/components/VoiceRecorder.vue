@@ -5,9 +5,30 @@
       :class="['record-btn', { 'recording': isRecording }]"
       :disabled="isProcessing"
     >
-      <MicIcon />
+      <Icon name="mic" />
       <span>{{ buttonText }}</span>
     </button>
+
+    <!-- Text Input Option -->
+    <div class="text-input-container">
+      <p class="or-divider">or type your meal</p>
+      <div class="text-input-form">
+        <input 
+          type="text" 
+          v-model="mealText" 
+          placeholder="E.g. 'Grilled chicken with rice and vegetables for lunch'" 
+          :disabled="isProcessing || isRecording"
+          @keyup.enter="submitText"
+        />
+        <button 
+          @click="submitText" 
+          class="submit-btn"
+          :disabled="isProcessing || isRecording || !mealText.trim()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
     
     <div v-if="transcription" class="transcription-display">
       <p>"{{ transcription }}"</p>
@@ -49,10 +70,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import MicIcon from './IconsLibrary.vue'
+import { ref, computed, h } from 'vue'
+import Icon from '@/components/IconsLibrary.vue'
 import { aiProcessMeal } from '@/utils/aiMealProcessor'
 import { saveMealEntry } from '@/services/mealService'
+
+const MicIcon = (props) => h(Icon, { name: 'mic', ...props })
 
 const props = defineProps({
   disabled: {
@@ -68,6 +91,7 @@ const isProcessing = ref(false)
 const transcription = ref('')
 const recognition = ref(null)
 const mealData = ref(null)
+const mealText = ref('')
 
 const buttonText = computed(() => {
   if (isRecording.value) return 'Stop Recording'
@@ -124,6 +148,14 @@ function stopRecording() {
   if (recognition.value) {
     recognition.value.stop()
   }
+}
+
+async function submitText() {
+  if (!mealText.value.trim() || isProcessing.value) return
+  
+  transcription.value = mealText.value
+  await processMeal(mealText.value)
+  // Don't clear mealText here to allow for corrections/resubmissions
 }
 
 async function processMeal(transcript) {
@@ -194,6 +226,75 @@ async function saveMeal() {
 .record-btn.recording {
   background-color: #d32f2f;
   animation: pulse 1.5s infinite;
+}
+
+.text-input-container {
+  margin-top: 1rem;
+}
+
+.or-divider {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.or-divider::before {
+  left: 0;
+}
+
+.or-divider::after {
+  right: 0;
+}
+
+.text-input-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.text-input-form input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+}
+
+.text-input-form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.submit-btn {
+  padding: 0.75rem 1.25rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #3b77db;
+}
+
+.submit-btn:disabled {
+  background-color: #b0b0b0;
+  cursor: not-allowed;
 }
 
 @keyframes pulse {

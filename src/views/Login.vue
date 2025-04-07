@@ -1,38 +1,56 @@
 <template>
-    <div class="login-container">
-      <div class="login-card">
-        <h2>Marcel Nutrition Tracker</h2>
-        <button @click="signInWithGoogle" class="google-signin">
-          Sign in with Google
-        </button>
-        
-        <p v-if="error" class="error-message">{{ error }}</p>
-      </div>
+  <div class="login-container">
+    <div class="login-card">
+      <h2>Marcel Nutrition Tracker</h2>
+      <button @click="signInWithGoogle" class="google-signin">
+        Sign in with Google
+      </button>
+      
+      <p v-if="error" class="error-message">{{ error }}</p>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-  
-  const error = ref(null)
-  const router = useRouter()
-  
-  const signInWithGoogle = async () => {
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { 
+  getAuth, 
+  signInWithRedirect, 
+  getRedirectResult, 
+  GoogleAuthProvider 
+} from 'firebase/auth'
+
+const error = ref(null)
+const router = useRouter()
+
+// Check for redirect result when component mounts
+onMounted(async () => {
+  try {
     const auth = getAuth()
-    const provider = new GoogleAuthProvider()
+    const result = await getRedirectResult(auth)
     
-    try {
-      const result = await signInWithPopup(auth, provider)
-      error.value = null
+    if (result) {
+      // User successfully signed in
       router.push('/dashboard')
-    } catch (err) {
-      console.error('Login error', err)
-      error.value = err.message || 'An error occurred during login'
     }
+  } catch (err) {
+    console.error('Redirect result error:', err)
+    error.value = err.message || 'An error occurred during login'
   }
-  </script>
+})
+
+const signInWithGoogle = () => {
+  const auth = getAuth()
+  const provider = new GoogleAuthProvider()
+  
+  // Don't await this - it redirects away from the page
+  signInWithRedirect(auth, provider).catch(err => {
+    console.error('Redirect initiation error:', err)
+    error.value = err.message || 'An error occurred during login'
+  })
+}
+</script>
   
   <style scoped>
   .login-container {

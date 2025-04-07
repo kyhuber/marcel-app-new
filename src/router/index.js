@@ -23,7 +23,7 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/meals',
+    path: '/mealhistory',
     name: 'MealHistory',
     component: MealHistory,
     meta: { requiresAuth: true }

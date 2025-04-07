@@ -1,50 +1,50 @@
 <template>
-    <aside class="sidebar" :class="{ 'collapsed': isCollapsed }">
-      <div class="sidebar-header">
-        <h2 class="app-title">Marcel</h2>
-        <button @click="toggleSidebar" class="collapse-btn">
-          <CollapseIcon :direction="isCollapsed ? 'right' : 'left'" />
-        </button>
-      </div>
-      
-      <div class="sidebar-content">
-        <nav class="sidebar-nav">
-          <router-link to="/dashboard" class="nav-item">
-            <DashboardIcon />
-            <span v-if="!isCollapsed">Dashboard</span>
-          </router-link>
-          <router-link to="/MealHistory" class="nav-item">
-            <MealsIcon />
-            <span v-if="!isCollapsed">Meal History</span>
-          </router-link>
-          <router-link to="/analytics" class="nav-item">
-            <AnalyticsIcon />
-            <span v-if="!isCollapsed">Analytics</span>
-          </router-link>
-          <router-link to="/goals" class="nav-item">
-            <GoalsIcon />
-            <span v-if="!isCollapsed">Goals</span>
-          </router-link>
-        </nav>
-      </div>
-      
-      <div class="sidebar-footer">
-        <router-link to="/settings" class="nav-item">
-          <SettingsIcon />
-          <span v-if="!isCollapsed">Settings</span>
+  <aside class="sidebar" :class="{ 'collapsed': isCollapsed }">
+    <div class="sidebar-header">
+      <h2 class="app-title">Marcel</h2>
+      <button @click="toggleSidebar" class="collapse-btn">
+        <Icon :name="isCollapsed ? 'chevron-right' : 'chevron-left'" />
+      </button>
+    </div>
+    
+    <div class="sidebar-content">
+      <nav class="sidebar-nav">
+        <router-link to="/dashboard" class="nav-item">
+          <Icon name="dashboard" />
+          <span v-if="!isCollapsed">Dashboard</span>
         </router-link>
-        <div class="user-profile" v-if="!isCollapsed">
-          <div class="avatar">{{ userInitials }}</div>
-          <div class="user-info">
-            <div class="username">{{ displayName }}</div>
-          </div>
+        <router-link to="/MealHistory" class="nav-item">
+          <Icon name="meals" />
+          <span v-if="!isCollapsed">Meal History</span>
+        </router-link>
+        <router-link to="/analytics" class="nav-item">
+          <Icon name="analytics" />
+          <span v-if="!isCollapsed">Analytics</span>
+        </router-link>
+        <router-link to="/goals" class="nav-item">
+          <Icon name="goals" />
+          <span v-if="!isCollapsed">Goals</span>
+        </router-link>
+      </nav>
+    </div>
+    
+    <div class="sidebar-footer">
+      <router-link to="/settings" class="nav-item">
+        <Icon name="settings" />
+        <span v-if="!isCollapsed">Settings</span>
+      </router-link>
+      <div class="user-profile" v-if="!isCollapsed">
+        <div class="avatar">{{ userInitials }}</div>
+        <div class="user-info">
+          <div class="username">{{ displayName }}</div>
         </div>
       </div>
-    </aside>
-  </template>
+    </div>
+  </aside>
+</template>
   
   <script setup>
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, h } from 'vue'
   import { getAuth } from 'firebase/auth'
   import Icon from '@/components/IconsLibrary.vue'
   
@@ -66,7 +66,16 @@
     return displayName.value[0] || '?'
   })
   
-  onMounted(() => {
+  const DashboardIcon = (props) => h(Icon, { name: 'dashboard', ...props })
+  const MealsIcon = (props) => h(Icon, { name: 'meals', ...props })
+  const AnalyticsIcon = (props) => h(Icon, { name: 'analytics', ...props })
+  const GoalsIcon = (props) => h(Icon, { name: 'goals', ...props })
+  const SettingsIcon = (props) => h(Icon, { name: 'settings', ...props })
+  const CollapseIcon = (props) => h(Icon, { 
+    name: props.direction === 'right' ? 'chevron-right' : 'chevron-left', 
+    ...props 
+  })
+onMounted(() => {
     // Check if sidebar state was saved
     const savedState = localStorage.getItem('sidebarCollapsed')
     if (savedState !== null) {

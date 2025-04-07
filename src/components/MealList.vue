@@ -50,6 +50,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { h } from 'vue'
 import Icon from '@/components/IconsLibrary.vue'
 
 const props = defineProps({
@@ -58,6 +59,8 @@ const props = defineProps({
     default: () => []
   }
 })
+
+const MealsIcon = (props) => h(Icon, { name: 'meals', ...props })
 
 const emit = defineEmits(['edit-meal', 'delete-meal', 'add-meal'])
 

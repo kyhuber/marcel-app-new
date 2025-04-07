@@ -7,7 +7,7 @@
         <h1>Nutrition Tracker</h1>
         <DateSelector :selectedDate="selectedDate" @update:date="updateSelectedDate" />
         <button @click="logout" class="logout-btn">
-          <LogoutIcon />
+          <Icon name="logout" />
           <span>Logout</span>
         </button>
       </header>
@@ -53,7 +53,7 @@
 
         <div class="record-meal-section">
           <h2>Record Your Meal</h2>
-          <p class="voice-instructions">Tap the button and describe what you ate, like "I had a chicken salad with olive oil for lunch"</p>
+          <p class="voice-instructions">Either tap the button and speak your meal, or type what you ate, like "I had a chicken salad with olive oil for lunch"</p>
           <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
   getAuth, 
@@ -99,6 +99,7 @@ import NutritionCard from '@/components/NutritionCard.vue'
 import DateSelector from '@/components/DateSelector.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import { useNutritionTracking } from '@/services/nutritionService'
+import Icon from '@/components/IconsLibrary.vue'
 
 const router = useRouter()
 const totalCalories = ref(0)
@@ -108,6 +109,8 @@ const totalFat = ref(0)
 const recentMeals = ref([])
 const selectedDate = ref(new Date())
 const { dailyGoals } = useNutritionTracking()
+
+const LogoutIcon = (props) => h(Icon, { name: 'logout', ...props })
 
 const logout = async () => {
   const auth = getAuth()

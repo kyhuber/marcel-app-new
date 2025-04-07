@@ -1,55 +1,55 @@
 <template>
-    <div class="date-selector">
-      <button @click="goToPreviousDay" class="date-nav-btn">
-        <ChevronLeftIcon />
-      </button>
-      <div class="date-display" @click="showCalendar = !showCalendar">
-        <span v-if="isToday">Today</span>
-        <span v-else-if="isYesterday">Yesterday</span>
-        <span v-else>{{ formattedDate }}</span>
-        <CalendarIcon />
+  <div class="date-selector">
+    <button @click="goToPreviousDay" class="date-nav-btn">
+      <Icon name="chevron-left" />
+    </button>
+    <div class="date-display" @click="showCalendar = !showCalendar">
+      <span v-if="isToday">Today</span>
+      <span v-else-if="isYesterday">Yesterday</span>
+      <span v-else>{{ formattedDate }}</span>
+      <Icon name="calendar" />
+    </div>
+    <button @click="goToNextDay" class="date-nav-btn" :disabled="isToday">
+      <Icon name="chevron-right" />
+    </button>
+    
+    <div v-if="showCalendar" class="calendar-popup">
+      <div class="calendar-header">
+        <button @click="prevMonth" class="month-nav-btn">
+          <Icon name="chevron-left" />
+        </button>
+        <span>{{ calendarTitle }}</span>
+        <button @click="nextMonth" class="month-nav-btn">
+          <Icon name="chevron-right" />
+        </button>
       </div>
-      <button @click="goToNextDay" class="date-nav-btn" :disabled="isToday">
-        <ChevronRightIcon />
-      </button>
-      
-      <div v-if="showCalendar" class="calendar-popup">
-        <div class="calendar-header">
-          <button @click="prevMonth" class="month-nav-btn">
-            <ChevronLeftIcon />
-          </button>
-          <span>{{ calendarTitle }}</span>
-          <button @click="nextMonth" class="month-nav-btn">
-            <ChevronRightIcon />
-          </button>
-        </div>
-        <div class="weekdays">
-          <span v-for="day in weekdays" :key="day">{{ day }}</span>
-        </div>
-        <div class="calendar-grid">
-          <button 
-            v-for="(day, index) in calendarDays" 
-            :key="index"
-            :class="[
-              'calendar-day',
-              { 'other-month': !day.currentMonth },
-              { 'selected': isSameDay(day.date, selectedDate) },
-              { 'today': isSameDay(day.date, new Date()) },
-              { 'disabled': day.date > new Date() }
-            ]"
-            :disabled="day.date > new Date()"
-            @click="selectDate(day.date)"
-          >
-            {{ day.date.getDate() }}
-          </button>
-        </div>
-        <div class="calendar-footer">
-          <button @click="selectToday" class="today-btn">Today</button>
-          <button @click="showCalendar = false" class="close-btn">Close</button>
-        </div>
+      <div class="weekdays">
+        <span v-for="day in weekdays" :key="day">{{ day }}</span>
+      </div>
+      <div class="calendar-grid">
+        <button 
+          v-for="(day, index) in calendarDays" 
+          :key="index"
+          :class="[
+            'calendar-day',
+            { 'other-month': !day.currentMonth },
+            { 'selected': isSameDay(day.date, selectedDate) },
+            { 'today': isSameDay(day.date, new Date()) },
+            { 'disabled': day.date > new Date() }
+          ]"
+          :disabled="day.date > new Date()"
+          @click="selectDate(day.date)"
+        >
+          {{ day.date.getDate() }}
+        </button>
+      </div>
+      <div class="calendar-footer">
+        <button @click="selectToday" class="today-btn">Today</button>
+        <button @click="showCalendar = false" class="close-btn">Close</button>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script setup>
   import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'

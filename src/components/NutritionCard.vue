@@ -1,7 +1,7 @@
 <template>
     <div class="nutrition-card">
       <div class="card-icon" :style="{ backgroundColor: iconBgColor }">
-        <component :is="iconComponent" />
+        <Icon :name="icon" />
       </div>
       <div class="card-content">
         <div class="card-header">
