@@ -17,3 +17,10 @@ const app = initializeApp(firebaseConfig)
 // Export Firestore and Auth
 export const db = getFirestore(app)
 export const auth = getAuth(app)
+
+// Optional: Additional logging
+console.log('Firebase Initialized:', {
+  app: !!app,
+  db: !!db,
+  auth: !!auth
+})

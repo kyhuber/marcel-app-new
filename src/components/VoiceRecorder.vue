@@ -74,6 +74,7 @@ import { ref, computed, h } from 'vue'
 import Icon from '@/components/IconsLibrary.vue'
 import { aiProcessMeal } from '@/utils/aiMealProcessor'
 import { saveMealEntry } from '@/services/mealService'
+import { getAuth } from 'firebase/auth'
 
 const MicIcon = (props) => h(Icon, { name: 'mic', ...props })
 
@@ -175,9 +176,21 @@ async function processMeal(transcript) {
 
 async function saveMeal() {
   try {
-    if (!mealData.value) return
+    if (!mealData.value) {
+      console.warn('No meal data to save')
+      return
+    }
     
-    await saveMealEntry(mealData.value)
+    const auth = getAuth()
+    console.log('Current Authentication State:', {
+      currentUser: auth.currentUser,
+      uid: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      isAuthenticated: !!auth.currentUser
+    })
+    
+    const savedMeal = await saveMealEntry(mealData.value)
+    
     emit('meal-saved', mealData.value)
     
     // Reset the state
@@ -186,8 +199,13 @@ async function saveMeal() {
     
     alert('Meal saved successfully!')
   } catch (error) {
-    console.error('Error saving meal:', error)
-    alert('Error saving meal: ' + error.message)
+    console.error('Detailed Meal Save Error:', {
+      message: error.message,
+      code: error.code,
+      name: error.name,
+      stack: error.stack
+    })
+    alert(`Error saving meal: ${error.message}`)
   }
 }
 </script>

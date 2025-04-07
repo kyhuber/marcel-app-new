@@ -10,20 +10,43 @@ import {
     const auth = getAuth()
     const user = auth.currentUser
   
+    console.log('Saving Meal - Full Authentication Details:', {
+      userExists: !!user,
+      uid: user?.uid,
+      email: user?.email,
+      displayName: user?.displayName,
+      isAnonymous: user?.isAnonymous,
+      emailVerified: user?.emailVerified
+    })
+  
     if (!user) {
+      console.error('Attempted to save meal with no authenticated user')
       throw new Error('User not authenticated')
     }
   
     try {
       const mealCollection = collection(db, 'meals')
       
-      return await addDoc(mealCollection, {
-        userId: user.uid,
+      const mealEntry = {
+        userId: user.uid,  // Explicitly set userId
         ...mealData,
-        createdAt: serverTimestamp()
-      })
+        timestamp: serverTimestamp()
+      }
+  
+      console.log('Meal Entry to Save:', mealEntry)
+  
+      // Get the current user's ID token to verify authentication
+      const idToken = await user.getIdToken()
+      console.log('ID Token Retrieved:', !!idToken)
+  
+      return await addDoc(mealCollection, mealEntry)
     } catch (error) {
-      console.error('Error saving meal:', error)
+      console.error('Detailed Meal Saving Error:', {
+        message: error.message,
+        code: error.code,
+        name: error.name,
+        stack: error.stack
+      })
       throw error
     }
   }

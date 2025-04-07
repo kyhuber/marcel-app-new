@@ -241,6 +241,8 @@
       <line x1="3" y1="10" x2="21" y2="10"></line>
     </svg>
     
+    
+
     <svg 
       v-else-if="name === 'chevron-left'" 
       xmlns="http://www.w3.org/2000/svg" 

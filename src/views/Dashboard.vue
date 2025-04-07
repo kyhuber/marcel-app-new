@@ -22,7 +22,7 @@
               :target="2000" 
               unit="cal" 
               color="#4285F4" 
-              Icon="calories"
+              Icon name="calories"
             />
             <NutritionCard 
               title="Protein" 
@@ -30,7 +30,7 @@
               :target="100" 
               unit="g" 
               color="#34A853" 
-              Icon="protein"
+              Icon name="protein"
             />
             <NutritionCard 
               title="Carbs" 
@@ -38,7 +38,7 @@
               :target="250" 
               unit="g" 
               color="#FBBC05" 
-              Icon="carbs"
+              Icon name="carbs"
             />
             <NutritionCard 
               title="Fat" 
@@ -46,7 +46,7 @@
               :target="70" 
               unit="g" 
               color="#EA4335" 
-              Icon="fat"
+              Icon name="fat"
             />
           </div>
         </div>
@@ -125,6 +125,10 @@ const updateSelectedDate = (date) => {
   fetchDailyNutrition()
 }
 
+const editMeal = (mealId) => {
+  router.push(`/meals/edit/${mealId}`)
+}
+
 const handleMealSaved = async (meal) => {
   await fetchDailyNutrition()
 }
@@ -138,6 +142,13 @@ const fetchDailyNutrition = async () => {
     router.push('/')
     return
   }
+
+  // Detailed authentication logging
+  console.log('Fetching Nutrition - User Details:', {
+    uid: user.uid,
+    email: user.email,
+    displayName: user.displayName
+  })
 
   // Set start and end of the selected day
   const startDate = new Date(selectedDate.value)
@@ -154,8 +165,19 @@ const fetchDailyNutrition = async () => {
   )
 
   try {
+    console.log('Executing meal query with:', {
+      userId: user.uid,
+      startDate,
+      endDate
+    })
+
     const querySnapshot = await getDocs(q)
     
+    console.log('Query Snapshot:', {
+      size: querySnapshot.size,
+      empty: querySnapshot.empty
+    })
+
     // Reset values
     totalCalories.value = 0
     totalProtein.value = 0
@@ -169,6 +191,8 @@ const fetchDailyNutrition = async () => {
         ...doc.data(),
       }
       
+      console.log('Found Meal:', meal)
+      
       totalCalories.value += meal.calories || 0
       totalProtein.value += meal.protein || 0
       totalCarbs.value += meal.carbs || 0
@@ -177,15 +201,14 @@ const fetchDailyNutrition = async () => {
       recentMeals.value.push(meal)
     })
   } catch (error) {
-    console.error('Error fetching nutrition data:', error.code, error.message)
-    // Consider adding user-friendly error handling
-    alert('Failed to fetch meals. Please try again.')
+    console.error('Detailed Nutrition Fetch Error:', {
+      message: error.message,
+      code: error.code,
+      name: error.name,
+      stack: error.stack
+    })
+    alert(`Failed to fetch meals: ${error.message}`)
   }
-}
-
-const editMeal = (mealId) => {
-  // TODO: Implement edit functionality
-  console.log('Edit meal:', mealId)
 }
 
 const deleteMeal = async (mealId) => {

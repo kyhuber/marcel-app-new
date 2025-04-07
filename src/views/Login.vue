@@ -101,6 +101,7 @@ const handleAuth = async () => {
       
       // Save additional user profile info
       await setDoc(doc(db, 'userProfiles', user.uid), {
+        userId: user.uid,
         username: username.value,
         email: email.value,
         createdAt: new Date()

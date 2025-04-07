@@ -8,6 +8,7 @@ import MealHistory from '../views/MealHistory.vue'
 import Analytics from '../views/Analytics.vue'
 import Goals from '../views/Goals.vue'
 import Settings from '../views/Settings.vue'
+import EditMeal from '../views/EditMeal.vue'
 
 const routes = [
   {
@@ -44,6 +45,12 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: Settings,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/meals/edit/:id',
+    name: 'EditMeal',
+    component: EditMeal,
     meta: { requiresAuth: true }
   }
 ]
