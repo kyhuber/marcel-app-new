@@ -73,41 +73,6 @@
           </div>
           
           <div class="goals-card">
-            <h2>Weekly Targets</h2>
-            <p class="goals-description">Set weekly targets to maintain consistency in your nutrition.</p>
-            
-            <div class="goals-form">
-              <div class="form-group">
-                <label for="weeklyProtein">Weekly Protein Target</label>
-                <div class="input-with-unit">
-                  <input 
-                    type="number" 
-                    id="weeklyProtein" 
-                    v-model="goals.weeklyProtein" 
-                    @change="saveGoals"
-                  />
-                  <span class="unit">g</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label for="workoutDays">Workout Days per Week</label>
-                <div class="input-with-unit">
-                  <input 
-                    type="number" 
-                    id="workoutDays" 
-                    v-model="goals.workoutDays" 
-                    min="0"
-                    max="7"
-                    @change="saveGoals"
-                  />
-                  <span class="unit">days</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="goals-card">
             <h2>Notifications</h2>
             <p class="goals-description">Set reminders to help you stay on track with your goals.</p>
             

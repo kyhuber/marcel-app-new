@@ -1,112 +1,32 @@
 <template>
-    <div class="edit-meal-container">
-      <Sidebar />
+  <div class="edit-meal-container">
+    <Sidebar />
+    
+    <main class="edit-meal-main">
+      <header class="page-header">
+        <div class="header-left">
+          <button @click="goBack" class="back-btn">
+            <Icon name="chevron-left" />
+            <span>Back</span>
+          </button>
+          <h1>Edit Meal</h1>
+        </div>
+      </header>
       
-      <main class="edit-meal-main">
-        <header class="page-header">
-          <div class="header-left">
-            <button @click="goBack" class="back-btn">
-              <Icon name="chevron-left" />
-              <span>Back</span>
-            </button>
-            <h1>Edit Meal</h1>
-          </div>
-        </header>
+      <section class="edit-meal-content">
+        <div v-if="loading" class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Loading meal data...</p>
+        </div>
         
-        <section class="edit-meal-content">
-          <div v-if="loading" class="loading-indicator">
-            <div class="spinner"></div>
-            <p>Loading meal data...</p>
-          </div>
-          
-          <div v-else-if="!mealData" class="error-message">
-            <p>Meal not found or error loading meal data.</p>
-            <button @click="goBack" class="btn-primary">Go Back</button>
-          </div>
-          
-          <form v-else @submit.prevent="saveMeal" class="meal-form">
-            <div class="form-group">
-              <label for="description">Meal Description</label>
-              <input 
-                type="text" 
-                id="description" 
-                v-model="mealData.description" 
-                placeholder="Describe your meal"
-                required
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="mealType">Meal Type</label>
-              <select id="mealType" v-model="mealData.mealType">
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-                <option value="snack">Snack</option>
-              </select>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group half-width">
-                <label for="calories">Calories</label>
-                <input 
-                  type="number" 
-                  id="calories" 
-                  v-model.number="mealData.calories"
-                  step="0.1" 
-                  min="0"
-                  required
-                />
-              </div>
-              
-              <div class="form-group half-width">
-                <label for="protein">Protein (g)</label>
-                <input 
-                  type="number" 
-                  id="protein" 
-                  v-model.number="mealData.protein" 
-                  min="0"
-                  step="0.1"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group half-width">
-                <label for="carbs">Carbs (g)</label>
-                <input 
-                  type="number" 
-                  id="carbs" 
-                  v-model.number="mealData.carbs" 
-                  min="0"
-                  step="0.1"
-                />
-              </div>
-              
-              <div class="form-group half-width">
-                <label for="fat">Fat (g)</label>
-                <input 
-                  type="number" 
-                  id="fat" 
-                  v-model.number="mealData.fat" 
-                  min="0"
-                  step="0.1"
-                />
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="foodItems">Food Items (comma separated)</label>
-              <input 
-                type="text" 
-                id="foodItems" 
-                v-model="foodItemsInput" 
-                placeholder="e.g. chicken, rice, broccoli"
-              />
-            </div>
-
-            <div class="form-group">
+        <div v-else-if="!mealData" class="error-message">
+          <p>Meal not found or error loading meal data.</p>
+          <button @click="goBack" class="btn-primary">Go Back</button>
+        </div>
+        
+        <form v-else @submit.prevent="saveMeal" class="meal-form">
+          <div class="meal-context-row">
+            <div class="date-time-group">
               <label>Meal Date & Time</label>
               <div class="datetime-inputs">
                 <div class="date-picker-wrapper">
@@ -123,15 +43,99 @@
               </div>
             </div>
             
-            <div class="form-actions">
-              <button type="button" @click="goBack" class="btn-secondary">Cancel</button>
-              <button type="submit" class="btn-primary">Save Changes</button>
+            <div class="meal-type-group">
+              <label for="mealType">Meal Type</label>
+              <select id="mealType" v-model="mealData.mealType" class="meal-type-select">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
             </div>
-          </form>
-        </section>
-      </main>
-    </div>
-  </template>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Meal Description</label>
+            <input 
+              type="text" 
+              id="description" 
+              v-model="mealData.description" 
+              placeholder="What did you eat?"
+              required
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="foodItems">Food Items (comma separated)</label>
+            <input 
+              type="text" 
+              id="foodItems" 
+              v-model="foodItemsInput" 
+              placeholder="e.g. chicken, rice, broccoli"
+            />
+          </div>
+          
+          <div class="nutrition-inputs">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="calories">Calories</label>
+                <input 
+                  type="number" 
+                  id="calories" 
+                  v-model.number="mealData.calories"
+                  step="0.1" 
+                  min="0"
+                  required
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="protein">Protein (g)</label>
+                <input 
+                  type="number" 
+                  id="protein" 
+                  v-model.number="mealData.protein" 
+                  min="0"
+                  step="0.1"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="carbs">Carbs (g)</label>
+                <input 
+                  type="number" 
+                  id="carbs" 
+                  v-model.number="mealData.carbs" 
+                  min="0"
+                  step="0.1"
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="fat">Fat (g)</label>
+                <input 
+                  type="number" 
+                  id="fat" 
+                  v-model.number="mealData.fat" 
+                  min="0"
+                  step="0.1"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" @click="goBack" class="btn-secondary">Cancel</button>
+            <button type="submit" class="btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</template>
   
   <script setup>
   import { ref, computed, onMounted } from 'vue'
@@ -288,169 +292,201 @@
   </script>
   
   <style scoped>
-  .edit-meal-container {
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--background-light);
-  }
-  
+.edit-meal-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background-light);
+}
+
+.edit-meal-main {
+  flex: 1;
+  padding: 1.5rem;
+  margin-left: 250px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.edit-meal-content {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.meal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.meal-context-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+}
+
+.date-time-group, .meal-type-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meal-type-select {
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nutrition-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.datetime-inputs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-picker-wrapper {
+  flex: 1;
+}
+
+.time-input {
+  width: 120px;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #3b77db;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #e0e0e0;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #f5f5f5;
+}
+
+.loading-indicator, .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  gap: 1rem;
+}
+
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid var(--primary-color);
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .edit-meal-main {
-    flex: 1;
-    padding: 1.5rem;
-    margin-left: 250px;
+    margin-left: 0;
+    padding: 1rem;
   }
-  
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    background-color: white;
-    padding: 1rem 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .back-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: none;
-    color: var(--text-dark);
-    cursor: pointer;
-  }
-  
-  .edit-meal-content {
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .meal-form {
-    display: flex;
+
+  .meal-context-row {
     flex-direction: column;
-    gap: 1.25rem;
-  }
-  
-  .form-row {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .half-width {
-    flex: 1;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-primary:hover {
-    background-color: #3b77db;
-  }
-  
-  .btn-secondary {
-    background-color: transparent;
-    border: 1px solid #e0e0e0;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-secondary:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .loading-indicator, .error-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 0;
-    gap: 1rem;
-  }
-  
-  .spinner {
-    border: 3px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    border-top: 3px solid var(--primary-color);
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    align-items: stretch;
   }
 
   .datetime-inputs {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .date-picker-wrapper {
-    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .time-input {
-    width: 120px;
-    padding: 0.5rem;
-    border: 1px solid #e0e0e0;
-    border-radius: var(--border-radius);
+    width: 100%;
   }
 
-  @media (max-width: 768px) {
-    .datetime-inputs {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-    
-    .time-input {
-      width: 100%;
-    }
+  .form-row {
+    flex-direction: column;
+    gap: 1.25rem;
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .edit-meal-main {
-      margin-left: 0;
-      padding: 1rem;
-    }
-    
-    .form-row {
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-  }
-  </style>
+}
+</style>

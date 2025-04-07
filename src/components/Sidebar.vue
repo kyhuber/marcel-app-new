@@ -38,18 +38,23 @@
         <div class="user-info">
           <div class="username">{{ displayName }}</div>
         </div>
+        <button @click="logout" class="logout-btn" title="Logout">
+          <Icon name="logout" />
+        </button>
       </div>
     </div>
   </aside>
 </template>
   
 <script setup>
-import { ref, computed, onMounted, h } from 'vue'
-import { getAuth } from 'firebase/auth'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { getAuth, signOut } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Icon from '@/components/IconsLibrary.vue'
 
+const router = useRouter()
 const isCollapsed = ref(false)
 const displayName = ref('')
 const username = ref('')
@@ -68,6 +73,17 @@ const userInitials = computed(() => {
   }
   return displayName.value[0] || '?'
 })
+
+const logout = async () => {
+  const auth = getAuth()
+  try {
+    await signOut(auth)
+    router.push('/')
+  } catch (error) {
+    console.error('Logout error', error)
+    alert('Error logging out. Please try again.')
+  }
+}
 
 const loadUserProfile = async () => {
   const auth = getAuth()
@@ -205,6 +221,22 @@ onMounted(() => {
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   margin-top: 0.5rem;
+  position: relative; /* For positioning the logout button */
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #757575;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.logout-btn:hover {
+  color: var(--primary-color);
 }
 
 .avatar {

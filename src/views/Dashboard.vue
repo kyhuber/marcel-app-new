@@ -6,10 +6,6 @@
       <header class="dashboard-header">
         <h1>Nutrition Tracker</h1>
         <DateSelector :selectedDate="selectedDate" @update:date="updateSelectedDate" />
-        <button @click="logout" class="logout-btn">
-          <Icon name="logout" />
-          <span>Logout</span>
-        </button>
       </header>
 
       <section class="dashboard-content">
@@ -76,10 +72,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { 
-  getAuth, 
-  signOut 
-} from 'firebase/auth'
+import { getAuth} from 'firebase/auth'
 import { 
   collection, 
   query, 
@@ -107,18 +100,6 @@ const totalFat = ref(0)
 const recentMeals = ref([])
 const selectedDate = ref(new Date())
 const { dailyGoals } = useNutritionTracking()
-
-const logout = async () => {
-  const auth = getAuth()
-  try {
-    await signOut(auth)
-    router.push('/')
-  } catch (error) {
-    console.error('Logout error', error)
-    // Consider adding a user-friendly error notification
-    alert('Error logging out. Please try again.')
-  }
-}
 
 const updateSelectedDate = (date) => {
   selectedDate.value = date
@@ -252,23 +233,6 @@ onMounted(async () => {
   padding: 1rem 1.5rem;
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: transparent;
-  color: var(--text-dark);
-  border: 1px solid #e0e0e0;
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.logout-btn:hover {
-  background-color: #f5f5f5;
 }
 
 .dashboard-content {

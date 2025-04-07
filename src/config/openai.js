@@ -1,10 +1,9 @@
-import OpenAI from 'openai'
+// src/config/openai.js
+// This file is now just a placeholder to maintain compatibility
+// with existing imports. The actual OpenAI logic has moved to
+// the serverless function.
 
-// Initialize OpenAI with API key from environment variables
-export const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Needed for client-side browser usage (not recommended for production)
-})
+console.log('OpenAI is now handled by secure server-side functions');
 
-// Optional: Add debugging to help troubleshoot API key issues
-console.log('OpenAI client initialized. API key defined:', !!import.meta.env.VITE_OPENAI_API_KEY)
+// Export an empty object to prevent import errors
+export const openai = {};

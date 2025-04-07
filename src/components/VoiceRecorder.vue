@@ -70,13 +70,10 @@
 </template>
 
 <script setup>
-import { ref, computed, h } from 'vue'
+import { ref, computed } from 'vue'
 import Icon from '@/components/IconsLibrary.vue'
 import { aiProcessMeal } from '@/utils/aiMealProcessor'
 import { saveMealEntry } from '@/services/mealService'
-import { getAuth } from 'firebase/auth'
-
-const MicIcon = (props) => h(Icon, { name: 'mic', ...props })
 
 const props = defineProps({
   disabled: {
@@ -113,18 +110,35 @@ function toggleRecording() {
 function startRecording() {
   if ('webkitSpeechRecognition' in window) {
     recognition.value = new webkitSpeechRecognition()
-    recognition.value.continuous = false
-    recognition.value.interimResults = false
+    recognition.value.continuous = true
+    recognition.value.interimResults = true
     recognition.value.lang = 'en-US'
-
+    
+    let silenceTimer
+    
     recognition.value.onstart = () => {
       isRecording.value = true
       transcription.value = ''
       mealData.value = null
     }
 
-    recognition.value.onend = () => {
-      isRecording.value = false
+    recognition.value.onresult = (event) => {
+      // Clear previous silence timer
+      clearTimeout(silenceTimer)
+      
+      // Collect all results
+      const interimTranscript = Array.from(event.results)
+        .map(result => result[0].transcript)
+        .join('')
+      
+      // Update transcription
+      transcription.value = interimTranscript
+      
+      // Set a short silence timer (2 seconds)
+      silenceTimer = setTimeout(() => {
+        // Stop recording after a brief pause
+        stopRecording()
+      }, 2000)
     }
 
     recognition.value.onerror = (event) => {
@@ -133,10 +147,11 @@ function startRecording() {
       alert(`Speech recognition error: ${event.error}`)
     }
 
-    recognition.value.onresult = async (event) => {
-      const transcript = event.results[0][0].transcript
-      transcription.value = transcript
-      await processMeal(transcript)
+    recognition.value.onend = () => {
+      if (isRecording.value) {
+        // Automatically process if recording was intentionally stopped
+        processMeal(transcription.value)
+      }
     }
 
     recognition.value.start()
@@ -147,7 +162,13 @@ function startRecording() {
 
 function stopRecording() {
   if (recognition.value) {
+    isRecording.value = false
     recognition.value.stop()
+    
+    // Immediately process the transcription
+    if (transcription.value.trim()) {
+      processMeal(transcription.value)
+    }
   }
 }
 
@@ -176,21 +197,9 @@ async function processMeal(transcript) {
 
 async function saveMeal() {
   try {
-    if (!mealData.value) {
-      console.warn('No meal data to save')
-      return
-    }
+    if (!mealData.value) return
     
-    const auth = getAuth()
-    console.log('Current Authentication State:', {
-      currentUser: auth.currentUser,
-      uid: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      isAuthenticated: !!auth.currentUser
-    })
-    
-    const savedMeal = await saveMealEntry(mealData.value)
-    
+    await saveMealEntry(mealData.value)
     emit('meal-saved', mealData.value)
     
     // Reset the state
@@ -199,13 +208,8 @@ async function saveMeal() {
     
     alert('Meal saved successfully!')
   } catch (error) {
-    console.error('Detailed Meal Save Error:', {
-      message: error.message,
-      code: error.code,
-      name: error.name,
-      stack: error.stack
-    })
-    alert(`Error saving meal: ${error.message}`)
+    console.error('Error saving meal:', error)
+    alert('Error saving meal: ' + error.message)
   }
 }
 </script>
