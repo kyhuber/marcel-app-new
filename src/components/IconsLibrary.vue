@@ -11,11 +11,9 @@
       stroke-linecap="round" 
       stroke-linejoin="round"
     >
-      <path d="M12 2L4 7l1 2 7-5 7 5 1-2-8-5z"></path>
-      <path d="M4 7v10c0 3 2 5 8 5s8-2 8-5V7"></path>
-      <line x1="8" y1="16" x2="8" y2="16"></line>
-      <line x1="12" y1="16" x2="12" y2="16"></line>
-      <line x1="16" y1="16" x2="16" y2="16"></line>
+      <path d="M10.5 20.5c-2-2-3.5-4.5-3.5-7a7 7 0 1 1 14 0c0 2.5-1.5 5-3.5 7" />
+      <path d="M14 22c1-1 2-2 2-4" />
+      <path d="M12 17c-1-2-1-4 1-6" />
     </svg>
     
     <svg 
@@ -30,9 +28,8 @@
       stroke-linecap="round" 
       stroke-linejoin="round"
     >
-      <path d="M18 7c0-5.333-8-5.333-8 0"></path>
-      <path d="M10 7v10a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V7"></path>
-      <path d="M6 7v10a3 3 0 0 0 3 3h0"></path>
+      <path d="M18 7c0-5.333-8-5.333-8 0v10a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3" />
+      <path d="M6 14l3 3 3-3" />
     </svg>
     
     <svg 
@@ -47,9 +44,9 @@
       stroke-linecap="round" 
       stroke-linejoin="round"
     >
-      <path d="M17 12a5 5 0 0 0-5-5c-2.76 0-5 2.24-5 5s2.24 5 5 5c1.13 0 2.16-.39 3-1.02"></path>
-      <path d="M3 12h6"></path>
-      <path d="M21 12h-4"></path>
+      <path d="M9 10l3 3 3-3" />
+      <circle cx="12" cy="14" r="4" />
+      <path d="M12 3v7" />
     </svg>
     
     <svg 
@@ -64,8 +61,9 @@
       stroke-linecap="round" 
       stroke-linejoin="round"
     >
-      <path d="M14 12a4 4 0 0 0-8 0 8 8 0 0 0 8 8h0a8 8 0 0 0 8-8 4 4 0 0 0-4-4h-4z"></path>
-      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M21 15l-3-3a4 4 0 0 0-4-4h-2a3 3 0 0 0-3 3" />
+      <circle cx="7" cy="12" r="3" />
+      <path d="M15 9l-1.5 6" />
     </svg>
     
     <svg 
