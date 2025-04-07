@@ -1,0 +1,7 @@
+{
+    "functions": {
+      "api/analyze-meal.js": {
+        "includeFiles": "src/config/prompts/**"
+      }
+    }
+  }
