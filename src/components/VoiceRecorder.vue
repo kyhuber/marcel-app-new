@@ -55,6 +55,14 @@
           <span class="meal-label">Protein:</span>
           <span class="meal-value">{{ mealData.protein || 0 }}g</span>
         </div>
+        <div class="meal-item">
+          <span class="meal-label">Carbs:</span>
+          <span class="meal-value">{{ mealData.carbs || 0 }}g</span>
+        </div>
+        <div class="meal-item">
+          <span class="meal-label">Fat:</span>
+          <span class="meal-value">{{ mealData.fat || 0 }}g</span>
+        </div>
         <div class="meal-foods" v-if="mealData.foodItems && mealData.foodItems.length">
           <h4>Food Items:</h4>
           <ul>
