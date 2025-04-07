@@ -174,7 +174,7 @@ const fetchDailyNutrition = async () => {
       recentMeals.value.push(meal)
     })
   } catch (error) {
-    console.error('Error fetching nutrition data:', error)
+    console.error('Error fetching nutrition data:', error.code, error.message)
   }
 }
 

@@ -1,101 +1,101 @@
 <template>
-    <div class="meal-history-container">
-      <Sidebar />
-      
-      <main class="meal-history-main">
-        <header class="page-header">
-          <h1>Meal History</h1>
-          <DateRangePicker 
-            :startDate="startDate" 
-            :endDate="endDate"
-            @update:dateRange="updateDateRange" 
-          />
-        </header>
-  
-        <section class="history-content">
-          <div class="filters">
-            <div class="search-box">
-              <input 
-                type="text" 
-                v-model="searchQuery" 
-                placeholder="Search meals..." 
-                @input="handleSearch"
-              />
-              <SearchIcon />
-            </div>
+  <div class="meal-history-container">
+    <Sidebar />
+    
+    <main class="meal-history-main">
+      <header class="page-header">
+        <h1>Meal History</h1>
+        <DateRangePicker 
+          :startDate="startDate" 
+          :endDate="endDate"
+          @update:dateRange="updateDateRange" 
+        />
+      </header>
+
+      <section class="history-content">
+        <div class="filters">
+          <div class="search-box">
+            <input 
+              type="text" 
+              v-model="searchQuery" 
+              placeholder="Search meals..." 
+              @input="handleSearch"
+            />
+            <Icon name="search" />
+          </div>
+          
+          <div class="filter-options">
+            <select v-model="selectedMealType" @change="applyFilters">
+              <option value="">All Meal Types</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
             
-            <div class="filter-options">
-              <select v-model="selectedMealType" @change="applyFilters">
-                <option value="">All Meal Types</option>
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-                <option value="snack">Snack</option>
-              </select>
-              
-              <select v-model="sortBy" @change="applyFilters">
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="calories-desc">Highest Calories</option>
-                <option value="calories-asc">Lowest Calories</option>
-                <option value="protein-desc">Highest Protein</option>
-              </select>
-            </div>
+            <select v-model="sortBy" @change="applyFilters">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="calories-desc">Highest Calories</option>
+              <option value="calories-asc">Lowest Calories</option>
+              <option value="protein-desc">Highest Protein</option>
+            </select>
           </div>
-  
-          <div v-if="loading" class="loading-indicator">
-            <div class="spinner"></div>
-            <p>Loading meals...</p>
-          </div>
-          
-          <div v-else-if="filteredMeals.length === 0" class="empty-state">
-            <p>No meals found for the selected period.</p>
-            <button @click="goToRecordMeal" class="btn btn-primary">Record a Meal</button>
-          </div>
-          
-          <div v-else>
-            <div class="meal-groups">
-              <div v-for="(group, date) in groupedMeals" :key="date" class="meal-day-group">
-                <div class="date-header">
-                  <h3>{{ formatDateHeader(date) }}</h3>
-                  <div class="day-summary">
-                    <span class="day-total">{{ getDayTotal(group, 'calories') }} cal</span>
-                    <span class="day-total">{{ getDayTotal(group, 'protein') }}g protein</span>
-                  </div>
+        </div>
+
+        <div v-if="loading" class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Loading meals...</p>
+        </div>
+        
+        <div v-else-if="filteredMeals.length === 0" class="empty-state">
+          <p>No meals found for the selected period.</p>
+          <button @click="goToRecordMeal" class="btn btn-primary">Record a Meal</button>
+        </div>
+        
+        <div v-else>
+          <div class="meal-groups">
+            <div v-for="(group, date) in groupedMeals" :key="date" class="meal-day-group">
+              <div class="date-header">
+                <h3>{{ formatDateHeader(date) }}</h3>
+                <div class="day-summary">
+                  <span class="day-total">{{ getDayTotal(group, 'calories') }} cal</span>
+                  <span class="day-total">{{ getDayTotal(group, 'protein') }}g protein</span>
                 </div>
-                
-                <MealList 
-                  :meals="group" 
-                  @edit-meal="editMeal" 
-                  @delete-meal="deleteMeal"
-                />
               </div>
-            </div>
-            
-            <div class="pagination" v-if="totalPages > 1">
-              <button 
-                @click="prevPage" 
-                :disabled="currentPage === 1"
-                class="pagination-btn"
-              >
-                <ChevronLeftIcon />
-              </button>
               
-              <span class="page-indicator">{{ currentPage }} of {{ totalPages }}</span>
-              
-              <button 
-                @click="nextPage" 
-                :disabled="currentPage === totalPages"
-                class="pagination-btn"
-              >
-                <ChevronRightIcon />
-              </button>
+              <MealList 
+                :meals="group" 
+                @edit-meal="editMeal" 
+                @delete-meal="deleteMeal"
+              />
             </div>
           </div>
-        </section>
-      </main>
-    </div>
-  </template>
+          
+          <div class="pagination" v-if="totalPages > 1">
+            <button 
+              @click="prevPage" 
+              :disabled="currentPage === 1"
+              class="pagination-btn"
+            >
+              <Icon name="chevron-left" />
+            </button>
+            
+            <span class="page-indicator">{{ currentPage }} of {{ totalPages }}</span>
+            
+            <button 
+              @click="nextPage" 
+              :disabled="currentPage === totalPages"
+              class="pagination-btn"
+            >
+              <Icon name="chevron-right" />
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</template>
   
   <script setup>
   import { ref, computed, onMounted, watch } from 'vue'

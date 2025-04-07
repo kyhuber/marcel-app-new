@@ -20,28 +20,28 @@
         </div>
         <div class="meal-nutrients">
           <span class="calories">
-            <CaloriesIcon class="icon-small" /> {{ meal.calories || 0 }} cal
+            <icon="calories" class="icon-small" /> {{ meal.calories || 0 }} cal
           </span>
           <span class="protein">
-            <ProteinIcon class="icon-small" /> {{ meal.protein || 0 }}g
+            <icon="protein" class="icon-small" /> {{ meal.protein || 0 }}g
           </span>
           <span v-if="meal.carbs" class="carbs">
-            <CarbsIcon class="icon-small" /> {{ meal.carbs }}g
+            <icon="carbs" class="icon-small" /> {{ meal.carbs }}g
           </span>
           <span v-if="meal.fat" class="fat">
-            <FatIcon class="icon-small" /> {{ meal.fat }}g
+            <icon="fat" class="icon-small" /> {{ meal.fat }}g
           </span>
         </div>
-        <div v-if="meal.foodItems && meal.foodItems.length" class="food-items">
-          {{ meal.foodItems.map(item => item.name).join(', ') }}
+        <div v-if="hasFoodItems(meal)" class="food-items">
+          {{ formatFoodItems(meal.foodItems) }}
         </div>
       </div>
       <div class="meal-actions">
         <button @click="$emit('edit-meal', meal.id)" class="action-btn edit-btn">
-          <EditIcon />
+          <Icon name="edit" />
         </button>
         <button @click="confirmDelete(meal.id)" class="action-btn delete-btn">
-          <DeleteIcon />
+          <Icon name="delete" />
         </button>
       </div>
     </div>
@@ -50,7 +50,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { h } from 'vue'
 import Icon from '@/components/IconsLibrary.vue'
 
 const props = defineProps({
@@ -59,8 +58,6 @@ const props = defineProps({
     default: () => []
   }
 })
-
-const MealsIcon = (props) => h(Icon, { name: 'meals', ...props })
 
 const emit = defineEmits(['edit-meal', 'delete-meal', 'add-meal'])
 
@@ -115,6 +112,23 @@ const getMealIcon = (mealType) => {
     default:
       return '🍽️'
   }
+}
+
+// Check if meal has valid food items array
+const hasFoodItems = (meal) => {
+  return meal.foodItems && Array.isArray(meal.foodItems) && meal.foodItems.length > 0
+}
+
+// Safely format food items
+const formatFoodItems = (foodItems) => {
+  if (!Array.isArray(foodItems)) {
+    return typeof foodItems === 'string' ? foodItems : 'Unknown food items'
+  }
+  
+  return foodItems.map(item => {
+    // Handle both string items and object items with a name property
+    return typeof item === 'object' && item !== null ? (item.name || 'Unknown item') : item
+  }).join(', ')
 }
 
 const confirmDelete = (mealId) => {

@@ -1,55 +1,55 @@
 <template>
-    <div class="date-range-picker">
-      <button @click="togglePicker" class="range-selector">
-        <CalendarIcon />
-        <span>{{ displayRange }}</span>
-        <ChevronDownIcon />
-      </button>
+  <div class="date-range-picker">
+    <button @click="togglePicker" class="range-selector">
+      <Icon name="calendar" />
+      <span>{{ displayRange }}</span>
+      <Icon name="chevron-down" />
+    </button>
+    
+    <div v-if="showPicker" class="date-picker-popup">
+      <div class="preset-ranges">
+        <button 
+          v-for="preset in presets" 
+          :key="preset.label"
+          @click="selectPreset(preset)"
+          :class="['preset-btn', { active: isActivePreset(preset) }]"
+        >
+          {{ preset.label }}
+        </button>
+      </div>
       
-      <div v-if="showPicker" class="date-picker-popup">
-        <div class="preset-ranges">
-          <button 
-            v-for="preset in presets" 
-            :key="preset.label"
-            @click="selectPreset(preset)"
-            :class="['preset-btn', { active: isActivePreset(preset) }]"
-          >
-            {{ preset.label }}
-          </button>
-        </div>
-        
-        <div class="custom-range">
-          <div class="picker-container">
-            <div class="date-input">
-              <label>Start Date</label>
-              <input 
-                type="date" 
-                v-model="localStartDate" 
-                :max="formatDateForInput(maxDate)"
-                @change="updateCustomRange"
-              />
-            </div>
-            
-            <div class="date-input">
-              <label>End Date</label>
-              <input 
-                type="date" 
-                v-model="localEndDate" 
-                :min="localStartDate"
-                :max="formatDateForInput(maxDate)"
-                @change="updateCustomRange"
-              />
-            </div>
+      <div class="custom-range">
+        <div class="picker-container">
+          <div class="date-input">
+            <label>Start Date</label>
+            <input 
+              type="date" 
+              v-model="localStartDate" 
+              :max="formatDateForInput(maxDate)"
+              @change="updateCustomRange"
+            />
           </div>
           
-          <div class="picker-actions">
-            <button @click="applyRange" class="apply-btn">Apply</button>
-            <button @click="showPicker = false" class="cancel-btn">Cancel</button>
+          <div class="date-input">
+            <label>End Date</label>
+            <input 
+              type="date" 
+              v-model="localEndDate" 
+              :min="localStartDate"
+              :max="formatDateForInput(maxDate)"
+              @change="updateCustomRange"
+            />
           </div>
+        </div>
+        
+        <div class="picker-actions">
+          <button @click="applyRange" class="apply-btn">Apply</button>
+          <button @click="showPicker = false" class="cancel-btn">Cancel</button>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script setup>
   import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'

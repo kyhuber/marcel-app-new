@@ -63,20 +63,6 @@
     return Math.min(percent, 100)
   })
   
-  const iconComponent = computed(() => {
-    switch(props.icon.toLowerCase()) {
-      case 'protein':
-        return ProteinIcon
-      case 'carbs':
-        return CarbsIcon
-      case 'fat':
-        return FatIcon
-      case 'calories':
-      default:
-        return CaloriesIcon
-    }
-  })
-  
   const iconBgColor = computed(() => {
     return `${props.color}20` // 20% opacity version of the color
   })
