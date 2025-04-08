@@ -88,7 +88,10 @@ const handleAuth = async () => {
     if (isLoginMode.value) {
       // Login
       await signInWithEmailAndPassword(auth, email.value, password.value)
-      router.push('/dashboard')
+      
+      // Check for redirect query parameter
+      const redirectPath = route.query.redirect || '/dashboard'
+      router.push(redirectPath)
     } else {
       // Sign Up
       const userCredential = await createUserWithEmailAndPassword(
@@ -107,6 +110,7 @@ const handleAuth = async () => {
         createdAt: new Date()
       })
       
+      // Redirect to dashboard after signup
       router.push('/dashboard')
     }
   } catch (err) {

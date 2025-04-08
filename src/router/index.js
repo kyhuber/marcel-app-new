@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 // Import components
 import Login from '../views/Login.vue'
@@ -60,25 +60,30 @@ const router = createRouter({
   routes
 })
 
-// Navigation guards
+// Enhanced navigation guard with async auth check
 router.beforeEach((to, from, next) => {
   const auth = getAuth()
-  const currentUser = auth.currentUser
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
+  
+  // Return a promise that resolves when auth state is determined
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe() // Unsubscribe immediately to prevent memory leaks
+      
+      const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+      const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
 
-  // Handle auth required routes
-  if (requiresAuth && !currentUser) {
-    next({ name: 'Login' })
-  } 
-  // Handle guest only routes
-  else if (requiresGuest && currentUser) {
-    next({ name: 'Dashboard' })
-  } 
-  // Allow navigation
-  else {
-    next()
-  }
+      if (requiresAuth && !user) {
+        // Redirect to login if trying to access protected route without authentication
+        resolve(next({ name: 'Login', query: { redirect: to.fullPath } }))
+      } else if (requiresGuest && user) {
+        // Redirect to dashboard if authenticated user tries to access login page
+        resolve(next({ name: 'Dashboard' }))
+      } else {
+        // Allow navigation
+        resolve(next())
+      }
+    })
+  })
 })
 
 export default router
