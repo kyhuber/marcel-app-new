@@ -32,11 +32,6 @@
               </div>
             </div>
           </div>
-          
-          <button @click="scrollToMealInput" class="cta-button pulse-animation">
-             Log Your First Meal
-            <Icon name="chevron-down" />
-          </button>
         </div>
         
         <!-- Empty day state -->
@@ -56,10 +51,6 @@
               <span class="goal-value">{{ dailyGoals.protein }}g</span>
             </div>
           </div>
-          <button @click="scrollToMealInput" class="cta-button">
-            Log Your First Meal Today
-            <Icon name="mic" />
-          </button>
         </div>
       </div>
     </div>
@@ -84,24 +75,7 @@
       })
     }
   })
-  
-  const scrollToMealInput = () => {
-    // Find the meal input section and scroll to it
-    const mealSection = document.querySelector('.record-meal-section')
-    if (mealSection) {
-      mealSection.scrollIntoView({ behavior: 'smooth' })
-      
-      // Add a highlight effect to the voice recorder
-      const voiceRecorder = mealSection.querySelector('.voice-recorder')
-      if (voiceRecorder) {
-        voiceRecorder.classList.add('highlight')
-        // Remove highlight after animation completes
-        setTimeout(() => {
-          voiceRecorder.classList.remove('highlight')
-        }, 2000)
-      }
-    }
-  }
+
   </script>
   
   <style scoped>
@@ -174,27 +148,6 @@
   .step-content p {
     margin: 0;
     font-size: 0.9rem;
-  }
-  
-  .cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 1rem;
-  }
-  
-  .cta-button:hover {
-    background-color: #3b77db;
-    transform: translateY(-2px);
   }
   
   .nutrition-goals-preview {
