@@ -12,15 +12,15 @@
             <h2>Account Settings</h2>
             
             <div class="settings-section">
-              <h3>Profile Information</h3>
-              <div class="form-group">
-                <label for="displayName">Display Name</label>
+              <h3>App Preferences</h3>
+              <div class="form-group checkbox-group">
                 <input 
-                  type="text" 
-                  id="displayName" 
-                  v-model="user.displayName" 
-                  placeholder="Your name"
+                  type="checkbox" 
+                  id="darkMode" 
+                  v-model="settings.darkMode" 
+                  @change="toggleDarkMode"
                 />
+                <label for="darkMode">Dark Mode</label>
               </div>
               
               <div class="form-group">
@@ -124,7 +124,7 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, watch } from 'vue'
   import { 
     getAuth, 
     updateProfile as firebaseUpdateProfile 
@@ -153,6 +153,12 @@
     darkMode: false,
     autoSave: true
   })
+
+  const toggleDarkMode = () => {
+    const isDark = settings.value.darkMode
+    document.documentElement.classList.toggle('dark-theme', isDark)
+    localStorage.setItem('darkMode', isDark ? 'true' : 'false')
+  }
   
   // Load user data and settings
   const loadUserData = () => {
@@ -180,6 +186,7 @@
           ...settingsDoc.data()
         }
       }
+      document.documentElement.classList.toggle('dark-theme', settings.value.darkMode)
     } catch (error) {
       console.error('Error loading settings:', error)
     }
@@ -204,6 +211,7 @@
     }
   }
   
+
   // Save app settings
   const saveSettings = async () => {
     const auth = getAuth()
@@ -316,9 +324,19 @@
   }
   
   onMounted(() => {
+    const savedDarkMode = localStorage.getItem('darkMode')
+  if (savedDarkMode !== null) {
+    settings.value.darkMode = savedDarkMode === 'true'
+    toggleDarkMode()
+  }
     loadUserData()
     loadSettings()
   })
+
+  watch(() => settings.value.darkMode, (isDark) => {
+  document.documentElement.classList.toggle('dark-theme', isDark)
+  localStorage.setItem('darkMode', isDark ? 'true' : 'false')
+})
   </script>
   
   <style scoped>
@@ -460,6 +478,45 @@
   .danger-btn:hover {
     background-color: #b71c1c;
   }
+
+  .form-group.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 40px;
+  height: 20px;
+  appearance: none;
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: var(--text-light);
+  border-radius: 50%;
+  top: 1px;
+  left: 2px;
+  transition: all 0.3s ease;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: var(--primary-color);
+}
+
+.checkbox-group input[type="checkbox"]:checked::before {
+  transform: translateX(18px);
+  background-color: white;
+}
   
   /* Responsive adjustments */
   @media (max-width: 768px) {

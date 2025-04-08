@@ -335,7 +335,7 @@ onMounted(() => {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .record-btn:hover:not(:disabled) {
@@ -343,7 +343,7 @@ onMounted(() => {
 }
 
 .record-btn:disabled {
-  background-color: #b0b0b0;
+  background-color: var(--text-light);
   cursor: not-allowed;
 }
 
@@ -353,8 +353,8 @@ onMounted(() => {
 }
 
 .instruction-card {
-  background-color: #f8faff;
-  border: 1px solid #e0e7ff;
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 1rem;
   margin-bottom: 1rem;
@@ -388,10 +388,10 @@ onMounted(() => {
 }
 
 .example {
-  background-color: white;
+  background-color: var(--background-card);
+  border-left: 3px solid var(--primary-color);
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
-  border-left: 3px solid var(--primary-color);
   font-style: italic;
 }
 
@@ -504,7 +504,7 @@ onMounted(() => {
 .transcription-display {
   margin: 1rem 0;
   padding: 0.75rem;
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
   border-radius: var(--border-radius);
   font-style: italic;
   position: relative;
@@ -536,9 +536,9 @@ onMounted(() => {
 .meal-result {
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: #f9f9f9;
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  border: 1px solid #eaeaea;
 }
 
 .meal-result-header {

@@ -139,15 +139,15 @@ onMounted(() => {
 .sidebar {
   width: 250px;
   height: 100vh;
-  background-color: white;
+  background-color: var(--background-card);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-  display: flex;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 100;
-  transition: width 0.3s ease;
 }
 
 .sidebar.collapsed {
@@ -159,7 +159,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .app-title {
@@ -201,7 +201,7 @@ onMounted(() => {
 }
 
 .nav-item:hover {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
 }
 
 .nav-item.router-link-active {
@@ -218,7 +218,7 @@ onMounted(() => {
 
 .sidebar-footer {
   padding: 1rem 0;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color);
 }
 
 .user-profile {

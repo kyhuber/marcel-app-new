@@ -179,12 +179,12 @@ const confirmDelete = (mealId) => {
 }
 
 .meal-card {
-  background-color: white;
+  background-color: var(--background-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.2s ease;
 }
 
 .meal-card:hover {
@@ -195,7 +195,7 @@ const confirmDelete = (mealId) => {
   display: flex;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .meal-type-indicator {
@@ -230,7 +230,7 @@ const confirmDelete = (mealId) => {
 
 .meal-time {
   font-size: 0.75rem;
-  color: #757575;
+  color: var(--text-light);
 }
 
 .meal-nutrients {
@@ -240,7 +240,7 @@ const confirmDelete = (mealId) => {
 }
 
 .nutrient-pill {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
   padding: 0.25rem 0.5rem;
   border-radius: 16px;
   font-size: 0.75rem;
@@ -260,7 +260,7 @@ const confirmDelete = (mealId) => {
 }
 
 .food-item {
-  background-color: #f0f2f5;
+  background-color: var(--background-light);
   border-radius: 4px;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
@@ -287,9 +287,9 @@ const confirmDelete = (mealId) => {
 .input-text {
   margin-top: 0.5rem;
   font-style: italic;
-  color: #757575;
+  color: var(--text-light);
+  background-color: var(--background-light);
   font-size: 0.875rem;
-  background-color: #f9f9f9;
   padding: 0.75rem;
   border-radius: var(--border-radius);
 }
@@ -304,7 +304,7 @@ const confirmDelete = (mealId) => {
 .action-btn {
   background: none;
   border: none;
-  color: #757575;
+  color: var(--text-light);
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 4px;
@@ -315,7 +315,7 @@ const confirmDelete = (mealId) => {
 }
 
 .action-btn:hover {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
 }
 
 .action-btn.edit-btn:hover {

@@ -1,15 +1,18 @@
+/* src/style.css - Add theme variables */
 :root {
-  /* Design Tokens */
+  /* Light Theme (Default) */
   --primary-color: #4285F4;
   --secondary-color: #34A853;
   --warning-color: #FBBC05;
   --error-color: #EA4335;
   --background-light: #f0f2f5;
-  --text-dark: #333;
+  --background-card: #ffffff;
+  --text-dark: #333333;
   --text-light: #757575;
-  --border-radius: 8px;
+  --border-color: #e0e0e0;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --transition-standard: all 0.3s ease;
+  --border-radius: 8px;
   
   /* Responsive Typography */
   font-size: 16px;
@@ -21,12 +24,33 @@
   box-sizing: border-box;
 }
 
+/* Dark Theme Class */
+.dark-theme {
+  --primary-color: #5c9aff;
+  --secondary-color: #4cc066;
+  --warning-color: #ffd166;
+  --error-color: #ff6b6b;
+  --background-light: #121212;
+  --background-card: #1e1e1e;
+  --text-dark: #e0e0e0;
+  --text-light: #a0a0a0;
+  --border-color: #2c2c2c;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   background-color: var(--background-light);
   color: var(--text-dark);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Update all instances of white to use the variable */
+.card, .sidebar, .page-header, .meal-card, .settings-card, .nutrition-card, .history-content, .analytics-header, .record-meal-section, .recent-meals-section, .nutrition-summary-section, .goals-card, .meal-type-selection {
+  background-color: var(--background-card);
+  transition: background-color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
