@@ -169,8 +169,9 @@ const confirmDelete = (mealId) => {
 }
 
 .log-meal-btn {
+  padding: 0.75rem 1.25rem;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-on-primary);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius);

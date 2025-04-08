@@ -13,7 +13,9 @@
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --transition-standard: all 0.3s ease;
   --border-radius: 8px;
-  
+  --text-on-primary: white;
+  --text-on-secondary: white;
+  --text-on-accent: black;
   /* Responsive Typography */
   font-size: 16px;
 }
@@ -36,6 +38,9 @@
   --text-light: #a0a0a0;
   --border-color: #2c2c2c;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --text-on-primary: white; /* Usually stays white even in dark mode */
+  --text-on-secondary: white;
+  --text-on-accent: black;
 }
 
 body {
