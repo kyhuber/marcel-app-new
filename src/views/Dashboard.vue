@@ -9,7 +9,15 @@
       </header>
 
       <section class="dashboard-content">
-        <div class="nutrition-summary-section">
+        <!-- Empty state handling -->
+        <EmptyState 
+          v-if="showEmptyState"
+          :isFirstTimeUser="isFirstTimeUser" 
+          :dailyGoals="dailyGoals" 
+        />
+
+        <!-- Only show nutrition summary when we have meals -->
+        <div v-if="!showEmptyState" class="nutrition-summary-section">
           <h2>Today's Nutrition</h2>
           <div class="nutrition-cards">
             <NutritionCard 
@@ -49,14 +57,14 @@
 
         <div class="record-meal-section">
           <h2>Log Your Meal</h2>
-          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "I had boiled chicken with hot cheetos and blueberries for lunch"</p>
+          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "Grilled chicken with rice and vegetables for lunch"</p>
           <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 
         <div class="recent-meals-section">
           <div class="section-header">
             <h2>Recent Meals</h2>
-            <button @click="showAllMeals" class="view-all-btn">View All</button>
+            <button v-if="recentMeals.length > 0" @click="showAllMeals" class="view-all-btn">View All</button>
           </div>
           <MealList 
             :meals="recentMeals" 
@@ -71,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { 
@@ -81,7 +89,9 @@ import {
   getDocs, 
   orderBy,
   deleteDoc,
-  doc
+  doc,
+  getDoc,
+  limit
 } from 'firebase/firestore'
 
 import { db } from '@/firebase'
@@ -90,6 +100,7 @@ import VoiceRecorder from '@/components/VoiceRecorder.vue'
 import NutritionCard from '@/components/NutritionCard.vue'
 import DateSelector from '@/components/DateSelector.vue'
 import Sidebar from '@/components/Sidebar.vue'
+import EmptyState from '@/components/EmptyState.vue'
 import { useNutritionTracking } from '@/services/nutritionService'
 
 const router = useRouter()
@@ -99,7 +110,14 @@ const totalCarbs = ref(0)
 const totalFat = ref(0)
 const recentMeals = ref([])
 const selectedDate = ref(new Date())
+const isFirstTimeUser = ref(false)
 const { dailyGoals } = useNutritionTracking()
+
+// Computed property to determine if we should show empty state
+const showEmptyState = computed(() => {
+  // Show empty state if we have no meals
+  return recentMeals.value.length === 0;
+})
 
 const updateSelectedDate = (date) => {
   selectedDate.value = date
@@ -111,14 +129,14 @@ const editMeal = (mealId) => {
 }
 
 const handleMealSaved = async (meal) => {
+  // When a meal is saved, refresh the daily nutrition and set firstTimeUser to false
+  isFirstTimeUser.value = false
   await fetchDailyNutrition()
 }
 
 const fetchDailyNutrition = async () => {
   const auth = getAuth()
   const user = auth.currentUser
-
-  // Redirect to login if no
 
   // Redirect to login if no user is authenticated
   if (!user) {
@@ -169,6 +187,31 @@ const fetchDailyNutrition = async () => {
   }
 }
 
+const checkFirstTimeUser = async () => {
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  if (!user) return
+
+  try {
+    // Query for any meals by this user
+    const allMealsQuery = query(
+      collection(db, 'meals'),
+      where('userId', '==', user.uid),
+      limit(1)
+    )
+    
+    const querySnapshot = await getDocs(allMealsQuery)
+    
+    // If no meals at all, this is a first-time user
+    isFirstTimeUser.value = querySnapshot.empty
+  } catch (error) {
+    console.error('Error checking first-time user:', error)
+    // Default to false if there's an error
+    isFirstTimeUser.value = false
+  }
+}
+
 const deleteMeal = async (mealId) => {
   try {
     await deleteDoc(doc(db, 'meals', mealId))
@@ -184,10 +227,15 @@ const showAllMeals = () => {
 }
 
 const goToRecordMeal = () => {
-  router.push('/dashboard')
+  // This function scrolls to the record meal section
+  const mealSection = document.querySelector('.record-meal-section')
+  if (mealSection) {
+    mealSection.scrollIntoView({ behavior: 'smooth' })
+  }
 }
 
 onMounted(async () => {
+  await checkFirstTimeUser()
   await fetchDailyNutrition()
 })
 </script>
