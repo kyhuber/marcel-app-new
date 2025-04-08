@@ -310,10 +310,10 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  background-color: white;
+  background-color: var(--background-card);
   padding: 1rem 1.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .header-left {
@@ -333,10 +333,10 @@
 }
 
 .edit-meal-content {
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .meal-form {
@@ -364,7 +364,7 @@
 
 .meal-type-select {
   padding: 0.5rem;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   border-radius: var(--border-radius);
 }
 
@@ -402,7 +402,7 @@
 .time-input {
   width: 120px;
   padding: 0.5rem;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   border-radius: var(--border-radius);
 }
 
@@ -429,7 +429,7 @@
 
 .btn-secondary {
   background-color: transparent;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius);
   cursor: pointer;

@@ -318,7 +318,7 @@ onMounted(() => {
 }
 
 .instruction-toggle:hover {
-  background-color: #e0e0e0;
+  background-color: var(--background-card)
 }
 
 .record-btn {
@@ -411,7 +411,7 @@ onMounted(() => {
 .meal-type-select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
 }
@@ -445,7 +445,7 @@ onMounted(() => {
   top: 50%;
   width: 40%;
   height: 1px;
-  background-color: #e0e0e0;
+  background-color: var(--background-card)
 }
 
 .or-divider::before {
@@ -464,7 +464,7 @@ onMounted(() => {
 .text-input-form input {
   flex: 1;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   border-radius: var(--border-radius);
   font-size: 0.95rem;
 }

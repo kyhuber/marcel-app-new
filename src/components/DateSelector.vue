@@ -248,7 +248,7 @@
   }
   
   .date-display:hover {
-    background-color: #e0e0e0;
+    background-color: var(--background-card)
   }
   
   .calendar-popup {
@@ -258,7 +258,7 @@
     transform: translateX(-50%);
     margin-top: 0.5rem;
     width: 300px;
-    background-color: white;
+    background-color: var(--background-card);
     border-radius: var(--border-radius);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     z-index: 1000;

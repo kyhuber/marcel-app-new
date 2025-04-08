@@ -86,7 +86,7 @@ button {
 
 /* Common Card Styles */
 .card {
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
   padding: 1.5rem;
@@ -205,7 +205,7 @@ button {
   input, select, textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #e0e0e0;
+    border: var(--border-color);
     border-radius: var(--border-radius);
     font-family: inherit;
     font-size: 1rem;
@@ -245,7 +245,7 @@ button {
   }
   
   .btn-secondary:hover {
-    background-color: #e0e0e0;
+    background-color: var(--background-card)
   }
   
   .btn-danger {

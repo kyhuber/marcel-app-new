@@ -508,17 +508,17 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  background-color: white;
+  background-color: var(--background-card);
   padding: 1rem 1.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .history-content {
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .filters {
@@ -599,7 +599,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 
 /* New meal card styles */
 .meal-card {
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -771,7 +771,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  background-color: var(--background-card)
 }
 
 .pagination-btn:disabled {

@@ -46,7 +46,7 @@ const logout = () => {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: white;
+    background-color: var(--background-card);
     position: sticky;
     top: 0;
     z-index: 100;

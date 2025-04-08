@@ -73,7 +73,7 @@
     display: flex;
     gap: 1rem;
     padding: 1.25rem;
-    background-color: white;
+    background-color: var(--background-card);
     border-radius: var(--border-radius);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;

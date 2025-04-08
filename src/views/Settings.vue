@@ -357,10 +357,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    background-color: white;
+    background-color: var(--background-card);
     padding: 1rem 1.5rem;
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
   }
   
   .settings-content {
@@ -370,10 +370,10 @@
   }
   
   .settings-card {
-    background-color: white;
+    background-color: var(--background-card);
     border-radius: var(--border-radius);
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
   }
   
   .settings-section {
@@ -402,7 +402,7 @@
   .form-group input[type="email"] {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #e0e0e0;
+    border: var(--border-color);
     border-radius: var(--border-radius);
   }
   
@@ -423,9 +423,9 @@
   
   .option-btn {
     padding: 0.5rem 1rem;
-    border: 1px solid #e0e0e0;
+    border: var(--border-color);
     border-radius: var(--border-radius);
-    background-color: white;
+    background-color: var(--background-card);
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -460,7 +460,7 @@
   }
   
   .secondary-btn:hover {
-    background-color: #e0e0e0;
+    background-color: var(--background-card)
   }
   
   .danger-zone {
@@ -515,7 +515,7 @@
 
 .checkbox-group input[type="checkbox"]:checked::before {
   transform: translateX(18px);
-  background-color: white;
+  background-color: var(--background-card);
 }
   
   /* Responsive adjustments */

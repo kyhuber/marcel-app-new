@@ -80,7 +80,7 @@
   
   <style scoped>
   .empty-state {
-    background-color: white;
+    background-color: var(--background-card);
     border-radius: var(--border-radius);
     padding: 2rem;
     text-align: center;

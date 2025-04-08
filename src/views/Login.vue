@@ -133,7 +133,7 @@ const handleAuth = async () => {
 .login-card {
   width: 100%;
   max-width: 350px;
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
@@ -174,7 +174,7 @@ const handleAuth = async () => {
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: var(--border-color);
   border-radius: var(--border-radius);
 }
 

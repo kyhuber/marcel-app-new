@@ -30,7 +30,7 @@
   <style scoped>
   .progress-container {
     height: 10px;
-    background-color: #e0e0e0;
+    background-color: var(--background-card)
     border-radius: 5px;
     overflow: hidden;
     margin-top: 8px;

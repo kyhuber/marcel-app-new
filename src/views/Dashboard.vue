@@ -258,10 +258,10 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  background-color: white;
+  background-color: var(--background-card);
   padding: 1rem 1.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .dashboard-content {
@@ -273,10 +273,10 @@ onMounted(async () => {
 .nutrition-summary-section, 
 .record-meal-section, 
 .recent-meals-section {
-  background-color: white;
+  background-color: var(--background-card);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .nutrition-cards {
