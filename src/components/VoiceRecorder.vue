@@ -10,15 +10,16 @@
       <h3>How to Log Your Meals</h3>
       <p>For best results, try to include:</p>
       <ul class="instruction-list">
-        <li><strong>What you ate:</strong> "I had eggs and toast"</li>
+        <li><strong>What you ate:</strong> "I had avocado toast and fresh fruit"</li>
+        <li><strong>Optional amounts:</strong> "2 slices" / "1 cup of berries"</li>
         <li><strong>When you ate it:</strong> "for breakfast" / "yesterday" / "this morning"</li>
-        <li><strong>Optional amounts:</strong> "2 eggs" / "1 cup of rice"</li>
+    
       </ul>
       <p class="example-heading">Examples:</p>
       <div class="examples">
-        <div class="example">"I had chicken and broccoli for dinner"</div>
+        <div class="example">"I had chicken and cheetos for dinner tonight"</div>
         <div class="example">"Yesterday morning I ate oatmeal for breakfast"</div>
-        <div class="example">"2 slices of pizza for lunch today"</div>
+        <div class="example">"2 slices of detroit-style pizza for lunch today"</div>
       </div>
     </div>
 
