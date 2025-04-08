@@ -267,6 +267,15 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
+/* Helper classes for mobile/desktop display */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .sidebar {
@@ -276,12 +285,14 @@ onMounted(() => {
     right: 0;
     top: auto;
     width: 100%;
-    height: 60px;
+    height: 70px;
     flex-direction: row;
     background-color: white;
     padding: 0;
     z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.06);
+    border-top: 1px solid #f0f0f0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
   
   .sidebar-header {
@@ -293,6 +304,7 @@ onMounted(() => {
     width: 100%;
     display: block;
     overflow: visible;
+    height: 100%;
   }
   
   .sidebar-nav {
@@ -302,25 +314,54 @@ onMounted(() => {
     padding: 0;
     margin: 0;
     height: 100%;
+    align-items: center;
   }
   
   .nav-item {
+    position: relative;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 8px 0;
     font-size: 0.75rem;
     text-align: center;
     justify-content: center;
     align-items: center;
     gap: 0.25rem;
     border-left: none;
-    border-top: 3px solid transparent;
+    border-top: none;
     flex: 1;
     height: 100%;
+    color: var(--text-light);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .nav-item span {
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
   }
   
   .nav-item.router-link-active {
     border-left-color: transparent;
-    border-top-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-4px);
+  }
+  
+  .nav-item.router-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+  }
+  
+  /* Make dashboard icon slightly larger for emphasis */
+  .nav-item[href="/dashboard"] svg {
+    height: 26px;
+    width: 26px;
   }
   
   .sidebar-footer {
@@ -330,19 +371,13 @@ onMounted(() => {
   .sidebar.collapsed {
     width: 100%; /* Ensure full width even when collapsed */
   }
-
+  
   .mobile-only {
+    display: flex;
+  }
+  
+  .desktop-only {
     display: none;
   }
-
-  @media (max-width: 768px) {
-    .mobile-only {
-      display: flex;
-    }
-    
-    .desktop-only {
-      display: none;
-    }
-}
 }
 </style>
