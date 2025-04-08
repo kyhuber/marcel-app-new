@@ -4,7 +4,7 @@
     
     <main class="dashboard-main">
       <header class="dashboard-header">
-        <h1>Nutrition Tracker</h1>
+        <h1>Protein & Calorie Tracker for Ripped Folks</h1>
         <DateSelector :selectedDate="selectedDate" @update:date="updateSelectedDate" />
       </header>
 
