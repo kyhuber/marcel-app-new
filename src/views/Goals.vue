@@ -309,5 +309,24 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    word-break: break-word; /* Break long words if needed */
+  }
+
+  .checkbox-group input {
+    margin: 0;
+    flex-shrink: 0; /* Prevent checkbox from shrinking */
+  }
+
+  .checkbox-group label {
+    flex: 1; /* Allow label to take available space */
+    min-width: 0; /* Prevent overflow */
+    word-wrap: break-word; /* Ensure long words break */
+  }
 }
   </style>

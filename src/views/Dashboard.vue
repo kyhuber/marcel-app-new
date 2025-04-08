@@ -49,7 +49,7 @@
 
         <div class="record-meal-section">
           <h2>Log Your Meal</h2>
-          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "Grilled chicken with rice and vegetables for lunch"</p>
+          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "I had boiled chicken with hot cheetos and blueberries for lunch"</p>
           <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 
