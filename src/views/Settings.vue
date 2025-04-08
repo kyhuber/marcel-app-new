@@ -466,7 +466,7 @@
   .settings-main {
     margin-left: 0;
     padding: 1rem;
-    padding-bottom: 5rem; /* Space for bottom navigation */
+    padding-bottom: 70px; /* Space for bottom navigation */
   }
   
   .page-header {

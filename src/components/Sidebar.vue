@@ -1,3 +1,5 @@
+// Update the Sidebar.vue template section:
+
 <template>
   <aside class="sidebar" :class="{ 'collapsed': isCollapsed }">
     <div class="sidebar-header">
@@ -13,7 +15,7 @@
           <Icon name="dashboard" />
           <span v-if="!isCollapsed">Dashboard</span>
         </router-link>
-        <router-link to="/MealHistory" class="nav-item">
+        <router-link to="/mealhistory" class="nav-item">
           <Icon name="meals" />
           <span v-if="!isCollapsed">Meal History</span>
         </router-link>
@@ -25,11 +27,15 @@
           <Icon name="goals" />
           <span v-if="!isCollapsed">Goals</span>
         </router-link>
+        <router-link to="/settings" class="nav-item mobile-only">
+          <Icon name="settings" />
+          <span v-if="!isCollapsed">Settings</span>
+        </router-link>
       </nav>
     </div>
     
     <div class="sidebar-footer">
-      <router-link to="/settings" class="nav-item">
+      <router-link to="/settings" class="nav-item desktop-only">
         <Icon name="settings" />
         <span v-if="!isCollapsed">Settings</span>
       </router-link>
@@ -129,78 +135,78 @@ onMounted(() => {
 })
 </script>
   
-  <style scoped>
-  .sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: white;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    transition: width 0.3s ease;
-  }
-  
-  .sidebar.collapsed {
-    width: 70px;
-  }
-  
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .app-title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-  }
-  
-  .collapse-btn {
-    background: none;
-    border: none;
-    color: #757575;
-    cursor: pointer;
-    padding: 0.25rem;
-  }
-  
-  .sidebar-content {
-    flex: 1;
-    padding: 1.5rem 0;
-    overflow-y: auto;
-  }
-  
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1.5rem;
-    color: var(--text-dark);
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-    border-left: 3px solid transparent;
-  }
-  
-  .nav-item:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .nav-item.router-link-active {
-    background-color: rgba(66, 133, 244, 0.1);
-    border-left-color: var(--primary-color);
+<style scoped>
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  color: #757575;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.sidebar-content {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: #f5f5f5;
+}
+
+.nav-item.router-link-active {
+  background-color: rgba(66, 133, 244, 0.1);
+  border-left-color: var(--primary-color);
   color: var(--primary-color);
   font-weight: 500;
 }
@@ -268,26 +274,34 @@ onMounted(() => {
     bottom: 0;
     left: 0;
     right: 0;
+    top: auto;
     width: 100%;
-    height: auto;
-    display: flex;
+    height: 60px;
     flex-direction: row;
     background-color: white;
-    padding: 0.5rem 0;
+    padding: 0;
     z-index: 1000;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    margin-left: 0; /* Reset any margin */
   }
   
-  .sidebar-content {
+  .sidebar-header {
     display: none;
   }
   
+  .sidebar-content {
+    padding: 0;
+    width: 100%;
+    display: block;
+    overflow: visible;
+  }
+  
   .sidebar-nav {
-    display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-around;
+    padding: 0;
+    margin: 0;
+    height: 100%;
   }
   
   .nav-item {
@@ -297,12 +311,38 @@ onMounted(() => {
     text-align: center;
     justify-content: center;
     align-items: center;
-    display: flex;
     gap: 0.25rem;
+    border-left: none;
+    border-top: 3px solid transparent;
+    flex: 1;
+    height: 100%;
   }
   
-  .sidebar-header, .sidebar-footer {
+  .nav-item.router-link-active {
+    border-left-color: transparent;
+    border-top-color: var(--primary-color);
+  }
+  
+  .sidebar-footer {
     display: none;
   }
+  
+  .sidebar.collapsed {
+    width: 100%; /* Ensure full width even when collapsed */
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-only {
+      display: flex;
+    }
+    
+    .desktop-only {
+      display: none;
+    }
+}
 }
 </style>

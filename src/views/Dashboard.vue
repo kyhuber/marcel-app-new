@@ -264,7 +264,7 @@ onMounted(async () => {
   .dashboard-main {
     margin-left: 0;
     padding: 1rem;
-    padding-bottom: 5rem; /* Make room for bottom navigation */
+    padding-bottom: 70px; /* Make room for bottom navigation */
   }
   
   .nutrition-cards {
