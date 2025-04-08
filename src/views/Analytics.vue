@@ -168,7 +168,8 @@ const mealTypeBreakdown = computed(() => {
     breakfast: { count: 0, calories: 0, protein: 0 },
     lunch: { count: 0, calories: 0, protein: 0 },
     dinner: { count: 0, calories: 0, protein: 0 },
-    snack: { count: 0, calories: 0, protein: 0 }
+    snack: { count: 0, calories: 0, protein: 0 },
+    dessert: { count: 0, calories: 0, protein: 0 }
   }
 
   meals.value.forEach(meal => {

@@ -70,7 +70,7 @@
             :meals="recentMeals" 
             @edit-meal="editMeal" 
             @delete-meal="deleteMeal"
-            @add-meal="goToRecordMeal"
+            @log-meal="goToRecordMeal"
           />
         </div>
       </section>

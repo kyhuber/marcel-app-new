@@ -34,7 +34,7 @@
           </div>
           
           <button @click="scrollToMealInput" class="cta-button pulse-animation">
-            Add Your First Meal
+             Log Your First Meal
             <Icon name="chevron-down" />
           </button>
         </div>

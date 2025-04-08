@@ -98,12 +98,13 @@
         return '#4285F4' // Blue
       case 'snack':
         return '#EA4335' // Red
+      case 'dessert':
+        return '#9C27B0' // Purple
       default:
         return '#9e9e9e' // Gray
     }
   }
-  
-  // Get icon based on meal type
+
   const getMealIcon = (mealType) => {
     switch(mealType.toLowerCase()) {
       case 'breakfast':
@@ -114,6 +115,8 @@
         return '🍲'
       case 'snack':
         return '🍌'
+      case 'dessert':
+        return '🍨'
       default:
         return '🍽️'
     }

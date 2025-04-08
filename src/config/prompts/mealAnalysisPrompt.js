@@ -10,7 +10,7 @@ export function getMealAnalysisPrompt(transcript) {
   2. Estimate the portion size if it is specified.
   3. Estimate the protein content in grams, calories, carbohydrates in grams, and fat in grams for each food item.
   4. Assign a confidence level ("high", "medium", or "low") to each estimation.
-  5. Extract the meal time if mentioned (e.g., breakfast, lunch, dinner, or snack).
+  5. Extract the meal time if mentioned (e.g., breakfast, lunch, dinner, snack, or dessert).
   6. Return the output as valid JSON with the following structure:
   
   {

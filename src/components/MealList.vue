@@ -2,7 +2,7 @@
   <div class="meal-list">
     <div v-if="meals.length === 0" class="empty-state">
       <p>No meals recorded yet</p>
-      <button @click="$emit('add-meal')" class="add-meal-btn">Add a meal</button>
+      <button @click="$emit('log-meal')" class="log-meal-btn">Log a meal</button>
     </div>
     <div 
       v-else
@@ -67,7 +67,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['edit-meal', 'delete-meal', 'add-meal'])
+const emit = defineEmits(['edit-meal', 'delete-meal', 'log-meal'])
 
 const visibleInputs = ref(new Set())
 
@@ -91,25 +91,23 @@ const formatTime = (timestamp) => {
 }
 
 const getMealColor = (mealType) => {
-  if (!mealType) return '#9e9e9e'
-  
   switch(mealType.toLowerCase()) {
     case 'breakfast':
-      return '#FBBC05'
+      return '#FBBC05' // Yellow
     case 'lunch':
-      return '#34A853'
+      return '#34A853' // Green
     case 'dinner':
-      return '#4285F4'
+      return '#4285F4' // Blue
     case 'snack':
-      return '#EA4335'
+      return '#EA4335' // Red
+    case 'dessert':
+      return '#9C27B0' // Purple
     default:
-      return '#9e9e9e'
+      return '#9e9e9e' // Gray
   }
 }
 
 const getMealIcon = (mealType) => {
-  if (!mealType) return '🍽️'
-  
   switch(mealType.toLowerCase()) {
     case 'breakfast':
       return '🍳'
@@ -119,6 +117,8 @@ const getMealIcon = (mealType) => {
       return '🍲'
     case 'snack':
       return '🍌'
+    case 'dessert':
+      return '🍨'
     default:
       return '🍽️'
   }
@@ -168,7 +168,7 @@ const confirmDelete = (mealId) => {
   color: #757575;
 }
 
-.add-meal-btn {
+.log-meal-btn {
   background-color: var(--primary-color);
   color: white;
   border: none;

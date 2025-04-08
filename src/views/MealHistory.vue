@@ -262,28 +262,24 @@ const formatTime = (timestamp) => {
   })
 }
 
-// Get meal type color
 const getMealColor = (mealType) => {
-  if (!mealType) return '#9e9e9e'
-  
   switch(mealType.toLowerCase()) {
     case 'breakfast':
-      return '#FBBC05'
+      return '#FBBC05' // Yellow
     case 'lunch':
-      return '#34A853'
+      return '#34A853' // Green
     case 'dinner':
-      return '#4285F4'
+      return '#4285F4' // Blue
     case 'snack':
-      return '#EA4335'
+      return '#EA4335' // Red
+    case 'dessert':
+      return '#9C27B0' // Purple
     default:
-      return '#9e9e9e'
+      return '#9e9e9e' // Gray
   }
 }
 
-// Get meal type icon
 const getMealIcon = (mealType) => {
-  if (!mealType) return '🍽️'
-  
   switch(mealType.toLowerCase()) {
     case 'breakfast':
       return '🍳'
@@ -293,6 +289,8 @@ const getMealIcon = (mealType) => {
       return '🍲'
     case 'snack':
       return '🍌'
+    case 'dessert':
+      return '🍨'
     default:
       return '🍽️'
   }
