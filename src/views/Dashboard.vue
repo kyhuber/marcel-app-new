@@ -48,8 +48,8 @@
         </div>
 
         <div class="record-meal-section">
-          <h2>Record Your Meal</h2>
-          <p class="voice-instructions">Either tap the button and speak your meal, or type what you ate, like "I had a chicken salad with olive oil for lunch"</p>
+          <h2>Log Your Meal</h2>
+          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "Grilled chicken with rice and vegetables for lunch"</p>
           <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 

@@ -11,12 +11,12 @@
 
     <!-- Text Input Option -->
     <div class="text-input-container">
-      <p class="or-divider">or type your meal</p>
+      <p class="or-divider">or</p>
       <div class="text-input-form">
         <input 
           type="text" 
           v-model="mealText" 
-          placeholder="E.g. 'Grilled chicken with rice and vegetables for lunch'" 
+          placeholder="Type your meal details..." 
           :disabled="isProcessing || isRecording"
           @keyup.enter="submitText"
         />
@@ -102,7 +102,7 @@ const mealText = ref('')
 const buttonText = computed(() => {
   if (isRecording.value) return 'Stop Recording'
   if (isProcessing.value) return 'Processing...'
-  return 'Record Meal'
+  return 'Speak Meal'
 })
 
 function toggleRecording() {
