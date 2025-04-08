@@ -50,7 +50,7 @@
         
         <div v-else-if="filteredMeals.length === 0" class="empty-state">
           <p>No meals found for the selected period.</p>
-          <button @click="goToRecordMeal" class="btn btn-primary">Record a Meal</button>
+          <button @click="goToLogMeal" class="btn btn-primary">Log a Meal</button>
         </div>
         
         <div v-else>
@@ -474,8 +474,8 @@ const fetchMeals = async () => {
   }
 }
 
-// Navigation to dashboard to record a meal
-const goToRecordMeal = () => {
+// Navigation to dashboard to log a meal
+const goToLogMeal = () => {
   router.push('/dashboard')
 }
 
