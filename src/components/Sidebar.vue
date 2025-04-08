@@ -272,10 +272,11 @@ onMounted(() => {
     height: auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    background-color: white;
     padding: 0.5rem 0;
     z-index: 1000;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 0; /* Reset any margin */
   }
   
   .sidebar-content {
@@ -294,6 +295,10 @@ onMounted(() => {
     padding: 0.5rem;
     font-size: 0.75rem;
     text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 0.25rem;
   }
   
   .sidebar-header, .sidebar-footer {
