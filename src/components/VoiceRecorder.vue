@@ -1,5 +1,27 @@
 <template>
   <div class="voice-recorder">
+    <div class="instruction-toggle" @click="toggleInstructions">
+      <span v-if="showInstructions">Hide instructions</span>
+      <span v-else>Show instructions</span>
+      <Icon :name="showInstructions ? 'chevron-up' : 'chevron-down'" />
+    </div>
+
+    <div class="instruction-card" v-if="showInstructions">
+      <h3>How to Log Your Meals</h3>
+      <p>For best results, try to include:</p>
+      <ul class="instruction-list">
+        <li><strong>What you ate:</strong> "I had eggs and toast"</li>
+        <li><strong>When you ate it:</strong> "for breakfast" / "yesterday" / "this morning"</li>
+        <li><strong>Optional amounts:</strong> "2 eggs" / "1 cup of rice"</li>
+      </ul>
+      <p class="example-heading">Examples:</p>
+      <div class="examples">
+        <div class="example">"I had chicken and broccoli for dinner"</div>
+        <div class="example">"Yesterday morning I ate oatmeal for breakfast"</div>
+        <div class="example">"2 slices of pizza for lunch today"</div>
+      </div>
+    </div>
+
     <button 
       @click="toggleRecording" 
       :class="['record-btn', { 'recording': isRecording }]"
@@ -38,6 +60,18 @@
       </div>
     </div>
     
+    <!-- Meal type selection if needed -->
+    <div v-if="mealData && mealData.needsMealTypeSelection" class="meal-type-selection">
+      <p>Please select a meal type:</p>
+      <select v-model="mealData.mealType" class="meal-type-select">
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+        <option value="snack">Snack</option>
+        <option value="dessert">Dessert</option>
+      </select>
+    </div>
+    
     <div v-if="mealData && !isProcessing" class="meal-result">
       <div class="meal-result-header">
         <h3>Meal Analysis Results</h3>
@@ -45,7 +79,7 @@
       <div class="meal-result-content">
         <div class="meal-item">
           <span class="meal-label">Meal Type:</span>
-          <span class="meal-value">{{ mealData.mealType || 'Unknown' }}</span>
+          <span class="meal-value">{{ formatMealType(mealData.mealType) || 'Unknown' }}</span>
         </div>
         <div class="meal-item">
           <span class="meal-label">Calories:</span>
@@ -78,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Icon from '@/components/IconsLibrary.vue'
 import { aiProcessMeal } from '@/utils/aiMealProcessor'
 import { saveMealEntry } from '@/services/mealService'
@@ -98,12 +132,24 @@ const transcription = ref('')
 const recognition = ref(null)
 const mealData = ref(null)
 const mealText = ref('')
+const showInstructions = ref(true) // Default to showing instructions
+
+// Format meal type with proper capitalization
+const formatMealType = (type) => {
+  if (!type) return 'Unknown'
+  return type.charAt(0).toUpperCase() + type.slice(1)
+}
 
 const buttonText = computed(() => {
   if (isRecording.value) return 'Stop Recording'
   if (isProcessing.value) return 'Processing...'
   return 'Speak Meal'
 })
+
+function toggleInstructions() {
+  showInstructions.value = !showInstructions.value
+  localStorage.setItem('showMealInstructions', showInstructions.value.toString())
+}
 
 function toggleRecording() {
   if (props.disabled) return
@@ -188,12 +234,31 @@ async function submitText() {
   // Don't clear mealText here to allow for corrections/resubmissions
 }
 
+function validateMealData(data) {
+  const validMealTypes = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert'];
+  
+  // Check if mealType exists and is valid
+  if (!data.mealType || !validMealTypes.includes(data.mealType.toLowerCase())) {
+    console.warn(`Invalid meal type detected: "${data.mealType}". Prompting user to select.`);
+    
+    // Set a flag to prompt the user to select a meal type
+    data.needsMealTypeSelection = true;
+    data.mealType = 'snack'; // Default that can be changed by user
+  } else {
+    // Ensure meal type is lowercase for consistency
+    data.mealType = data.mealType.toLowerCase();
+    data.needsMealTypeSelection = false;
+  }
+  
+  return data;
+}
+
 async function processMeal(transcript) {
   try {
     isProcessing.value = true
     
     const result = await aiProcessMeal(transcript)
-    mealData.value = result
+    mealData.value = validateMealData(result)
     
     isProcessing.value = false
   } catch (error) {
@@ -213,6 +278,7 @@ async function saveMeal() {
     // Reset the state
     transcription.value = ''
     mealData.value = null
+    mealText.value = ''
     
     alert('Meal saved successfully!')
   } catch (error) {
@@ -220,11 +286,38 @@ async function saveMeal() {
     alert('Error saving meal: ' + error.message)
   }
 }
+
+onMounted(() => {
+  // Check localStorage for instruction visibility preference
+  const savedVisibility = localStorage.getItem('showMealInstructions')
+  if (savedVisibility !== null) {
+    showInstructions.value = savedVisibility === 'true'
+  }
+})
 </script>
 
 <style scoped>
 .voice-recorder {
   width: 100%;
+}
+
+.instruction-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  transition: background-color 0.2s ease;
+}
+
+.instruction-toggle:hover {
+  background-color: #e0e0e0;
 }
 
 .record-btn {
@@ -256,6 +349,80 @@ async function saveMeal() {
 .record-btn.recording {
   background-color: #d32f2f;
   animation: pulse 1.5s infinite;
+}
+
+.instruction-card {
+  background-color: #f8faff;
+  border: 1px solid #e0e7ff;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.instruction-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.instruction-list {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.instruction-list li {
+  margin-bottom: 0.25rem;
+}
+
+.example-heading {
+  font-weight: 500;
+  margin: 0.75rem 0 0.5rem 0;
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.example {
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border-left: 3px solid var(--primary-color);
+  font-style: italic;
+}
+
+.meal-type-selection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #fff8e1;
+  border-radius: var(--border-radius);
+  border-left: 4px solid #FBBC05;
+}
+
+.meal-type-selection p {
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.meal-type-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .instruction-card {
+    padding: 0.75rem;
+  }
+  
+  .instruction-list {
+    padding-left: 1rem;
+  }
 }
 
 .text-input-container {

@@ -166,11 +166,30 @@ export default async function handler(req, res) {
     const foodItemNames = Array.isArray(mealData.foodItems) 
       ? mealData.foodItems.map(item => typeof item === 'object' ? (item.name || 'Unknown item') : String(item))
       : [transcript];
+
+    // Validate meal type
+    const validMealTypes = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert'];
+    if (!mealData.mealTime || !validMealTypes.includes(mealData.mealTime.toLowerCase())) {
+      // Default to the most appropriate meal type based on time of day
+      const hourOfDay = new Date().getHours();
+      
+      if (hourOfDay >= 4 && hourOfDay < 11) {
+        mealData.mealTime = 'breakfast';
+      } else if (hourOfDay >= 11 && hourOfDay < 16) {
+        mealData.mealTime = 'lunch';
+      } else if (hourOfDay >= 16 && hourOfDay < 22) {
+        mealData.mealTime = 'dinner';
+      } else {
+        mealData.mealTime = 'snack';
+      }
+      
+      console.log(`Invalid meal type detected. Defaulting to: ${mealData.mealTime}`);
+    }
     
     // Create the final meal data object with default values for missing fields
     const finalMealData = {
       description: transcript,
-      mealType: mealData.mealTime || 'unspecified',
+      mealType: mealData.mealTime.toLowerCase() || 'unspecified',
       foodItems: foodItemNames,
       calories: parseFloat(mealData.totalCalories) || 0,
       protein: parseFloat(mealData.totalProtein) || 0,
