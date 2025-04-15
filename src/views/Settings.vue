@@ -1,127 +1,118 @@
 <template>
-    <div class="settings-container">
-      <Sidebar />
+  <div class="settings-container">
+    <Sidebar />
+    
+    <main class="settings-main">
+      <header class="page-header">
+        <h1>Settings</h1>
+      </header>
       
-      <main class="settings-main">
-        <header class="page-header">
-          <h1>Settings</h1>
-        </header>
+      <section class="settings-content">
+        <div class="settings-card">
+          <h2>Account Settings</h2>
+          
+          <div class="settings-section">
+            <h3>App Preferences</h3>
+            <div class="form-group checkbox-group">
+              <input 
+                type="checkbox" 
+                id="darkMode" 
+                v-model="settings.darkMode" 
+                @change="toggleDarkMode"
+              />
+              <label for="darkMode">Dark Mode</label>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                v-model="user.email" 
+                disabled
+              />
+            </div>
+            
+            <button @click="updateProfile" class="action-btn primary-btn">Update Profile</button>
+          </div>
+        </div>
         
-        <section class="settings-content">
-          <div class="settings-card">
-            <h2>Account Settings</h2>
+        <div class="settings-card">
+          <h2>App Settings</h2>
+          
+          <div class="settings-section">
+            <h3>Units</h3>
+            <div class="form-group">
+              <label>Weight Units</label>
+              <div class="option-buttons">
+                <button 
+                  @click="settings.weightUnit = 'kg'" 
+                  :class="['option-btn', settings.weightUnit === 'kg' ? 'active' : '']"
+                >
+                  Kilograms (kg)
+                </button>
+                <button 
+                  @click="settings.weightUnit = 'lb'" 
+                  :class="['option-btn', settings.weightUnit === 'lb' ? 'active' : '']"
+                >
+                  Pounds (lb)
+                </button>
+              </div>
+            </div>
             
-            <div class="settings-section">
-              <h3>App Preferences</h3>
-              <div class="form-group checkbox-group">
-                <input 
-                  type="checkbox" 
-                  id="darkMode" 
-                  v-model="settings.darkMode" 
-                  @change="toggleDarkMode"
-                />
-                <label for="darkMode">Dark Mode</label>
+            <div class="form-group">
+              <label>Volume Units</label>
+              <div class="option-buttons">
+                <button 
+                  @click="settings.volumeUnit = 'ml'" 
+                  :class="['option-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
+                >
+                  Milliliters (ml)
+                </button>
+                <button 
+                  @click="settings.volumeUnit = 'oz'" 
+                  :class="['option-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
+                >
+                  Fluid Ounces (oz)
+                </button>
               </div>
-              
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  v-model="user.email" 
-                  disabled
-                />
-              </div>
-              
-              <button @click="updateProfile" class="action-btn primary-btn">Update Profile</button>
             </div>
           </div>
           
-          <div class="settings-card">
-            <h2>App Settings</h2>
-            
-            <div class="settings-section">
-              <h3>Units</h3>
-              <div class="form-group">
-                <label>Weight Units</label>
-                <div class="option-buttons">
-                  <button 
-                    @click="settings.weightUnit = 'kg'" 
-                    :class="['option-btn', settings.weightUnit === 'kg' ? 'active' : '']"
-                  >
-                    Kilograms (kg)
-                  </button>
-                  <button 
-                    @click="settings.weightUnit = 'lb'" 
-                    :class="['option-btn', settings.weightUnit === 'lb' ? 'active' : '']"
-                  >
-                    Pounds (lb)
-                  </button>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label>Volume Units</label>
-                <div class="option-buttons">
-                  <button 
-                    @click="settings.volumeUnit = 'ml'" 
-                    :class="['option-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
-                  >
-                    Milliliters (ml)
-                  </button>
-                  <button 
-                    @click="settings.volumeUnit = 'oz'" 
-                    :class="['option-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
-                  >
-                    Fluid Ounces (oz)
-                  </button>
-                </div>
-              </div>
+          <div class="settings-section">
+            <h3>App Preferences</h3>
+            <div class="form-group checkbox-group">
+              <input 
+                type="checkbox" 
+                id="autoSave" 
+                v-model="settings.autoSave" 
+              />
+              <label for="autoSave">Auto-save voice recordings</label>
             </div>
-            
-            <div class="settings-section">
-              <h3>App Preferences</h3>
-              <div class="form-group checkbox-group">
-                <input 
-                  type="checkbox" 
-                  id="darkMode" 
-                  v-model="settings.darkMode" 
-                />
-                <label for="darkMode">Dark Mode (Coming Soon)</label>
-              </div>
-              
-              <div class="form-group checkbox-group">
-                <input 
-                  type="checkbox" 
-                  id="autoSave" 
-                  v-model="settings.autoSave" 
-                />
-                <label for="autoSave">Auto-save voice recordings</label>
-              </div>
-            </div>
-            
-            <button @click="saveSettings" class="action-btn primary-btn">Save Settings</button>
           </div>
           
-          <div class="settings-card">
-            <h2>Data Management</h2>
-            
-            <div class="settings-section">
-              <h3>Export Data</h3>
-              <p>Download all your meal data as a CSV file.</p>
-              <button @click="exportData" class="action-btn secondary-btn">Export Data</button>
-            </div>
-            
-            <div class="settings-section danger-zone">
-              <h3>Danger Zone</h3>
-              <p>Clear all your data from the app. This action cannot be undone.</p>
-              <button @click="confirmClearData" class="action-btn danger-btn">Clear All Data</button>
-            </div>
+          <button @click="saveSettings" class="action-btn primary-btn">Save Settings</button>
+        </div>
+        
+        <div class="settings-card">
+          <h2>Data Management</h2>
+          
+          <div class="settings-section">
+            <h3>Export Data</h3>
+            <p>Download all your meal data as a CSV file.</p>
+            <button @click="exportData" class="action-btn secondary-btn">Export Data</button>
           </div>
-        </section>
-      </main>
-    </div>
-  </template>
+          
+          <div class="settings-section danger-zone">
+            <h3>Danger Zone</h3>
+            <p>Clear all your data from the app. This action cannot be undone.</p>
+            <button @click="confirmClearData" class="action-btn danger-btn">Clear All Data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</template>
   
   <script setup>
   import { ref, onMounted, watch } from 'vue'

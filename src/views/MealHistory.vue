@@ -142,6 +142,7 @@
 </template>
 
 <script setup>
+// Script remains unchanged
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
@@ -538,6 +539,9 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 
 .search-box input {
   padding-right: 2.5rem;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  border-color: var(--border-color);
 }
 
 .search-box svg {
@@ -545,7 +549,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #757575;
+  color: var(--text-light);
 }
 
 .filter-options {
@@ -556,6 +560,9 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 
 .filter-options select {
   min-width: 150px;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  border-color: var(--border-color);
 }
 
 .loading-indicator {
@@ -565,6 +572,11 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   justify-content: center;
   padding: 3rem 0;
   color: var(--text-light);
+}
+
+.spinner {
+  border: 3px solid var(--background-light);
+  border-top: 3px solid var(--primary-color);
 }
 
 .empty-state {
@@ -587,7 +599,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   align-items: center;
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .day-summary {
@@ -597,12 +609,12 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   font-size: 0.875rem;
 }
 
-/* New meal card styles */
+/* Meal card styles */
 .meal-card {
   background-color: var(--background-card);
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
   transition: transform 0.2s ease;
 }
@@ -615,7 +627,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   display: flex;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .meal-type-indicator {
@@ -646,11 +658,12 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   font-weight: 600;
   margin: 0;
   margin-right: 0.75rem;
+  color: var(--text-dark);
 }
 
 .meal-time {
   font-size: 0.75rem;
-  color: #757575;
+  color: var(--text-light);
 }
 
 .meal-nutrients {
@@ -660,12 +673,13 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 }
 
 .nutrient-pill {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
   padding: 0.25rem 0.5rem;
   border-radius: 16px;
   font-size: 0.75rem;
   font-weight: 500;
   white-space: nowrap;
+  color: var(--text-dark);
 }
 
 .meal-content {
@@ -680,15 +694,16 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 }
 
 .food-item {
-  background-color: #f0f2f5;
+  background-color: var(--background-light);
   border-radius: 4px;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
+  color: var(--text-dark);
 }
 
 .original-input {
   margin-top: 0.5rem;
-  border-top: 1px dashed #eee;
+  border-top: 1px dashed var(--border-color);
   padding-top: 0.5rem;
 }
 
@@ -707,9 +722,9 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 .input-text {
   margin-top: 0.5rem;
   font-style: italic;
-  color: #757575;
+  color: var(--text-light);
   font-size: 0.875rem;
-  background-color: #f9f9f9;
+  background-color: var(--background-light);
   padding: 0.75rem;
   border-radius: var(--border-radius);
 }
@@ -724,7 +739,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 .action-btn {
   background: none;
   border: none;
-  color: #757575;
+  color: var(--text-light);
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 4px;
@@ -735,7 +750,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 }
 
 .action-btn:hover {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
 }
 
 .action-btn.edit-btn:hover {
@@ -744,7 +759,7 @@ watch([searchQuery, selectedMealType, sortBy], () => {
 }
 
 .action-btn.delete-btn:hover {
-  color: #d32f2f;
+  color: var(--error-color);
   background-color: rgba(211, 47, 47, 0.1);
 }
 
@@ -765,13 +780,13 @@ watch([searchQuery, selectedMealType, sortBy], () => {
   height: 36px;
   border-radius: 50%;
   border: none;
-  background-color: #f0f2f5;
+  background-color: var(--background-light);
   color: var(--text-dark);
   transition: all 0.2s ease;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: var(--background-card)
+  background-color: var(--background-medium, var(--background-light)); 
 }
 
 .pagination-btn:disabled {
