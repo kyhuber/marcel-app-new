@@ -2,6 +2,7 @@
 :root {
   /* Light Theme (Default) */
   --primary-color: #4285F4;
+  --primary-color-rgb: 66, 133, 244;
   --secondary-color: #34A853;
   --warning-color: #FBBC05;
   --error-color: #EA4335;
@@ -29,6 +30,7 @@
 /* Dark Theme Class */
 .dark-theme {
   --primary-color: #5c9aff;
+  --primary-color-rgb: 92, 154, 255;
   --secondary-color: #4cc066;
   --warning-color: #ffd166;
   --error-color: #ff6b6b;
