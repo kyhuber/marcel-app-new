@@ -1,3 +1,4 @@
+<!-- Settings.vue with Comprehensive Dark Mode Support -->
 <template>
   <div class="settings-container">
     <Sidebar />
@@ -13,23 +14,28 @@
           
           <div class="settings-section">
             <h3>App Preferences</h3>
-            <div class="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="darkMode" 
-                v-model="settings.darkMode" 
-                @change="toggleDarkMode"
-              />
+            <div class="form-group dark-mode-toggle">
               <label for="darkMode">Dark Mode</label>
+              <div class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  id="darkMode" 
+                  v-model="settings.darkMode" 
+                  @change="toggleDarkMode"
+                  class="toggle-input"
+                />
+                <span class="toggle-slider"></span>
+              </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group email-group">
               <label for="email">Email</label>
               <input 
                 type="email" 
                 id="email" 
                 v-model="user.email" 
                 disabled
+                class="settings-input"
               />
             </div>
             
@@ -44,16 +50,16 @@
             <h3>Units</h3>
             <div class="form-group">
               <label>Weight Units</label>
-              <div class="option-buttons">
+              <div class="unit-selector">
                 <button 
                   @click="settings.weightUnit = 'kg'" 
-                  :class="['option-btn', settings.weightUnit === 'kg' ? 'active' : '']"
+                  :class="['unit-btn', settings.weightUnit === 'kg' ? 'active' : '']"
                 >
                   Kilograms (kg)
                 </button>
                 <button 
                   @click="settings.weightUnit = 'lb'" 
-                  :class="['option-btn', settings.weightUnit === 'lb' ? 'active' : '']"
+                  :class="['unit-btn', settings.weightUnit === 'lb' ? 'active' : '']"
                 >
                   Pounds (lb)
                 </button>
@@ -62,16 +68,16 @@
             
             <div class="form-group">
               <label>Volume Units</label>
-              <div class="option-buttons">
+              <div class="unit-selector">
                 <button 
                   @click="settings.volumeUnit = 'ml'" 
-                  :class="['option-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
+                  :class="['unit-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
                 >
                   Milliliters (ml)
                 </button>
                 <button 
                   @click="settings.volumeUnit = 'oz'" 
-                  :class="['option-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
+                  :class="['unit-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
                 >
                   Fluid Ounces (oz)
                 </button>
@@ -81,13 +87,17 @@
           
           <div class="settings-section">
             <h3>App Preferences</h3>
-            <div class="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="autoSave" 
-                v-model="settings.autoSave" 
-              />
+            <div class="form-group dark-mode-toggle">
               <label for="autoSave">Auto-save voice recordings</label>
+              <div class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  id="autoSave" 
+                  v-model="settings.autoSave" 
+                  class="toggle-input"
+                />
+                <span class="toggle-slider"></span>
+              </div>
             </div>
           </div>
           
@@ -406,6 +416,167 @@
   .checkbox-group input {
     margin: 0;
   }
+
+  /* Dark Mode Specific Variables */
+:root {
+  --toggle-bg-light: #e0e0e0;
+  --toggle-bg-dark: #444;
+  --toggle-slider-light: #ffffff;
+  --toggle-slider-dark: #f0f0f0;
+  --input-bg-light: #f0f2f5;
+  --input-bg-dark: #2c2c2c;
+  --input-text-light: #333;
+  --input-text-dark: #e0e0e0;
+  --input-border-light: #e0e0e0;
+  --input-border-dark: #444;
+}
+
+/* Dark Theme Global Adjustments */
+.dark-theme .settings-container {
+  background-color: var(--background-light);
+}
+
+.dark-theme .settings-card {
+  background-color: var(--background-card);
+  color: var(--text-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .page-header {
+  background-color: var(--background-card);
+  color: var(--text-dark);
+}
+
+/* Toggle Switch Styling */
+.dark-mode-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--toggle-bg-light);
+  transition: .4s;
+  border-radius: 26px;
+}
+
+.dark-theme .toggle-slider {
+  background-color: var(--toggle-bg-dark);
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--toggle-slider-light);
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.dark-theme .toggle-slider::before {
+  background-color: var(--toggle-slider-dark);
+}
+
+.toggle-input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+.toggle-input:checked + .toggle-slider::before {
+  transform: translateX(24px);
+}
+
+/* Input Styling */
+.dark-theme .settings-input {
+  background-color: var(--input-bg-dark);
+  color: var(--input-text-dark);
+  border-color: var(--input-border-dark);
+}
+
+.dark-theme .settings-input:disabled {
+  opacity: 0.6;
+  background-color: #3a3a3a;
+}
+
+/* Unit Selector Styling */
+.unit-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.unit-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: var(--input-bg-light);
+  color: var(--input-text-light);
+  border: 1px solid var(--input-border-light);
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+}
+
+.dark-theme .unit-btn {
+  background-color: var(--input-bg-dark);
+  color: var(--input-text-dark);
+  border-color: var(--input-border-dark);
+}
+
+.unit-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Danger Zone Styling */
+.danger-zone {
+  border: 1px dashed #d32f2f;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+}
+
+.dark-theme .danger-zone {
+  border-color: rgba(234, 67, 53, 0.5);
+}
+
+.danger-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.dark-theme .danger-btn {
+  background-color: #b71c1c;
+}
+
+.dark-theme .primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dark-theme .secondary-btn {
+  background-color: #3a3a3a;
+  color: var(--text-dark);
+}
   
   .option-buttons {
     display: flex;
@@ -516,6 +687,16 @@
     padding: 1rem;
     padding-bottom: 70px; /* Space for bottom navigation */
   }
+
+  @media (max-width: 768px) {
+  .unit-selector {
+    flex-direction: column;
+  }
+  
+  .unit-btn {
+    width: 100%;
+  }
+}
   
   .page-header {
     flex-direction: column;

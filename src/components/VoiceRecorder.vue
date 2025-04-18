@@ -13,7 +13,6 @@
         <li><strong>What you ate:</strong> "I had avocado toast and fresh fruit"</li>
         <li><strong>Optional amounts:</strong> "2 slices" / "1 cup of berries"</li>
         <li><strong>When you ate it:</strong> "for breakfast" / "yesterday" / "this morning"</li>
-    
       </ul>
       <p class="example-heading">Examples:</p>
       <div class="examples">
@@ -61,53 +60,66 @@
       </div>
     </div>
     
-    <!-- Meal type selection if needed -->
-    <div v-if="mealData && mealData.needsMealTypeSelection" class="meal-type-selection">
-      <p>Please select a meal type:</p>
-      <select v-model="mealData.mealType" class="meal-type-select">
-        <option value="breakfast">Breakfast</option>
-        <option value="lunch">Lunch</option>
-        <option value="dinner">Dinner</option>
-        <option value="snack">Snack</option>
-        <option value="dessert">Dessert</option>
-      </select>
-    </div>
-    
-    <div v-if="mealData && !isProcessing" class="meal-result">
-      <div class="meal-result-header">
-        <h3>Meal Analysis Results</h3>
+    <!-- Confirmation Modal -->
+    <div v-if="mealData && !isProcessing" class="meal-confirmation-modal">
+      <div class="modal-overlay" @click="resetForm"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirm Your Meal</h3>
+          <button @click="resetForm" class="close-btn">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <p class="confirmation-question">Does this look correct?</p>
+          
+          <div class="edit-meal-type">
+            <label for="mealType">Meal Type:</label>
+            <select id="mealType" v-model="mealData.mealType" class="edit-select">
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+              <option value="dessert">Dessert</option>
+            </select>
+          </div>
+          
+          <div class="nutrition-summary">
+            <div class="nutrition-item">
+              <span class="nutrition-label">Calories:</span>
+              <input type="number" v-model.number="mealData.calories" class="nutrition-input" min="0" />
+            </div>
+            <div class="nutrition-item">
+              <span class="nutrition-label">Protein:</span>
+              <input type="number" v-model.number="mealData.protein" class="nutrition-input" min="0" />
+              <span class="unit">g</span>
+            </div>
+            <div class="nutrition-item">
+              <span class="nutrition-label">Carbs:</span>
+              <input type="number" v-model.number="mealData.carbs" class="nutrition-input" min="0" />
+              <span class="unit">g</span>
+            </div>
+            <div class="nutrition-item">
+              <span class="nutrition-label">Fat:</span>
+              <input type="number" v-model.number="mealData.fat" class="nutrition-input" min="0" />
+              <span class="unit">g</span>
+            </div>
+          </div>
+          
+          <div class="food-items-editor">
+            <label>Food Items:</label>
+            <div v-for="(item, index) in mealData.foodItems" :key="index" class="food-item-edit">
+              <input type="text" v-model="mealData.foodItems[index]" class="food-item-input" />
+              <button @click="removeFood(index)" class="remove-btn">×</button>
+            </div>
+            <button @click="addFood" class="add-food-btn">+ Add Item</button>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button @click="resetForm" class="cancel-btn">Cancel</button>
+          <button @click="saveMeal" class="confirm-btn">Confirm & Save</button>
+        </div>
       </div>
-      <div class="meal-result-content">
-        <div class="meal-item">
-          <span class="meal-label">Meal Type:</span>
-          <span class="meal-value">{{ formatMealType(mealData.mealType) || 'Unknown' }}</span>
-        </div>
-        <div class="meal-item">
-          <span class="meal-label">Calories:</span>
-          <span class="meal-value">{{ mealData.calories || 0 }}</span>
-        </div>
-        <div class="meal-item">
-          <span class="meal-label">Protein:</span>
-          <span class="meal-value">{{ mealData.protein || 0 }}g</span>
-        </div>
-        <div class="meal-item">
-          <span class="meal-label">Carbs:</span>
-          <span class="meal-value">{{ mealData.carbs || 0 }}g</span>
-        </div>
-        <div class="meal-item">
-          <span class="meal-label">Fat:</span>
-          <span class="meal-value">{{ mealData.fat || 0 }}g</span>
-        </div>
-        <div class="meal-foods" v-if="mealData.foodItems && mealData.foodItems.length">
-          <h4>Food Items:</h4>
-          <ul>
-            <li v-for="(item, index) in mealData.foodItems" :key="index">
-              {{ item }}
-            </li>
-          </ul>
-        </div>
-      </div>
-      <button @click="saveMeal" class="save-btn">Save Meal</button>
     </div>
   </div>
 </template>
@@ -242,13 +254,11 @@ function validateMealData(data) {
   if (!data.mealType || !validMealTypes.includes(data.mealType.toLowerCase())) {
     console.warn(`Invalid meal type detected: "${data.mealType}". Prompting user to select.`);
     
-    // Set a flag to prompt the user to select a meal type
-    data.needsMealTypeSelection = true;
+    // Ensure meal type is lowercase for consistency
     data.mealType = 'snack'; // Default that can be changed by user
   } else {
     // Ensure meal type is lowercase for consistency
     data.mealType = data.mealType.toLowerCase();
-    data.needsMealTypeSelection = false;
   }
   
   return data;
@@ -269,6 +279,23 @@ async function processMeal(transcript) {
   }
 }
 
+function resetForm() {
+  transcription.value = ''
+  mealData.value = null
+  mealText.value = ''
+}
+
+function addFood() {
+  if (!mealData.value.foodItems) {
+    mealData.value.foodItems = []
+  }
+  mealData.value.foodItems.push('')
+}
+
+function removeFood(index) {
+  mealData.value.foodItems.splice(index, 1)
+}
+
 async function saveMeal() {
   try {
     if (!mealData.value) return
@@ -277,9 +304,7 @@ async function saveMeal() {
     emit('meal-saved', mealData.value)
     
     // Reset the state
-    transcription.value = ''
-    mealData.value = null
-    mealText.value = ''
+    resetForm()
     
     alert('Meal saved successfully!')
   } catch (error) {
@@ -300,6 +325,7 @@ onMounted(() => {
 <style scoped>
 .voice-recorder {
   width: 100%;
+  position: relative;
 }
 
 .instruction-toggle {
@@ -395,37 +421,6 @@ onMounted(() => {
   font-style: italic;
 }
 
-.meal-type-selection {
-  margin: 1rem 0;
-  padding: 1rem;
-  background-color: #fff8e1;
-  border-radius: var(--border-radius);
-  border-left: 4px solid #FBBC05;
-}
-
-.meal-type-selection p {
-  margin: 0 0 0.5rem 0;
-  font-weight: 500;
-}
-
-.meal-type-select {
-  width: 100%;
-  padding: 0.75rem;
-  border: var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-  .instruction-card {
-    padding: 0.75rem;
-  }
-  
-  .instruction-list {
-    padding-left: 1rem;
-  }
-}
-
 .text-input-container {
   margin-top: 1rem;
 }
@@ -445,7 +440,7 @@ onMounted(() => {
   top: 50%;
   width: 40%;
   height: 1px;
-  background-color: var(--background-card)
+  background-color: var(--border-color);
 }
 
 .or-divider::before {
@@ -464,7 +459,7 @@ onMounted(() => {
 .text-input-form input {
   flex: 1;
   padding: 0.75rem;
-  border: var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 0.95rem;
 }
@@ -533,73 +528,215 @@ onMounted(() => {
   100% { transform: rotate(360deg); }
 }
 
-.meal-result {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: var(--background-light);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-}
-
-.meal-result-header {
-  margin-bottom: 0.75rem;
-}
-
-.meal-result-header h3 {
-  font-size: 1.1rem;
-  color: var(--primary-color);
-  margin: 0;
-}
-
-.meal-result-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.meal-item {
+/* Modal Styles */
+.meal-confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  animation: fade-in 0.3s ease;
 }
 
-.meal-label {
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--background-card);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  animation: slide-up 0.3s ease;
+  z-index: 1001;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: white;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.confirmation-question {
+  text-align: center;
   font-weight: 500;
+  margin-bottom: 1.5rem;
   color: var(--text-dark);
 }
 
-.meal-value {
-  font-weight: 600;
+.edit-meal-type {
+  margin-bottom: 1.5rem;
 }
 
-.meal-foods {
-  margin-top: 0.75rem;
-}
-
-.meal-foods h4 {
-  font-size: 0.9rem;
-  margin: 0 0 0.5rem 0;
-}
-
-.meal-foods ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-.save-btn {
-  margin-top: 1rem;
+.edit-select {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
   border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+}
+
+.nutrition-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.nutrition-item {
+  display: flex;
+  align-items: center;
+}
+
+.nutrition-label {
   font-weight: 500;
+  margin-right: 0.5rem;
+  min-width: 60px;
+}
+
+.nutrition-input {
+  width: 70px;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.unit {
+  margin-left: 0.25rem;
+  color: var(--text-light);
+}
+
+.food-items-editor {
+  margin-top: 1.5rem;
+}
+
+.food-item-edit {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.food-item-input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--error-color);
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.add-food-btn {
+  background: none;
+  border: 1px dashed var(--border-color);
+  width: 100%;
+  padding: 0.5rem;
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  margin-top: 0.5rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.save-btn:hover {
-  background-color: #2d964a;
+.add-food-btn:hover {
+  background-color: var(--background-light);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: #f8f9ff;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border-color);
+  background: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.confirm-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .instruction-card {
+    padding: 0.75rem;
+  }
+  
+  .instruction-list {
+    padding-left: 1rem;
+  }
+  
+  .nutrition-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 95%;
+    max-height: 80vh;
+  }
 }
 </style>
