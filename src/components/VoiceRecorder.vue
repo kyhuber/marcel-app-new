@@ -264,70 +264,162 @@ async function submitText() {
 function validateMealData(data) {
   const validMealTypes = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert'];
   
-  // Check if mealType exists and is valid
-  if (!data.mealType || !validMealTypes.includes(data.mealType.toLowerCase())) {
-    console.warn(`Invalid meal type detected: "${data.mealType}". Prompting user to select.`);
-    
-    // Ensure meal type is lowercase for consistency
-    data.mealType = 'snack'; // Default that can be changed by user
-  } else {
-    // Ensure meal type is lowercase for consistency
-    data.mealType = data.mealType.toLowerCase();
+  // Create a new object with default values
+  const validatedData = {
+    description: data.description || '',
+    mealType: 'snack', // Default value
+    foodItems: [],
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fat: 0,
+    timestamp: new Date()
+  };
+  
+  // Copy properties, ensuring they're valid
+  if (data.mealType && validMealTypes.includes(data.mealType.toLowerCase())) {
+    validatedData.mealType = data.mealType.toLowerCase();
   }
   
-  // Ensure all required properties exist
-  if (!data.calories) data.calories = 0;
-  if (!data.protein) data.protein = 0;
-  if (!data.carbs) data.carbs = 0;
-  if (!data.fat) data.fat = 0;
+  // Parse numeric values safely
+  if (data.calories) validatedData.calories = parseFloat(data.calories) || 0;
+  if (data.protein) validatedData.protein = parseFloat(data.protein) || 0;
+  if (data.carbs) validatedData.carbs = parseFloat(data.carbs) || 0;
+  if (data.fat) validatedData.fat = parseFloat(data.fat) || 0;
   
-  // Ensure food items is an array
-  if (!data.foodItems || !Array.isArray(data.foodItems)) {
-    data.foodItems = [data.description || 'Unknown food'];
+  // Ensure food items is an array of strings
+  if (data.foodItems) {
+    if (Array.isArray(data.foodItems)) {
+      validatedData.foodItems = data.foodItems.map(item => {
+        if (typeof item === 'object' && item.name) return item.name;
+        return String(item);
+      }).filter(Boolean);
+    } else if (typeof data.foodItems === 'string') {
+      validatedData.foodItems = [data.foodItems];
+    }
   }
   
-  return data;
+  // If no food items were found, use description as fallback
+  if (validatedData.foodItems.length === 0 && validatedData.description) {
+    validatedData.foodItems = [validatedData.description];
+  }
+  
+  // Copy timestamp if available
+  if (data.timestamp) {
+    if (data.timestamp instanceof Date) {
+      validatedData.timestamp = data.timestamp;
+    } else if (typeof data.timestamp === 'string') {
+      try {
+        validatedData.timestamp = new Date(data.timestamp);
+      } catch (e) {
+        validatedData.timestamp = new Date();
+      }
+    }
+  }
+  
+  return validatedData;
 }
 
-async function processMeal(transcript) {
-  // Clear any previous errors and meal data
-  processingError.value = null
-  mealData.value = null
-  
+// src/utils/aiMealProcessor.js
+import { getNutritionEstimate } from './nutritionDatabase';
+
+export async function aiProcessMeal(transcript) {
   try {
-    isProcessing.value = true
+    console.log('Processing meal with transcript:', transcript);
     
-    // Add a small delay to show the loading indicator for better UX
-    // This is optional but gives users feedback that processing is occurring
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Call our secure serverless function instead of OpenAI directly
+    const response = await fetch('/api/analyze-meal', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ transcript }),
+      // Add timeout to prevent hanging requests
+      signal: AbortSignal.timeout(15000) // 15 second timeout
+    });
+
+    // Handle HTTP errors
+    if (!response.ok) {
+      const errorText = await response.text(); // Use text() instead of json() for error responses
+      console.error('API error response:', errorText);
+      throw new Error(errorText || `Error processing meal (Status ${response.status})`);
+    }
+
+    // Get response as text first to validate it
+    const responseText = await response.text();
     
-    const result = await aiProcessMeal(transcript)
-    
-    // Check if this is the fallback data by checking for the processingError property
-    // which is only added by the fallback in aiMealProcessor.js
-    if (result && result.processingError) {
-      console.warn('Received fallback nutrition data:', result);
-      throw new Error(result.processingError || "Couldn't connect to the nutrition analysis service.");
+    // Check if response is empty
+    if (!responseText || responseText.trim() === '') {
+      throw new Error('Empty response from meal analysis service');
     }
     
-    // Validate and store the meal data
-    if (result && (result.description || result.foodItems)) {
-      mealData.value = validateMealData(result)
-      
-      // Log the received data for debugging
-      console.log('Received meal data from LLM:', result);
-      console.log('Validated meal data:', mealData.value);
-    } else {
-      throw new Error("Couldn't properly analyze the meal. Please try providing more details.")
+    // Try to parse the response as JSON
+    let mealData;
+    try {
+      mealData = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError, 'Response text:', responseText);
+      throw new Error('Invalid response format from meal analysis service');
     }
+    
+    // Log the response for debugging
+    console.log('Processed meal data:', mealData);
+    
+    // Check if the API returned an error in the data
+    if (mealData.error) {
+      throw new Error(mealData.errorDetails || 'Error in meal analysis');
+    }
+    
+    // Check for presence of required nutrition data
+    if (!mealData.calories && !mealData.protein) {
+      console.warn('Missing nutrition data in API response:', mealData);
+      throw new Error('The meal analysis returned incomplete nutrition data');
+    }
+    
+    return mealData;
     
   } catch (error) {
-    console.error('Error processing meal:', error)
-    processingError.value = `Sorry, we couldn't process your meal: ${error.message}. Please try again with more details.`
-    mealData.value = null
-  } finally {
-    isProcessing.value = false
+    console.error("Error in aiProcessMeal:", error);
+    
+    // If the error is a timeout or network error, provide a more specific message
+    if (error.name === 'AbortError') {
+      return createFallbackData(transcript, "The request timed out. Please try again.");
+    } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+      return createFallbackData(transcript, "Network connection issue. Please check your internet connection.");
+    }
+    
+    // Return a fallback with error information
+    return createFallbackData(transcript, error.message);
   }
+}
+
+// Helper function to create consistent fallback data
+function createFallbackData(transcript, errorMessage) {
+  // Use local database as fallback
+  const foodItems = transcript.split(/and|,/).map(item => item.trim()).filter(Boolean);
+  let fallbackData = {
+    description: transcript,
+    foodItems: foodItems.length > 0 ? foodItems : [transcript],
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fat: 0,
+    mealType: 'unknown',
+    timestamp: new Date(),
+    processingError: errorMessage,
+    isFallbackData: true  // Flag to clearly identify this as fallback data
+  };
+  
+  // Try to estimate nutrition from local database
+  try {
+    const estimate = getNutritionEstimate(foodItems);
+    fallbackData.calories = estimate.calories;
+    fallbackData.protein = estimate.protein;
+  } catch (err) {
+    console.error("Error using local nutrition database:", err);
+  }
+  
+  return fallbackData;
 }
 
 function resetForm() {

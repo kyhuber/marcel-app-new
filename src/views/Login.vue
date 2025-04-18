@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
@@ -75,6 +75,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 
 const router = useRouter()
+const route = useRoute()
 const isLoginMode = ref(true)
 const email = ref('')
 const password = ref('')
