@@ -56,12 +56,21 @@
       <p>"{{ transcription }}"</p>
       <div class="processing-indicator" v-if="isProcessing">
         <div class="spinner"></div>
-        <span>Analyzing...</span>
+        <span>Analyzing your meal with AI...</span>
+      </div>
+    </div>
+    
+    <!-- Error Display -->
+    <div v-if="processingError" class="error-display">
+      <div class="error-icon">⚠️</div>
+      <div class="error-message">
+        <p>{{ processingError }}</p>
+        <button @click="processingError = null" class="try-again-btn">Try Again</button>
       </div>
     </div>
     
     <!-- Confirmation Modal -->
-    <div v-if="mealData && !isProcessing" class="meal-confirmation-modal">
+    <div v-if="mealData && !isProcessing && !processingError" class="meal-confirmation-modal">
       <div class="modal-overlay" @click="resetForm"></div>
       <div class="modal-content">
         <div class="modal-header">
@@ -146,6 +155,7 @@ const recognition = ref(null)
 const mealData = ref(null)
 const mealText = ref('')
 const showInstructions = ref(true) // Default to showing instructions
+const processingError = ref(null)
 
 // Format meal type with proper capitalization
 const formatMealType = (type) => {
@@ -176,6 +186,9 @@ function toggleRecording() {
 
 function startRecording() {
   if ('webkitSpeechRecognition' in window) {
+    // Clear any previous errors
+    processingError.value = null
+    
     recognition.value = new webkitSpeechRecognition()
     recognition.value.continuous = true
     recognition.value.interimResults = true
@@ -211,19 +224,22 @@ function startRecording() {
     recognition.value.onerror = (event) => {
       isRecording.value = false
       console.error('Speech recognition error:', event.error)
-      alert(`Speech recognition error: ${event.error}`)
+      processingError.value = `Speech recognition error: ${event.error}. Please try again or type your meal.`
     }
 
     recognition.value.onend = () => {
       if (isRecording.value) {
         // Automatically process if recording was intentionally stopped
-        processMeal(transcription.value)
+        isRecording.value = false
+        if (transcription.value.trim()) {
+          processMeal(transcription.value)
+        }
       }
     }
 
     recognition.value.start()
   } else {
-    alert('Speech recognition is not supported in your browser')
+    processingError.value = 'Speech recognition is not supported in your browser. Please use text input instead.'
   }
 }
 
@@ -231,16 +247,14 @@ function stopRecording() {
   if (recognition.value) {
     isRecording.value = false
     recognition.value.stop()
-    
-    // Immediately process the transcription
-    if (transcription.value.trim()) {
-      processMeal(transcription.value)
-    }
   }
 }
 
 async function submitText() {
   if (!mealText.value.trim() || isProcessing.value) return
+  
+  // Clear any previous errors
+  processingError.value = null
   
   transcription.value = mealText.value
   await processMeal(mealText.value)
@@ -261,20 +275,57 @@ function validateMealData(data) {
     data.mealType = data.mealType.toLowerCase();
   }
   
+  // Ensure all required properties exist
+  if (!data.calories) data.calories = 0;
+  if (!data.protein) data.protein = 0;
+  if (!data.carbs) data.carbs = 0;
+  if (!data.fat) data.fat = 0;
+  
+  // Ensure food items is an array
+  if (!data.foodItems || !Array.isArray(data.foodItems)) {
+    data.foodItems = [data.description || 'Unknown food'];
+  }
+  
   return data;
 }
 
 async function processMeal(transcript) {
+  // Clear any previous errors and meal data
+  processingError.value = null
+  mealData.value = null
+  
   try {
     isProcessing.value = true
     
-    const result = await aiProcessMeal(transcript)
-    mealData.value = validateMealData(result)
+    // Add a small delay to show the loading indicator for better UX
+    // This is optional but gives users feedback that processing is occurring
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    isProcessing.value = false
+    const result = await aiProcessMeal(transcript)
+    
+    // Check if this is the fallback data by checking for the processingError property
+    // which is only added by the fallback in aiMealProcessor.js
+    if (result && result.processingError) {
+      console.warn('Received fallback nutrition data:', result);
+      throw new Error(result.processingError || "Couldn't connect to the nutrition analysis service.");
+    }
+    
+    // Validate and store the meal data
+    if (result && (result.description || result.foodItems)) {
+      mealData.value = validateMealData(result)
+      
+      // Log the received data for debugging
+      console.log('Received meal data from LLM:', result);
+      console.log('Validated meal data:', mealData.value);
+    } else {
+      throw new Error("Couldn't properly analyze the meal. Please try providing more details.")
+    }
+    
   } catch (error) {
     console.error('Error processing meal:', error)
-    alert('Error processing meal: ' + error.message)
+    processingError.value = `Sorry, we couldn't process your meal: ${error.message}. Please try again with more details.`
+    mealData.value = null
+  } finally {
     isProcessing.value = false
   }
 }
@@ -282,7 +333,8 @@ async function processMeal(transcript) {
 function resetForm() {
   transcription.value = ''
   mealData.value = null
-  mealText.value = ''
+  processingError.value = null
+  // Optionally clear the input text: mealText.value = ''
 }
 
 function addFood() {
@@ -300,16 +352,24 @@ async function saveMeal() {
   try {
     if (!mealData.value) return
     
+    // Show saving indicator
+    isProcessing.value = true
+    
     await saveMealEntry(mealData.value)
     emit('meal-saved', mealData.value)
     
     // Reset the state
     resetForm()
+    mealText.value = '' // Clear input text on successful save
     
+    // Small delay to show success message
+    await new Promise(resolve => setTimeout(resolve, 300))
     alert('Meal saved successfully!')
   } catch (error) {
     console.error('Error saving meal:', error)
-    alert('Error saving meal: ' + error.message)
+    processingError.value = `Error saving meal: ${error.message}. Please try again.`
+  } finally {
+    isProcessing.value = false
   }
 }
 
@@ -526,6 +586,45 @@ onMounted(() => {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Error Display Styles */
+.error-display {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: rgba(234, 67, 53, 0.08);
+  border-left: 4px solid var(--error-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+.error-message {
+  flex: 1;
+}
+
+.error-message p {
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.try-again-btn {
+  background-color: transparent;
+  color: var(--primary-color);
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.try-again-btn:hover {
+  background-color: rgba(66, 133, 244, 0.1);
 }
 
 /* Modal Styles */

@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <h2>Marcel Nutrition Tracker for Ripped Folks</h2>
+      <h2>Marcel: Nutrition Tracking with a Flex</h2>
       
       <div class="form-toggle">
         <button 
