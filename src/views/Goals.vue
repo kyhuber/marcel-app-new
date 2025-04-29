@@ -149,15 +149,28 @@
   const saveGoals = async () => {
     const auth = getAuth()
     const user = auth.currentUser
-  
+
     if (!user) return
-  
+
     try {
+      console.log('Saving goals for user:', user.uid)
+      console.log('Goals data:', {
+        calories: goals.value.calories,
+        protein: goals.value.protein,
+        carbs: goals.value.carbs,
+        fat: goals.value.fat
+      })
+
       await setDoc(doc(db, 'userGoals', user.uid), goals.value)
       alert('Goals saved successfully!')
     } catch (error) {
-      console.error('Error saving goals:', error)
-      alert('Error saving goals. Please try again.')
+      console.error('Detailed error saving goals:', {
+        message: error.message,
+        code: error.code,
+        name: error.name,
+        stack: error.stack
+      })
+      alert(`Error saving goals: ${error.message}`)
     }
   }
   

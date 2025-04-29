@@ -112,25 +112,42 @@ const handleAuth = async () => {
 
       const user = userCredential.user
 
-      // Send email verification
-      await sendEmailVerification(user);
+const actionCodeSettings = {
+  //  THIS IS CRITICAL:  Set the URL to your login page!!
+  url: window.location.origin + '/login',  
+  //  Make sure this domain is whitelisted in Firebase Console!
+  handleCodeInApp: false,
+};
 
-      // Save additional user profile info
-      await setDoc(doc(db, 'userProfiles', user.uid), {
-        userId: user.uid,
-        username: username.value,
-        email: email.value,
-        createdAt: new Date()
-      })
+await sendEmailVerification(user, actionCodeSettings);
 
-      // Redirect to dashboard after signup
-      // router.push('/dashboard')  // Consider not redirecting immediately
-    }
-  } catch (err) {
-    console.error('Authentication error:', err)
-    error.value = err.message
-  }
+// Save additional user profile info
+await setDoc(doc(db, 'userProfiles', user.uid), {
+  userId: user.uid,
+  username: username.value,
+  email: email.value,
+  createdAt: new Date()
+})
+
+// Inform the user to check their email
+alert('Verification email sent! Please check your inbox and click the link to verify your account.');
 }
+} catch (err) {
+console.error('Authentication error:', err)
+error.value = err.message
+}
+}
+
+const resetPassword = async () => {
+const auth = getAuth();
+try {
+await sendPasswordResetEmail(auth, email.value);
+alert("Password reset email sent! Check your inbox.");
+} catch (error) {
+console.error("Password reset error:", error);
+error.value = error.message;
+}
+};
 </script>
 
 <style scoped>
