@@ -13,7 +13,7 @@
           
           <div class="settings-section">
             <h3>App Preferences</h3>
-            <div class="form-group dark-mode-toggle">
+            <div class="form-group toggle-group">
               <label for="darkMode">Dark Mode</label>
               <div class="toggle-switch">
                 <input 
@@ -26,17 +26,25 @@
                 <span class="toggle-slider"></span>
               </div>
             </div>
+            </div>
             
             <div class="form-group email-group">
               <label for="email">Email</label>
-              <input 
-                type="email" 
-                id="email" 
-                v-model="user.email" 
-                disabled
-                class="settings-input"
-              />
+              <div class="input-with-icon">
+                <span class="input-icon">✉️</span>
+                <input 
+                  type="email" 
+                  id="email" 
+                  v-model="user.email" 
+                  disabled
+                  class="settings-input"
+                />
+              </div>
+              <span class="input-note">Your login email cannot be changed</span>
             </div>
+          
+          <div class="settings-section">
+            <h3>Profile Information</h3>
             
             <button @click="updateProfile" class="action-btn primary-btn">Update Profile</button>
           </div>
@@ -54,17 +62,19 @@
                   @click="settings.weightUnit = 'kg'" 
                   :class="['unit-btn', settings.weightUnit === 'kg' ? 'active' : '']"
                 >
-                  Kilograms (kg)
+                  <span class="unit-badge">kg</span>
+                  Kilograms
                 </button>
                 <button 
                   @click="settings.weightUnit = 'lb'" 
                   :class="['unit-btn', settings.weightUnit === 'lb' ? 'active' : '']"
                 >
-                  Pounds (lb)
+                  <span class="unit-badge">lb</span>
+                  Pounds
                 </button>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label>Volume Units</label>
               <div class="unit-selector">
@@ -72,13 +82,15 @@
                   @click="settings.volumeUnit = 'ml'" 
                   :class="['unit-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
                 >
-                  Milliliters (ml)
+                  <span class="unit-badge">ml</span>
+                  Milliliters
                 </button>
                 <button 
                   @click="settings.volumeUnit = 'oz'" 
                   :class="['unit-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
                 >
-                  Fluid Ounces (oz)
+                  <span class="unit-badge">oz</span>
+                  Fluid Ounces
                 </button>
               </div>
             </div>
@@ -86,7 +98,7 @@
           
           <div class="settings-section">
             <h3>App Preferences</h3>
-            <div class="form-group dark-mode-toggle">
+            <div class="form-group toggle-group">
               <label for="autoSave">Auto-save voice recordings</label>
               <div class="toggle-switch">
                 <input 
@@ -339,7 +351,7 @@ watch(() => settings.value.darkMode, (isDark) => {
 })
 </script>
   
-  <style scoped>
+<style scoped>
 .settings-container {
   display: flex;
   min-height: 100vh;
@@ -374,6 +386,12 @@ watch(() => settings.value.darkMode, (isDark) => {
   border-radius: var(--border-radius);
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.settings-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .settings-section {
@@ -399,6 +417,63 @@ watch(() => settings.value.darkMode, (isDark) => {
   color: var(--text-dark);
 }
 
+/* Toggle Switch Styles */
+.toggle-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:focus + .toggle-slider {
+  box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Input Styles */
 .settings-input {
   width: 100%;
   padding: 0.75rem;
@@ -409,142 +484,109 @@ watch(() => settings.value.darkMode, (isDark) => {
 }
 
 .settings-input:disabled {
-  opacity: 0.7;
+  background-color: #f2f2f2;
+  color: #999;
+  border: 1px solid #ddd;
   cursor: not-allowed;
 }
 
-/* Modern Toggle Switch Styles */
-.toggle-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.dark-theme .settings-input:disabled {
+  background-color: #444;
+  color: #aaa;
+  border-color: #555;
 }
 
-.modern-toggle {
+.input-with-icon {
   position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
 }
 
-.modern-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-label {
+.input-icon {
   position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
 }
 
-.toggle-label:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
+.input-with-icon .settings-input {
+  padding-left: 2rem;
 }
 
-input:checked + .toggle-label {
-  background-color: var(--primary-color);
+.input-note {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
 }
 
-input:focus + .toggle-label {
-  box-shadow: 0 0 1px var(--primary-color);
-}
-
-input:checked + .toggle-label:before {
-  transform: translateX(26px);
-}
-
-/* Radio Button Styles */
-.radio-group {
+/* Unit Selector Styles */
+.unit-selector {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: var(--background-light);
-  border-radius: var(--border-radius);
 }
 
-.radio-option {
+.unit-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: var(--border-radius);
-  transition: background-color 0.2s ease;
+  gap: 0.5rem;
 }
 
-.radio-option:hover {
-  background-color: rgba(var(--primary-color-rgb), 0.05);
+.unit-btn:hover {
+  background-color: #f5f5f5;
 }
 
-.radio-option input[type="radio"] {
-  appearance: none;
-  background-color: #fff;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ccc;
-  border-radius: 50%;
-  display: inline-grid;
-  place-content: center;
-  cursor: pointer;
-}
-
-.radio-option input[type="radio"]::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  transform: scale(0);
-  transition: transform 0.2s ease-in-out;
-  box-shadow: inset 10px 10px var(--primary-color);
-}
-
-.radio-option input[type="radio"]:checked {
+.unit-btn.active {
+  background-color: rgba(66, 133, 244, 0.1);
   border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-.radio-option input[type="radio"]:checked::before {
-  transform: scale(1);
+.unit-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: #eee;
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
-.radio-option label {
-  cursor: pointer;
-  font-weight: normal;
-  margin-bottom: 0;
+.dark-theme .unit-badge {
+  background-color: #555;
+  color: #eee;
 }
 
-/* Dark Theme Adaptations */
-.dark-theme .radio-option input[type="radio"] {
-  background-color: var(--background-card);
-  border-color: #666;
+.unit-btn.active .unit-badge {
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.dark-theme .radio-option label {
-  color: var(--text-dark);
-}
-
-/* Action Buttons */
+/* Button Improvements */
 .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--border-radius);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
 }
 
 .primary-btn {
@@ -554,45 +596,68 @@ input:checked + .toggle-label:before {
 
 .primary-btn:hover {
   background-color: #3b77db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(66, 133, 244, 0.2);
 }
 
 .secondary-btn {
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
   color: var(--text-dark);
+  border: 1px solid var(--border-color);
 }
 
 .secondary-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.danger-btn {
+  background-color: #f8d7da;
+  color: #d32f2f;
+  border: 1px solid rgba(211, 47, 47, 0.3);
+}
+
+.danger-btn:hover {
+  background-color: #d32f2f;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
 }
 
 .dark-theme .secondary-btn {
   background-color: #3a3a3a;
-  color: var(--text-dark);
+  border-color: #555;
 }
 
 .dark-theme .secondary-btn:hover {
   background-color: #4a4a4a;
 }
 
-/* Danger Zone */
+.dark-theme .danger-btn {
+  background-color: rgba(211, 47, 47, 0.2);
+  color: #ff6b6b;
+  border-color: rgba(211, 47, 47, 0.4);
+}
+
+/* Danger Zone Improvements */
 .danger-zone {
   border: 1px dashed #d32f2f;
   padding: 1rem;
   border-radius: var(--border-radius);
   margin-top: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.danger-zone:hover {
+  background-color: rgba(211, 47, 47, 0.05);
 }
 
 .dark-theme .danger-zone {
   border-color: rgba(234, 67, 53, 0.5);
 }
 
-.danger-btn {
-  background-color: #d32f2f;
-  color: white;
-}
-
-.danger-btn:hover {
-  background-color: #b71c1c;
+.dark-theme .danger-zone:hover {
+  background-color: rgba(211, 47, 47, 0.1);
 }
 
 /* Responsive adjustments */
@@ -620,6 +685,10 @@ input:checked + .toggle-label:before {
   .toggle-group label {
     flex: 1;
     min-width: 0;
+  }
+  
+  .unit-selector {
+    flex-direction: column;
   }
 }
 </style>
