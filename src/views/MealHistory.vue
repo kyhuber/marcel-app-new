@@ -805,6 +805,14 @@ watch([searchQuery, selectedMealType, sortBy], () => {
     margin-left: 0;
     padding: 1rem;
     padding-bottom: 70px; /* Space for bottom navigation */
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
+  }
+
+  /* Additional height consideration for browser bottom UI */
+  @media (max-height: 650px) {
+    .meal-history-main {
+      padding-bottom: 0;
+    }
   }
   
   .page-header {

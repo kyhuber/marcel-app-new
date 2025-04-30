@@ -292,7 +292,34 @@ onMounted(() => {
     z-index: 1000;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.06);
     border-top: 1px solid #f0f0f0;
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0px);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+  }
+
+  /* Ensure content doesn't get hidden behind bottom nav */
+  body {
+    padding-bottom: 70px;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
+  }
+
+  /* Adjust for browsers with bottom navigation/UI */
+  @supports (-webkit-touch-callout: none) {
+    .sidebar {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0) + 70px);
+    }
+  }
+
+  /* Hide bottom navigation when browser bottom UI appears */
+  @media (max-height: 650px) {
+    .sidebar {
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    
+    body {
+      padding-bottom: 0;
+    }
   }
   
   .sidebar-header {

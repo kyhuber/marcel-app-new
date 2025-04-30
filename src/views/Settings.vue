@@ -12,21 +12,6 @@
           <h2>Account Settings</h2>
           
           <div class="settings-section">
-            <h3>App Preferences</h3>
-            <div class="form-group toggle-group">
-              <label for="darkMode">Dark Mode</label>
-              <div class="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  id="darkMode" 
-                  v-model="settings.darkMode" 
-                  @change="toggleDarkMode"
-                  class="toggle-input"
-                />
-                <span class="toggle-slider"></span>
-              </div>
-            </div>
-            </div>
             
             <div class="form-group email-group">
               <label for="email">Email</label>
@@ -42,6 +27,7 @@
               </div>
               <span class="input-note">Your login email cannot be changed</span>
             </div>
+          </div>
           
           <div class="settings-section">
             <h3>Profile Information</h3>
@@ -99,8 +85,22 @@
           <div class="settings-section">
             <h3>App Preferences</h3>
             <div class="form-group toggle-group">
-              <label for="autoSave">Auto-save voice recordings</label>
-              <div class="toggle-switch">
+              <span class="toggle-label">Dark Mode</span>
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  id="darkMode" 
+                  v-model="settings.darkMode" 
+                  @change="toggleDarkMode"
+                  class="toggle-input"
+                />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="form-group toggle-group">
+              <span class="toggle-label">Auto-save voice recordings</span>
+              <label class="toggle-switch">
                 <input 
                   type="checkbox" 
                   id="autoSave" 
@@ -108,7 +108,7 @@
                   class="toggle-input"
                 />
                 <span class="toggle-slider"></span>
-              </div>
+              </label>
             </div>
           </div>
           
@@ -424,6 +424,11 @@ watch(() => settings.value.darkMode, (isDark) => {
   align-items: center;
 }
 
+.toggle-label {
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -662,12 +667,20 @@ input:checked + .toggle-slider:before {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .settings-main {
+  .dashboard-main, .settings-main, .analytics-main, .goals-main, .meal-history-main {
     margin-left: 0;
     padding: 1rem;
-    padding-bottom: 70px; /* Space for bottom navigation */
+    padding-bottom: 70px; /* Make room for bottom navigation */
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
   }
-  
+
+  /* Additional height consideration for browser bottom UI */
+  @media (max-height: 650px) {
+    .dashboard-main, .settings-main, .analytics-main, .goals-main, .meal-history-main {
+      padding-bottom: 0;
+    }
+  }
+
   .page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -691,4 +704,5 @@ input:checked + .toggle-slider:before {
     flex-direction: column;
   }
 }
+
 </style>

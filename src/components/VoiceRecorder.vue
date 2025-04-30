@@ -80,6 +80,14 @@
         
         <div class="modal-body">
           <p class="confirmation-question">Does this look correct?</p>
+
+          <div class="food-items-editor">
+            <label>Food Items:</label>
+            <div v-for="(item, index) in mealData.foodItems" :key="index" class="food-item-edit">
+              <span class="food-item-display">{{ item }}</span>
+              <button @click="removeFood(index)" class="remove-btn">×</button>
+            </div>
+          </div>
           
           <div class="edit-meal-type">
             <label for="mealType">Meal Type:</label>
@@ -112,15 +120,6 @@
               <input type="number" v-model.number="mealData.fat" class="nutrition-input" min="0" />
               <span class="unit">g</span>
             </div>
-          </div>
-          
-          <div class="food-items-editor">
-            <label>Food Items:</label>
-            <div v-for="(item, index) in mealData.foodItems" :key="index" class="food-item-edit">
-              <input type="text" v-model="mealData.foodItems[index]" class="food-item-input" />
-              <button @click="removeFood(index)" class="remove-btn">×</button>
-            </div>
-            <button @click="addFood" class="add-food-btn">+ Add Item</button>
           </div>
         </div>
         
