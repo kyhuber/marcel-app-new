@@ -1,0 +1,90 @@
+{
+    "common": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "loading": "Wird geladen...",
+      "error": "Ein Fehler ist aufgetreten"
+    },
+    "header": {
+      "appName": "Marcel",
+      "tagline": "Ernährungstracking mit Flexibilität"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "todayNutrition": "Heutige Ernährung",
+      "logMeal": "Mahlzeit eintragen",
+      "recentMeals": "Letzte Mahlzeiten",
+      "voiceInstructions": "Sprechen Sie über die Mikrofontaste oder geben Sie direkt in das Feld unten ein. Zum Beispiel: \"Gegrilltes Hähnchen mit Reis und Gemüse zum Mittagessen\"",
+      "viewAll": "Alle anzeigen"
+    },
+    "nutrition": {
+      "calories": "Kalorien",
+      "protein": "Eiweiß",
+      "carbs": "Kohlenhydrate",
+      "fat": "Fett",
+      "units": {
+        "calories": "kcal",
+        "grams": "g"
+      }
+    },
+    "mealTypes": {
+      "breakfast": "Frühstück",
+      "lunch": "Mittagessen",
+      "dinner": "Abendessen",
+      "snack": "Snack",
+      "dessert": "Dessert"
+    },
+    "voiceRecorder": {
+      "startRecording": "Mahlzeit einsprechen",
+      "stopRecording": "Aufnahme stoppen",
+      "processing": "Wird verarbeitet...",
+      "showInstructions": "Anleitung anzeigen",
+      "hideInstructions": "Anleitung ausblenden",
+      "or": "oder",
+      "submit": "Absenden",
+      "typePlaceholder": "Mahlzeitdetails eingeben...",
+      "confirmMeal": "Mahlzeit bestätigen",
+      "confirmQuestion": "Ist das korrekt?",
+      "confirmSave": "Bestätigen & Speichern",
+      "addItem": "+ Element hinzufügen",
+      "tryAgain": "Erneut versuchen"
+    },
+    "settings": {
+      "title": "Einstellungen",
+      "account": "Kontoeinstellungen",
+      "preferences": "App-Einstellungen",
+      "darkMode": "Dunkelmodus",
+      "profile": "Profilinformationen",
+      "updateProfile": "Profil aktualisieren",
+      "units": "Einheiten",
+      "weightUnit": "Gewichtseinheiten",
+      "volumeUnit": "Volumeneinheiten",
+      "dataManagement": "Datenverwaltung",
+      "exportData": "Daten exportieren",
+      "dangerZone": "Gefahrenbereich",
+      "clearData": "Alle Daten löschen",
+      "clearDataWarning": "Löschen Sie alle Ihre Daten aus der App. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "emptyState": {
+      "noMeals": "Heute keine Mahlzeiten eingetragen",
+      "trackNutrition": "Verfolgen Sie Ihre Ernährung, um Ihren Fortschritt zu Ihren Tageszielen zu sehen.",
+      "welcome": "Willkommen bei Marcel!",
+      "welcomeMessage": "Beginnen wir mit der Verfolgung Ihrer Ernährung, um Ihnen zu helfen, Ihre Fitnessziele zu erreichen."
+    },
+    "errors": {
+      "authFailed": "Authentifizierung fehlgeschlagen",
+      "networkError": "Netzwerkverbindungsproblem. Bitte überprüfen Sie Ihre Internetverbindung.",
+      "processingFailed": "Mahlzeit konnte nicht verarbeitet werden",
+      "saveFailed": "Speichern der Mahlzeit fehlgeschlagen"
+    },
+    "dateTime": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "thisWeek": "Diese Woche",
+      "last7Days": "Letzte 7 Tage",
+      "last30Days": "Letzte 30 Tage",
+      "thisMonth": "Dieser Monat"
+    }
+  }

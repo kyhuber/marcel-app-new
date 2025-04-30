@@ -1,0 +1,90 @@
+{
+    "common": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "loading": "Chargement...",
+      "error": "Une erreur est survenue"
+    },
+    "header": {
+      "appName": "Marcel",
+      "tagline": "Suivi nutritionnel avec flexibilité"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "todayNutrition": "Nutrition d'aujourd'hui",
+      "logMeal": "Enregistrer un repas",
+      "recentMeals": "Repas récents",
+      "voiceInstructions": "Parlez en utilisant le bouton microphone ou écrivez directement dans la case ci-dessous. Par exemple : \"Poulet grillé avec du riz et des légumes pour le déjeuner\"",
+      "viewAll": "Voir tout"
+    },
+    "nutrition": {
+      "calories": "Calories",
+      "protein": "Protéines",
+      "carbs": "Glucides",
+      "fat": "Lipides",
+      "units": {
+        "calories": "cal",
+        "grams": "g"
+      }
+    },
+    "mealTypes": {
+      "breakfast": "Petit-déjeuner",
+      "lunch": "Déjeuner",
+      "dinner": "Dîner",
+      "snack": "Collation",
+      "dessert": "Dessert"
+    },
+    "voiceRecorder": {
+      "startRecording": "Dicter le repas",
+      "stopRecording": "Arrêter l'enregistrement",
+      "processing": "Traitement en cours...",
+      "showInstructions": "Afficher les instructions",
+      "hideInstructions": "Masquer les instructions",
+      "or": "ou",
+      "submit": "Soumettre",
+      "typePlaceholder": "Tapez les détails de votre repas...",
+      "confirmMeal": "Confirmer votre repas",
+      "confirmQuestion": "Est-ce correct ?",
+      "confirmSave": "Confirmer et sauvegarder",
+      "addItem": "+ Ajouter un élément",
+      "tryAgain": "Réessayer"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "account": "Paramètres du compte",
+      "preferences": "Préférences de l'application",
+      "darkMode": "Mode sombre",
+      "profile": "Informations du profil",
+      "updateProfile": "Mettre à jour le profil",
+      "units": "Unités",
+      "weightUnit": "Unités de poids",
+      "volumeUnit": "Unités de volume",
+      "dataManagement": "Gestion des données",
+      "exportData": "Exporter les données",
+      "dangerZone": "Zone dangereuse",
+      "clearData": "Effacer toutes les données",
+      "clearDataWarning": "Effacer toutes vos données de l'application. Cette action ne peut pas être annulée."
+    },
+    "emptyState": {
+      "noMeals": "Aucun repas enregistré aujourd'hui",
+      "trackNutrition": "Suivez votre nutrition pour voir votre progression vers vos objectifs quotidiens.",
+      "welcome": "Bienvenue sur Marcel !",
+      "welcomeMessage": "Commençons à suivre votre nutrition pour vous aider à atteindre vos objectifs de fitness."
+    },
+    "errors": {
+      "authFailed": "Échec de l'authentification",
+      "networkError": "Problème de connexion réseau. Veuillez vérifier votre connexion internet.",
+      "processingFailed": "Impossible de traiter le repas",
+      "saveFailed": "Échec de l'enregistrement du repas"
+    },
+    "dateTime": {
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "thisWeek": "Cette semaine",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "thisMonth": "Ce mois-ci"
+    }
+  }

@@ -122,7 +122,21 @@
             <h3>Export Data</h3>
             <p>Download all your meal data as a CSV file.</p>
             <button @click="exportData" class="action-btn secondary-btn">Export Data</button>
+
           </div>
+
+          <div class="settings-card logout-section">
+          <h2>Account Actions</h2>
+          
+          <div class="settings-section">
+            <h3>Log Out</h3>
+            <p>End your current session and return to the login screen.</p>
+            <button @click="logout" class="action-btn danger-btn logout-btn">
+              <Icon name="logout" />
+              Log Out
+            </button>
+          </div>
+        </div>
           
           <div class="settings-section danger-zone">
             <h3>Danger Zone</h3>
@@ -139,7 +153,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { 
   getAuth, 
-  updateProfile as firebaseUpdateProfile 
+  updateProfile as firebaseUpdateProfile,
+  signOut
 } from 'firebase/auth'
 import { 
   doc, 
@@ -151,8 +166,10 @@ import {
   getDocs, 
   deleteDoc 
 } from 'firebase/firestore'
+import { useRouter } from 'vue-router'
 import { db } from '@/firebase'
 import Sidebar from '@/components/Sidebar.vue'
+import Icon from '@/components/IconsLibrary.vue'
 
 const user = ref({
   displayName: '',
@@ -201,6 +218,20 @@ const loadSettings = async () => {
     document.documentElement.classList.toggle('dark-theme', settings.value.darkMode)
   } catch (error) {
     console.error('Error loading settings:', error)
+  }
+}
+
+const logout = async () => {
+  const auth = getAuth()
+  try {
+    await signOut(auth)
+    // Clear any persisted theme settings if needed
+    localStorage.removeItem('darkMode')
+    // Redirect to login page
+    router.push('/')
+  } catch (error) {
+    console.error('Logout error:', error)
+    alert('Error logging out. Please try again.')
   }
 }
 
@@ -576,7 +607,24 @@ input:checked + .toggle-slider:before {
   color: white;
 }
 
-/* Button Improvements */
+.logout-section {
+  background-color: rgba(234, 67, 53, 0.05);
+  border: 1px dashed var(--error-color);
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.logout-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 .action-btn {
   display: inline-flex;
   align-items: center;
@@ -702,6 +750,10 @@ input:checked + .toggle-slider:before {
   
   .unit-selector {
     flex-direction: column;
+  }
+
+  .logout-btn {
+    margin-top: 1rem;
   }
 }
 
