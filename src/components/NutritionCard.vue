@@ -6,7 +6,7 @@
       <div class="card-content">
         <div class="card-header">
           <h3>{{ title }}</h3>
-          <span class="card-target">Goal: {{ target }}{{ unit }}</span>
+          <span class="card-target">{{ t('nutrition.goal') }}: {{ target }}{{ unit }}</span>
         </div>
         <div class="card-progress">
           <div class="progress-info">
@@ -29,7 +29,10 @@
   
   <script setup>
   import { computed } from 'vue'
+  import { useI18n } from 'vue-i18n'
   import Icon from '@/components/IconsLibrary.vue'
+  
+  const { t } = useI18n()
   
   const props = defineProps({
     title: {

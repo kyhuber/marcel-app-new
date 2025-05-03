@@ -51,23 +51,35 @@
   </div>
 </template>
   
-  <script setup>
-  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-  import Icon from '@/components/IconsLibrary.vue'
-  
-  const props = defineProps({
-    selectedDate: {
-      type: Date,
-      default: () => new Date()
-    }
+<script setup>
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import Icon from '@/components/IconsLibrary.vue'
+
+const { t, locale } = useI18n()
+
+const props = defineProps({
+  selectedDate: {
+    type: Date,
+    default: () => new Date()
+  }
+})
+
+const emit = defineEmits(['update:date'])
+
+const showCalendar = ref(false)
+const currentMonth = ref(new Date().getMonth())
+const currentYear = ref(new Date().getFullYear())
+
+// Weekdays translation
+const weekdays = computed(() => {
+  // Use narrow weekday names for brevity
+  const formatter = new Intl.DateTimeFormat(locale.value, { weekday: 'narrow' })
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(2023, 0, i + 1) // Use a fixed month for consistent formatting
+    return formatter.format(date)
   })
-  
-  const emit = defineEmits(['update:date'])
-  
-  const showCalendar = ref(false)
-  const currentMonth = ref(new Date().getMonth())
-  const currentYear = ref(new Date().getFullYear())
-  const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+})
   
   const isToday = computed(() => {
     const today = new Date()
@@ -81,15 +93,15 @@
   })
   
   const formattedDate = computed(() => {
-    return props.selectedDate.toLocaleDateString('en-US', {
+    return props.selectedDate.toLocaleDateString(locale.value, {
       weekday: 'short',
       month: 'short',
       day: 'numeric'
     })
   })
-  
+
   const calendarTitle = computed(() => {
-    return new Date(currentYear.value, currentMonth.value).toLocaleDateString('en-US', {
+    return new Date(currentYear.value, currentMonth.value).toLocaleDateString(locale.value, {
       month: 'long',
       year: 'numeric'
     })

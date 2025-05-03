@@ -9,7 +9,7 @@
     <div v-if="showPicker" class="date-picker-popup">
       <div class="preset-ranges">
         <button 
-          v-for="preset in presets" 
+          v-for="preset in presets.value" 
           :key="preset.label"
           @click="selectPreset(preset)"
           :class="['preset-btn', { active: isActivePreset(preset) }]"
@@ -21,7 +21,7 @@
       <div class="custom-range">
         <div class="picker-container">
           <div class="date-input">
-            <label>Start Date</label>
+            <label>{{ $t('dateTime.startDate', 'Start Date') }}</label>
             <input 
               type="date" 
               v-model="localStartDate" 
@@ -31,7 +31,7 @@
           </div>
           
           <div class="date-input">
-            <label>End Date</label>
+            <label>{{ $t('dateTime.endDate', 'End Date') }}</label>
             <input 
               type="date" 
               v-model="localEndDate" 
@@ -43,110 +43,117 @@
         </div>
         
         <div class="picker-actions">
-          <button @click="applyRange" class="apply-btn">Apply</button>
-          <button @click="showPicker = false" class="cancel-btn">Cancel</button>
+          <button @click="applyRange" class="apply-btn">
+            {{ $t('common.apply', 'Apply') }}
+          </button>
+          <button @click="showPicker = false" class="cancel-btn">
+            {{ $t('common.cancel', 'Cancel') }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
   
-  <script setup>
-  import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-  import Icon from '@/components/IconsLibrary.vue'
-  
-  const props = defineProps({
-    startDate: {
-      type: Date,
-      required: true
-    },
-    endDate: {
-      type: Date,
-      required: true
+<script setup>
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import Icon from '@/components/IconsLibrary.vue'
+
+const { t } = useI18n()
+
+const props = defineProps({
+  startDate: {
+    type: Date,
+    required: true
+  },
+  endDate: {
+    type: Date,
+    required: true
+  }
+})
+
+const emit = defineEmits(['update:dateRange'])
+
+const showPicker = ref(false)
+const localStartDate = ref(formatDateForInput(props.startDate))
+const localEndDate = ref(formatDateForInput(props.endDate))
+const activePreset = ref('')
+const maxDate = new Date() // Today
+
+// Preset date ranges with translation support
+const presets = computed(() => [
+  { 
+    label: t('dateTime.today'),
+    getRange: () => {
+      const today = new Date()
+      const start = new Date(today)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(today)
+      end.setHours(23, 59, 59, 999)
+      return { start, end }
     }
-  })
-  
-  const emit = defineEmits(['update:dateRange'])
-  
-  const showPicker = ref(false)
-  const localStartDate = ref(formatDateForInput(props.startDate))
-  const localEndDate = ref(formatDateForInput(props.endDate))
-  const activePreset = ref('')
-  const maxDate = new Date() // Today
-  
-  // Preset date ranges
-  const presets = [
-    { 
-      label: 'Today',
-      getRange: () => {
-        const today = new Date()
-        const start = new Date(today)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(today)
-        end.setHours(23, 59, 59, 999)
-        return { start, end }
-      }
-    },
-    { 
-      label: 'Yesterday',
-      getRange: () => {
-        const today = new Date()
-        const yesterday = new Date(today)
-        yesterday.setDate(yesterday.getDate() - 1)
-        yesterday.setHours(0, 0, 0, 0)
-        const end = new Date(yesterday)
-        end.setHours(23, 59, 59, 999)
-        return { start: yesterday, end }
-      }
-    },
-    { 
-      label: 'This Week',
-      getRange: () => {
-        const today = new Date()
-        const start = new Date(today)
-        start.setDate(start.getDate() - start.getDay()) // Start of week (Sunday)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(today)
-        end.setHours(23, 59, 59, 999)
-        return { start, end }
-      }
-    },
-    { 
-      label: 'Last 7 Days',
-      getRange: () => {
-        const today = new Date()
-        const start = new Date(today)
-        start.setDate(start.getDate() - 6)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(today)
-        end.setHours(23, 59, 59, 999)
-        return { start, end }
-      }
-    },
-    { 
-      label: 'Last 30 Days',
-      getRange: () => {
-        const today = new Date()
-        const start = new Date(today)
-        start.setDate(start.getDate() - 29)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(today)
-        end.setHours(23, 59, 59, 999)
-        return { start, end }
-      }
-    },
-    { 
-      label: 'This Month',
-      getRange: () => {
-        const today = new Date()
-        const start = new Date(today.getFullYear(), today.getMonth(), 1)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(today)
-        end.setHours(23, 59, 59, 999)
-        return { start, end }
-      }
+  },
+  { 
+    label: t('dateTime.yesterday'),
+    getRange: () => {
+      const today = new Date()
+      const yesterday = new Date(today)
+      yesterday.setDate(yesterday.getDate() - 1)
+      yesterday.setHours(0, 0, 0, 0)
+      const end = new Date(yesterday)
+      end.setHours(23, 59, 59, 999)
+      return { start: yesterday, end }
     }
-  ]
+  },
+  { 
+    label: t('dateTime.thisWeek'),
+    getRange: () => {
+      const today = new Date()
+      const start = new Date(today)
+      start.setDate(start.getDate() - start.getDay()) // Start of week (Sunday)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(today)
+      end.setHours(23, 59, 59, 999)
+      return { start, end }
+    }
+  },
+  { 
+    label: t('dateTime.last7Days'),
+    getRange: () => {
+      const today = new Date()
+      const start = new Date(today)
+      start.setDate(start.getDate() - 6)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(today)
+      end.setHours(23, 59, 59, 999)
+      return { start, end }
+    }
+  },
+  { 
+    label: t('dateTime.last30Days'),
+    getRange: () => {
+      const today = new Date()
+      const start = new Date(today)
+      start.setDate(start.getDate() - 29)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(today)
+      end.setHours(23, 59, 59, 999)
+      return { start, end }
+    }
+  },
+  { 
+    label: t('dateTime.thisMonth'),
+    getRange: () => {
+      const today = new Date()
+      const start = new Date(today.getFullYear(), today.getMonth(), 1)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(today)
+      end.setHours(23, 59, 59, 999)
+      return { start, end }
+    }
+  }
+])
   
   // Format display range
   const displayRange = computed(() => {

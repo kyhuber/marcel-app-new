@@ -3,7 +3,7 @@
 <template>
   <aside class="sidebar" :class="{ 'collapsed': isCollapsed }">
     <div class="sidebar-header">
-      <h2 class="app-title">Marcel</h2>
+      <h2 class="app-title">{{ t('header.appName') }}</h2>
       <button @click="toggleSidebar" class="collapse-btn">
         <Icon :name="isCollapsed ? 'chevron-right' : 'chevron-left'" />
       </button>
@@ -13,23 +13,23 @@
       <nav class="sidebar-nav">
         <router-link to="/dashboard" class="nav-item">
           <Icon name="dashboard" />
-          <span v-if="!isCollapsed">Dashboard</span>
+          <span v-if="!isCollapsed">{{ t('dashboard.title') }}</span>
         </router-link>
         <router-link to="/mealhistory" class="nav-item">
           <Icon name="meals" />
-          <span v-if="!isCollapsed">Meal History</span>
+          <span v-if="!isCollapsed">{{ t('mealHistory.title') }}</span>
         </router-link>
         <router-link to="/analytics" class="nav-item">
           <Icon name="analytics" />
-          <span v-if="!isCollapsed">Analytics</span>
+          <span v-if="!isCollapsed">{{ t('analytics.title') }}</span>
         </router-link>
         <router-link to="/goals" class="nav-item">
           <Icon name="goals" />
-          <span v-if="!isCollapsed">Goals</span>
+          <span v-if="!isCollapsed">{{ t('goals.title') }}</span>
         </router-link>
         <router-link to="/settings" class="nav-item mobile-only">
           <Icon name="settings" />
-          <span v-if="!isCollapsed">Settings</span>
+          <span v-if="!isCollapsed">{{ t('settings.title') }}</span>
         </router-link>
       </nav>
     </div>
@@ -37,14 +37,14 @@
     <div class="sidebar-footer">
       <router-link to="/settings" class="nav-item desktop-only">
         <Icon name="settings" />
-        <span v-if="!isCollapsed">Settings</span>
+        <span v-if="!isCollapsed">{{ t('settings.title') }}</span>
       </router-link>
       <div class="user-profile" v-if="!isCollapsed">
         <div class="avatar">{{ userInitials }}</div>
         <div class="user-info">
           <div class="username">{{ displayName }}</div>
         </div>
-        <button @click="logout" class="logout-btn" title="Logout">
+        <button @click="logout" class="logout-btn" :title="t('common.logout')">
           <Icon name="logout" />
         </button>
       </div>
@@ -55,11 +55,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getAuth, signOut } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Icon from '@/components/IconsLibrary.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const isCollapsed = ref(false)
 const displayName = ref('')

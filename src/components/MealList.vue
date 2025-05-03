@@ -1,8 +1,8 @@
 <template>
   <div class="meal-list">
     <div v-if="meals.length === 0" class="empty-state">
-      <p>No meals recorded yet</p>
-      <button @click="$emit('log-meal')" class="log-meal-btn">Log a meal</button>
+      <p>{{ t('emptyState.noMeals') }}</p>
+      <button @click="$emit('log-meal')" class="log-meal-btn">{{ t('dashboard.logMeal') }}</button>
     </div>
     <div 
       v-else
@@ -20,10 +20,10 @@
             <span class="meal-time">{{ formatTime(meal.timestamp) }}</span>
           </div>
           <div class="meal-nutrients">
-            <span class="nutrient-pill">{{ meal.calories || 0 }} cal</span>
-            <span class="nutrient-pill">{{ meal.protein || 0 }}g protein</span>
-            <span v-if="meal.carbs" class="nutrient-pill">{{ meal.carbs }}g carbs</span>
-            <span v-if="meal.fat" class="nutrient-pill">{{ meal.fat }}g fat</span>
+            <span class="nutrient-pill">{{ meal.calories || 0 }} {{ t('nutrition.units.calories') }}</span>
+            <span class="nutrient-pill">{{ meal.protein || 0 }}{{ t('nutrition.units.grams') }} {{ t('nutrition.protein') }}</span>
+            <span v-if="meal.carbs" class="nutrient-pill">{{ meal.carbs }}{{ t('nutrition.units.grams') }} {{ t('nutrition.carbs') }}</span>
+            <span v-if="meal.fat" class="nutrient-pill">{{ meal.fat }}{{ t('nutrition.units.grams') }} {{ t('nutrition.fat') }}</span>
           </div>
         </div>
         <div class="meal-actions">
@@ -45,7 +45,7 @@
         
         <div class="original-input">
           <button @click="toggleOriginalInput(meal.id)" class="toggle-input-btn">
-            {{ isOriginalInputVisible(meal.id) ? 'Hide original input' : 'Show original input' }}
+            {{ isOriginalInputVisible(meal.id) ? t('common.close') : t('common.show') }}
           </button>
           <div v-if="isOriginalInputVisible(meal.id)" class="input-text">
             "{{ meal.description }}"
@@ -58,7 +58,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Icon from '@/components/IconsLibrary.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   meals: {
@@ -149,7 +152,7 @@ const isOriginalInputVisible = (mealId) => {
 }
 
 const confirmDelete = (mealId) => {
-  if (confirm('Are you sure you want to delete this meal?')) {
+  if (confirm(t('common.delete') + '?')) {
     emit('delete-meal', mealId)
   }
 }

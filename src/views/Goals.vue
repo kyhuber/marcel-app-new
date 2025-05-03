@@ -4,17 +4,17 @@
       
       <main class="goals-main">
         <header class="page-header">
-          <h1>Nutrition Goals</h1>
+          <h1>{{ $t('goals.title') }}</h1>
         </header>
         
         <section class="goals-content">
           <div class="goals-card">
-            <h2>Daily Nutrition Targets</h2>
-            <p class="goals-description">Set your daily nutrition targets to track your progress effectively.</p>
+            <h2>{{ $t('goals.dailyTargets') }}</h2>
+            <p class="goals-description">{{ $t('goals.targetsDescription') }}</p>
             
             <div class="goals-form">
               <div class="form-group">
-                <label for="calories">Daily Calories</label>
+                <label for="calories">{{ $t('goals.dailyCalories') }}</label>
                 <div class="input-with-unit">
                   <input 
                     type="number" 
@@ -22,12 +22,12 @@
                     v-model="goals.calories" 
                     @change="saveGoals"
                   />
-                  <span class="unit">cal</span>
+                  <span class="unit">{{ $t('nutrition.units.calories') }}</span>
                 </div>
               </div>
               
               <div class="form-group">
-                <label for="protein">Daily Protein</label>
+                <label for="protein">{{ $t('goals.dailyProtein') }}</label>
                 <div class="input-with-unit">
                   <input 
                     type="number" 
@@ -35,12 +35,12 @@
                     v-model="goals.protein" 
                     @change="saveGoals"
                   />
-                  <span class="unit">g</span>
+                  <span class="unit">{{ $t('nutrition.units.grams') }}</span>
                 </div>
               </div>
               
               <div class="form-group">
-                <label for="carbs">Daily Carbohydrates</label>
+                <label for="carbs">{{ $t('goals.dailyCarbs') }}</label>
                 <div class="input-with-unit">
                   <input 
                     type="number" 
@@ -48,12 +48,12 @@
                     v-model="goals.carbs" 
                     @change="saveGoals"
                   />
-                  <span class="unit">g</span>
+                  <span class="unit">{{ $t('nutrition.units.grams') }}</span>
                 </div>
               </div>
               
               <div class="form-group">
-                <label for="fat">Daily Fat</label>
+                <label for="fat">{{ $t('goals.dailyFat') }}</label>
                 <div class="input-with-unit">
                   <input 
                     type="number" 
@@ -61,20 +61,20 @@
                     v-model="goals.fat" 
                     @change="saveGoals"
                   />
-                  <span class="unit">g</span>
+                  <span class="unit">{{ $t('nutrition.units.grams') }}</span>
                 </div>
               </div>
             </div>
             
             <div class="goals-actions">
-              <button @click="resetToDefaults" class="reset-btn">Reset to Defaults</button>
-              <button @click="saveGoals" class="save-btn">Save Goals</button>
+              <button @click="resetToDefaults" class="reset-btn">{{ $t('goals.resetToDefaults') }}</button>
+              <button @click="saveGoals" class="save-btn">{{ $t('common.save') }}</button>
             </div>
           </div>
           
           <div class="goals-card">
-            <h2>Notifications</h2>
-            <p class="goals-description">Set reminders to help you stay on track with your goals.</p>
+            <h2>{{ $t('goals.notifications') }}</h2>
+            <p class="goals-description">{{ $t('goals.notificationsDescription') }}</p>
             
             <div class="goals-form">
               <div class="form-group checkbox-group">
@@ -84,11 +84,11 @@
                   v-model="goals.enableReminders" 
                   @change="saveGoals"
                 />
-                <label for="enableReminders">Enable Daily Reminders</label>
+                <label for="enableReminders">{{ $t('goals.enableReminders') }}</label>
               </div>
               
               <div class="form-group" v-if="goals.enableReminders">
-                <label for="reminderTime">Reminder Time</label>
+                <label for="reminderTime">{{ $t('goals.reminderTime') }}</label>
                 <input 
                   type="time" 
                   id="reminderTime" 
@@ -162,7 +162,7 @@
       })
 
       await setDoc(doc(db, 'userGoals', user.uid), goals.value)
-      alert('Goals saved successfully!')
+      alert(t('goals.saveSuccess'))
     } catch (error) {
       console.error('Detailed error saving goals:', {
         message: error.message,
@@ -170,13 +170,13 @@
         name: error.name,
         stack: error.stack
       })
-      alert(`Error saving goals: ${error.message}`)
+      alert(t('errors.saveFailed'))
     }
   }
   
   // Reset goals to default values
   const resetToDefaults = () => {
-    if (confirm('Are you sure you want to reset all goals to default values?')) {
+    if (confirm(t('goals.resetConfirm'))) {
       goals.value = { ...defaultGoals }
       saveGoals()
     }

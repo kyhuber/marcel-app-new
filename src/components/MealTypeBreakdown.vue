@@ -1,6 +1,6 @@
 <template>
     <div class="meal-type-breakdown">
-      <h2>Meal Type Breakdown</h2>
+      <h2>{{ t('mealTypes.breakdown') }}</h2>
       <div class="breakdown-content">
         <!-- Visual distribution chart -->
         <div class="distribution-chart">
@@ -14,7 +14,7 @@
             }"
           >
             <span class="meal-icon">{{ getMealIcon(mealType) }}</span>
-            <span class="meal-label">{{ formatMealType(mealType) }}</span>
+            <span class="meal-label">{{ t(`mealTypes.${mealType.toLowerCase()}`) }}</span>
             <span class="meal-percentage">{{ getPercentage(stat.calories) }}%</span>
           </div>
         </div>
@@ -29,24 +29,24 @@
           >
             <div class="stat-header">
               <span class="meal-icon">{{ getMealIcon(mealType) }}</span>
-              <h3>{{ formatMealType(mealType) }}</h3>
+              <h3>{{ t(`mealTypes.${mealType.toLowerCase()}`) }}</h3>
             </div>
             <div class="stat-details">
               <div class="stat-item">
-                <span class="stat-label">Meals</span>
+                <span class="stat-label">{{ t('mealTypes.meals') }}</span>
                 <span class="stat-value">{{ stat.count }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Calories</span>
+                <span class="stat-label">{{ t('nutrition.calories') }}</span>
                 <span class="stat-value">{{ stat.calories }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Protein</span>
-                <span class="stat-value">{{ stat.protein || 0 }}g</span>
+                <span class="stat-label">{{ t('nutrition.protein') }}</span>
+                <span class="stat-value">{{ stat.protein || 0 }}{{ t('nutrition.units.grams') }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Avg. Per Meal</span>
-                <span class="stat-value">{{ calculateAverage(stat.calories, stat.count) }} cal</span>
+                <span class="stat-label">{{ t('mealTypes.avgPerMeal') }}</span>
+                <span class="stat-value">{{ calculateAverage(stat.calories, stat.count) }} {{ t('nutrition.units.calories') }}</span>
               </div>
             </div>
           </div>
@@ -56,8 +56,10 @@
   </template>
   
   <script setup>
-  // Import required functions
   import { computed } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  
+  const { t } = useI18n()
   
   const props = defineProps({
     mealTypeBreakdown: {

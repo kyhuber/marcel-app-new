@@ -7,15 +7,18 @@
     </button>
     
     <div v-if="showMenu" class="mobile-menu">
-      <router-link to="/settings" class="menu-item">Settings</router-link>
-      <button @click="logout" class="menu-item">Logout</button>
+      <router-link to="/settings" class="menu-item">{{ t('settings.title') }}</router-link>
+      <button @click="logout" class="menu-item">{{ t('common.logout') }}</button>
     </div>
   </header>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Icon from '@/components/IconsLibrary.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   title: {

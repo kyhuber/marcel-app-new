@@ -4,7 +4,7 @@
     
     <main class="dashboard-main">
       <header class="dashboard-header">
-        <h1>Marcel: Nutrition Tracking with a Flex</h1>
+        <h1>{{ $t('dashboard.title') }}</h1>
         <DateSelector :selectedDate="selectedDate" @update:date="updateSelectedDate" />
       </header>
 
@@ -18,37 +18,37 @@
 
         <!-- Only show nutrition summary when we have meals -->
         <div v-if="!showEmptyState" class="nutrition-summary-section">
-          <h2>Today's Nutrition</h2>
+          <h2>{{ $t('dashboard.todayNutrition') }}</h2>
           <div class="nutrition-cards">
             <NutritionCard 
-              title="Calories" 
+              :title="$t('nutrition.calories')" 
               :current="totalCalories" 
               :target="dailyGoals.calories" 
-              unit="cal" 
+              :unit="$t('nutrition.units.calories')" 
               color="#4285F4" 
               icon="calories"
             />
             <NutritionCard 
-              title="Protein" 
+              :title="$t('nutrition.protein')" 
               :current="totalProtein" 
               :target="dailyGoals.protein" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#34A853" 
               icon="protein"
             />
             <NutritionCard 
-              title="Carbs" 
+              :title="$t('nutrition.carbs')" 
               :current="totalCarbs" 
               :target="dailyGoals.carbs" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#FBBC05" 
               icon="carbs"
             />
             <NutritionCard 
-              title="Fat" 
+              :title="$t('nutrition.fat')" 
               :current="totalFat" 
               :target="dailyGoals.fat" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#EA4335" 
               icon="fat"
             />
@@ -56,15 +56,17 @@
         </div>
 
         <div class="record-meal-section">
-          <h2>Log Your Meal</h2>
-          <p class="voice-instructions">Speak using the microphone button or type directly in the box below. For example: "Grilled chicken with rice and vegetables for lunch"</p>
+          <h2>{{ $t('dashboard.logMeal') }}</h2>
+          <p class="voice-instructions">
+            {{ $t('dashboard.voiceInstructions') }}
+          </p>
           <VoiceRecorder @meal-saved="handleMealSaved" />
         </div>
 
         <div class="recent-meals-section">
           <div class="section-header">
-            <h2>Recent Meals</h2>
-            <button v-if="recentMeals.length > 0" @click="showAllMeals" class="view-all-btn">View All</button>
+            <h2>{{ $t('dashboard.recentMeals') }}</h2>
+            <button v-if="recentMeals.length > 0" @click="showAllMeals" class="view-all-btn">{{ $t('dashboard.viewAll') }}</button>
           </div>
           <MealList 
             :meals="recentMeals" 
@@ -79,6 +81,7 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
@@ -103,6 +106,7 @@ import Sidebar from '@/components/Sidebar.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import { useNutritionTracking } from '@/services/nutritionService'
 
+const { t } = useI18n()
 const router = useRouter()
 const totalCalories = ref(0)
 const totalProtein = ref(0)
@@ -183,7 +187,7 @@ const fetchDailyNutrition = async () => {
     })
   } catch (error) {
     console.error('Error fetching meals:', error)
-    alert(`Failed to fetch meals: ${error.message}`)
+    alert(t('errors.saveFailed'))
   }
 }
 
@@ -218,7 +222,7 @@ const deleteMeal = async (mealId) => {
     await fetchDailyNutrition()
   } catch (error) {
     console.error('Error deleting meal:', error)
-    alert('Failed to delete meal. Please try again.')
+    alert(t('errors.saveFailed'))
   }
 }
 

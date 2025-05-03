@@ -4,8 +4,13 @@
       "cancel": "Abbrechen",
       "delete": "Löschen",
       "edit": "Bearbeiten",
-      "loading": "Wird geladen...",
-      "error": "Ein Fehler ist aufgetreten"
+      "loading": "Laden...",
+      "error": "Ein Fehler ist aufgetreten",
+      "close": "Schließen",
+      "apply": "Anwenden",
+      "show": "Originaleingabe anzeigen",
+      "hide": "Originaleingabe ausblenden",
+      "logout": "Abmelden"
     },
     "header": {
       "appName": "Marcel",
@@ -14,16 +19,52 @@
     "dashboard": {
       "title": "Dashboard",
       "todayNutrition": "Heutige Ernährung",
-      "logMeal": "Mahlzeit eintragen",
+      "logMeal": "Mahlzeit erfassen",
       "recentMeals": "Letzte Mahlzeiten",
-      "voiceInstructions": "Sprechen Sie über die Mikrofontaste oder geben Sie direkt in das Feld unten ein. Zum Beispiel: \"Gegrilltes Hähnchen mit Reis und Gemüse zum Mittagessen\"",
-      "viewAll": "Alle anzeigen"
+      "voiceInstructions": "Sprechen Sie über das Mikrofon oder geben Sie direkt in das Feld unten ein. Zum Beispiel: \"Gegrilltes Hähnchen mit Reis und Gemüse zum Mittagessen\"",
+      "viewAll": "Alle anzeigen",
+      "trackNutrition": "Verfolgen Sie Ihre Ernährung, um Ihren Fortschritt zu sehen."
+    },
+    "mealHistory": {
+      "title": "Mahlzeitenverlauf"
+    },
+    "analytics": {
+      "title": "Ernährungsanalysen",
+      "nutritionalTrends": "Ernährungstrends",
+      "weeklyOverview": "Wöchentliche Übersicht",
+      "weeklyTrendsComingSoon": "Wöchentliche Ernährungstrends kommen bald",
+      "viewFullHistory": "Vollständige Historie anzeigen",
+      "recentPerformance": "Aktuelle Leistung",
+      "sevenDayAverage": "7-Tage-Durchschnitt",
+      "goalConsistency": "Zielerreichung",
+      "recommendations": "Empfehlungen",
+      "addBreakfast": "Versuchen Sie, Frühstück in Ihre tägliche Routine einzubauen",
+      "increaseProtein": "Erhöhen Sie die Proteinzufuhr, um Ihre Ziele zu erreichen",
+      "underCalorieGoal": "Sie liegen deutlich unter Ihrem Kalorienziel für heute",
+      "startTracking": "Beginnen Sie mit der Erfassung von Mahlzeiten, um Einblicke zu erhalten"
+    },
+    "goals": {
+      "title": "Ernährungsziele",
+      "dailyTargets": "Tägliche Ernährungsziele",
+      "targetsDescription": "Legen Sie Ihre täglichen Ernährungsziele fest, um Ihren Fortschritt effektiv zu verfolgen.",
+      "dailyCalories": "Tägliche Kalorien",
+      "dailyProtein": "Tägliches Protein",
+      "dailyCarbs": "Tägliche Kohlenhydrate",
+      "dailyFat": "Tägliches Fett",
+      "resetToDefaults": "Auf Standardwerte zurücksetzen",
+      "saveSuccess": "Ziele erfolgreich gespeichert!",
+      "resetConfirm": "Sind Sie sicher, dass Sie alle Ziele auf Standardwerte zurücksetzen möchten?",
+      "notifications": "Benachrichtigungen",
+      "notificationsDescription": "Legen Sie Erinnerungen fest, um Ihre Ziele zu erreichen.",
+      "enableReminders": "Tägliche Erinnerungen aktivieren",
+      "reminderTime": "Erinnerungszeit"
     },
     "nutrition": {
-      "calories": "Kalorien",
-      "protein": "Eiweiß",
-      "carbs": "Kohlenhydrate",
-      "fat": "Fett",
+      "calories": "Gesamtkalorien",
+      "protein": "Gesamtprotein",
+      "carbs": "Gesamtkohlenhydrate",
+      "fat": "Gesamtfett",
+      "goal": "Ziel",
       "units": {
         "calories": "kcal",
         "grams": "g"
@@ -34,50 +75,81 @@
       "lunch": "Mittagessen",
       "dinner": "Abendessen",
       "snack": "Snack",
-      "dessert": "Dessert"
+      "dessert": "Dessert",
+      "breakdown": "Mahlzeitentypen Übersicht",
+      "meals": "Mahlzeiten",
+      "avgPerMeal": "Durchschnitt pro Mahlzeit"
     },
     "voiceRecorder": {
-      "startRecording": "Mahlzeit einsprechen",
+      "startRecording": "Mahlzeit sprechen",
       "stopRecording": "Aufnahme stoppen",
-      "processing": "Wird verarbeitet...",
-      "showInstructions": "Anleitung anzeigen",
-      "hideInstructions": "Anleitung ausblenden",
+      "processing": "Analysiere deine Mahlzeit mit KI...",
+      "showInstructions": "Anweisungen anzeigen",
+      "hideInstructions": "Anweisungen ausblenden",
       "or": "oder",
       "submit": "Absenden",
-      "typePlaceholder": "Mahlzeitdetails eingeben...",
+      "typePlaceholder": "Geben Sie Ihre Mahlzeit ein...",
       "confirmMeal": "Mahlzeit bestätigen",
-      "confirmQuestion": "Ist das korrekt?",
+      "confirmQuestion": "Sieht das richtig aus?",
       "confirmSave": "Bestätigen & Speichern",
       "addItem": "+ Element hinzufügen",
-      "tryAgain": "Erneut versuchen"
+      "tryAgain": "Erneut versuchen",
+      "howToLog": "So erfassen Sie Ihre Mahlzeiten",
+      "bestResults": "Für beste Ergebnisse, versuchen Sie Folgendes einzubeziehen:",
+      "whatYouAte": "Was Sie gegessen haben",
+      "whatYouAteExample": "\"Ich hatte Avocado-Toast und frisches Obst\"",
+      "optionalAmounts": "Optionale Mengen",
+      "amountsExample": "\"2 Scheiben\" / \"1 Tasse Beeren\"",
+      "whenYouAte": "Wann Sie gegessen haben",
+      "whenExample": "\"zum Frühstück\" / \"gestern\" / \"heute Morgen\"",
+      "examples": "Beispiele",
+      "example1": "\"Ich hatte heute Abend Hähnchen und Cheetos zum Abendessen\"",
+      "example2": "\"Gestern Morgen habe ich Haferflocken zum Frühstück gegessen\"",
+      "example3": "\"2 Scheiben Detroit-Style Pizza zum Mittagessen heute\"",
+      "foodItems": "Lebensmittel",
+      "mealType": "Mahlzeitentyp",
+      "voiceOrTextInstructions": "Sprechen Sie Ihre Mahlzeit ein oder geben Sie sie in das Textfeld unten ein. Zum Beispiel: \"Ich hatte ein Hähnchensandwich und Salat zum Mittagessen\""
     },
     "settings": {
       "title": "Einstellungen",
       "account": "Kontoeinstellungen",
       "preferences": "App-Einstellungen",
       "darkMode": "Dunkelmodus",
+      "language": "Sprache",
       "profile": "Profilinformationen",
       "updateProfile": "Profil aktualisieren",
-      "units": "Einheiten",
-      "weightUnit": "Gewichtseinheiten",
-      "volumeUnit": "Volumeneinheiten",
+      "emailNote": "Ihre E-Mail-Adresse kann nicht geändert werden",
+      "units": {
+        "weightUnit": "Gewichtseinheiten",
+        "volumeUnit": "Volumeneinheiten",
+        "kg": "Kilogramm",
+        "lb": "Pfund",
+        "ml": "Milliliter",
+        "oz": "Flüssigunzen"
+      },
       "dataManagement": "Datenverwaltung",
       "exportData": "Daten exportieren",
-      "dangerZone": "Gefahrenbereich",
+      "exportDescription": "Laden Sie alle Ihre Mahlzeitendaten als CSV-Datei herunter.",
+      "accountActions": "Kontoaktionen",
+      "logout": "Abmelden",
+      "logoutDescription": "Beenden Sie Ihre aktuelle Sitzung und kehren Sie zum Anmeldebildschirm zurück.",
+      "dangerZone": "Gefahrenzone",
       "clearData": "Alle Daten löschen",
-      "clearDataWarning": "Löschen Sie alle Ihre Daten aus der App. Diese Aktion kann nicht rückgängig gemacht werden."
+      "clearDataWarning": "Löschen Sie alle Ihre Daten aus der App. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "goals": "Ernährungsziele"
     },
     "emptyState": {
-      "noMeals": "Heute keine Mahlzeiten eingetragen",
-      "trackNutrition": "Verfolgen Sie Ihre Ernährung, um Ihren Fortschritt zu Ihren Tageszielen zu sehen.",
+      "noMeals": "Heute keine Mahlzeiten erfasst",
+      "trackNutrition": "Verfolgen Sie Ihre Ernährung, um Ihren Fortschritt zu sehen.",
       "welcome": "Willkommen bei Marcel!",
-      "welcomeMessage": "Beginnen wir mit der Verfolgung Ihrer Ernährung, um Ihnen zu helfen, Ihre Fitnessziele zu erreichen."
+      "welcomeMessage": "Lassen Sie uns Ihre Ernährung verfolgen, um Ihre Fitnessziele zu erreichen.",
+      "reachGoals": "Beginnen Sie mit der Erfassung Ihrer Mahlzeiten, um Ihre Ernährungsziele zu erreichen."
     },
     "errors": {
       "authFailed": "Authentifizierung fehlgeschlagen",
       "networkError": "Netzwerkverbindungsproblem. Bitte überprüfen Sie Ihre Internetverbindung.",
       "processingFailed": "Mahlzeit konnte nicht verarbeitet werden",
-      "saveFailed": "Speichern der Mahlzeit fehlgeschlagen"
+      "saveFailed": "Mahlzeit konnte nicht gespeichert werden"
     },
     "dateTime": {
       "today": "Heute",

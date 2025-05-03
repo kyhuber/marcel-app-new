@@ -4,17 +4,16 @@
     
     <main class="settings-main">
       <header class="page-header">
-        <h1>Settings</h1>
+        <h1>{{ $t('settings.title') }}</h1>
       </header>
       
       <section class="settings-content">
         <div class="settings-card">
-          <h2>Account Settings</h2>
+          <h2>{{ $t('settings.account') }}</h2>
           
           <div class="settings-section">
-            
             <div class="form-group email-group">
-              <label for="email">Email</label>
+              <label for="email">{{ $t('settings.account') }}</label>
               <div class="input-with-icon">
                 <span class="input-icon">✉️</span>
                 <input 
@@ -25,67 +24,68 @@
                   class="settings-input"
                 />
               </div>
-              <span class="input-note">Your login email cannot be changed</span>
+              <span class="input-note">{{ $t('settings.emailNote') }}</span>
             </div>
           </div>
           
           <div class="settings-section">
-            <h3>Profile Information</h3>
-            
-            <button @click="updateProfile" class="action-btn primary-btn">Update Profile</button>
+            <h3>{{ $t('settings.profile') }}</h3>
+            <button @click="updateProfile" class="action-btn primary-btn">
+              {{ $t('settings.updateProfile') }}
+            </button>
           </div>
         </div>
         
         <div class="settings-card">
-          <h2>App Settings</h2>
+          <h2>{{ $t('settings.preferences') }}</h2>
           
           <div class="settings-section">
-            <h3>Units</h3>
+            <h3>{{ $t('settings.units') }}</h3>
             <div class="form-group">
-              <label>Weight Units</label>
+              <label>{{ $t('settings.weightUnit') }}</label>
               <div class="unit-selector">
                 <button 
                   @click="settings.weightUnit = 'kg'" 
                   :class="['unit-btn', settings.weightUnit === 'kg' ? 'active' : '']"
                 >
                   <span class="unit-badge">kg</span>
-                  Kilograms
+                  {{ $t('settings.units.kg') }}
                 </button>
                 <button 
                   @click="settings.weightUnit = 'lb'" 
                   :class="['unit-btn', settings.weightUnit === 'lb' ? 'active' : '']"
                 >
                   <span class="unit-badge">lb</span>
-                  Pounds
+                  {{ $t('settings.units.lb') }}
                 </button>
               </div>
             </div>
 
             <div class="form-group">
-              <label>Volume Units</label>
+              <label>{{ $t('settings.volumeUnit') }}</label>
               <div class="unit-selector">
                 <button 
                   @click="settings.volumeUnit = 'ml'" 
                   :class="['unit-btn', settings.volumeUnit === 'ml' ? 'active' : '']"
                 >
                   <span class="unit-badge">ml</span>
-                  Milliliters
+                  {{ $t('settings.units.ml') }}
                 </button>
                 <button 
                   @click="settings.volumeUnit = 'oz'" 
                   :class="['unit-btn', settings.volumeUnit === 'oz' ? 'active' : '']"
                 >
                   <span class="unit-badge">oz</span>
-                  Fluid Ounces
+                  {{ $t('settings.units.oz') }}
                 </button>
               </div>
             </div>
           </div>
           
           <div class="settings-section">
-            <h3>App Preferences</h3>
+            <h3>{{ $t('settings.preferences') }}</h3>
             <div class="form-group toggle-group">
-              <span class="toggle-label">Dark Mode</span>
+              <span class="toggle-label">{{ $t('settings.darkMode') }}</span>
               <label class="toggle-switch">
                 <input 
                   type="checkbox" 
@@ -98,50 +98,52 @@
               </label>
             </div>
 
-            <div class="form-group toggle-group">
-              <span class="toggle-label">Auto-save voice recordings</span>
-              <label class="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  id="autoSave" 
-                  v-model="settings.autoSave" 
-                  class="toggle-input"
-                />
-                <span class="toggle-slider"></span>
-              </label>
+            <!-- Language Switcher -->
+            <div class="form-group language-switcher">
+              <span class="toggle-label">{{ $t('settings.language') }}</span>
+              <select 
+                v-model="currentLanguage" 
+                @change="changeLanguage" 
+                class="language-select"
+              >
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+              </select>
             </div>
           </div>
           
-          <button @click="saveSettings" class="action-btn primary-btn">Save Settings</button>
+          <button @click="saveSettings" class="action-btn primary-btn">
+            {{ $t('common.save') }}
+          </button>
         </div>
         
         <div class="settings-card">
-          <h2>Data Management</h2>
+          <h2>{{ $t('settings.dataManagement') }}</h2>
           
           <div class="settings-section">
-            <h3>Export Data</h3>
-            <p>Download all your meal data as a CSV file.</p>
-            <button @click="exportData" class="action-btn secondary-btn">Export Data</button>
-
+            <h3>{{ $t('settings.exportData') }}</h3>
+            <p>{{ $t('settings.exportDescription') }}</p>
+            <button @click="exportData" class="action-btn secondary-btn">{{ $t('settings.exportData') }}</button>
           </div>
 
           <div class="settings-card logout-section">
-          <h2>Account Actions</h2>
-          
-          <div class="settings-section">
-            <h3>Log Out</h3>
-            <p>End your current session and return to the login screen.</p>
-            <button @click="logout" class="action-btn danger-btn logout-btn">
-              <Icon name="logout" />
-              Log Out
-            </button>
+            <h2>{{ $t('settings.accountActions') }}</h2>
+            
+            <div class="settings-section">
+              <h3>{{ $t('settings.logout') }}</h3>
+              <p>{{ $t('settings.logoutDescription') }}</p>
+              <button @click="logout" class="action-btn danger-btn logout-btn">
+                <Icon name="logout" />
+                {{ $t('common.logout') }}
+              </button>
+            </div>
           </div>
-        </div>
           
           <div class="settings-section danger-zone">
-            <h3>Danger Zone</h3>
-            <p>Clear all your data from the app. This action cannot be undone.</p>
-            <button @click="confirmClearData" class="action-btn danger-btn">Clear All Data</button>
+            <h3>{{ $t('settings.dangerZone') }}</h3>
+            <p>{{ $t('settings.clearDataWarning') }}</p>
+            <button @click="confirmClearData" class="action-btn danger-btn">{{ $t('settings.clearData') }}</button>
           </div>
         </div>
       </section>
@@ -151,6 +153,7 @@
   
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { 
   getAuth, 
   updateProfile as firebaseUpdateProfile,
@@ -171,17 +174,31 @@ import { db } from '@/firebase'
 import Sidebar from '@/components/Sidebar.vue'
 import Icon from '@/components/IconsLibrary.vue'
 
+const { locale } = useI18n()
+const router = useRouter()
+
 const user = ref({
   displayName: '',
   email: ''
 })
 
+const currentLanguage = ref(localStorage.getItem('language') || 'en')
+
 const settings = ref({
   weightUnit: 'kg',
   volumeUnit: 'ml',
   darkMode: false,
-  autoSave: true
+  language: currentLanguage.value
 })
+
+// Change language method
+const changeLanguage = () => {
+  locale.value = currentLanguage.value
+  localStorage.setItem('language', currentLanguage.value)
+  
+  // Update settings object to ensure it's saved
+  settings.value.language = currentLanguage.value
+}
 
 const toggleDarkMode = () => {
   const isDark = settings.value.darkMode
@@ -210,12 +227,18 @@ const loadSettings = async () => {
     const settingsDoc = await getDoc(doc(db, 'userSettings', currentUser.uid))
     
     if (settingsDoc.exists()) {
+      const savedSettings = settingsDoc.data()
       settings.value = {
         ...settings.value,
-        ...settingsDoc.data()
+        ...savedSettings
+      }
+
+      // Set language from saved settings or default
+      if (savedSettings.language) {
+        currentLanguage.value = savedSettings.language
+        locale.value = savedSettings.language
       }
     }
-    document.documentElement.classList.toggle('dark-theme', settings.value.darkMode)
   } catch (error) {
     console.error('Error loading settings:', error)
   }
@@ -755,6 +778,19 @@ input:checked + .toggle-slider:before {
   .logout-btn {
     margin-top: 1rem;
   }
+}
+
+.language-switcher {
+  margin-top: 1rem;
+}
+
+.language-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background-light);
+  color: var(--text-dark);
 }
 
 </style>

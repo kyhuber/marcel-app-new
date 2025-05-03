@@ -6,7 +6,7 @@ export async function aiProcessMeal(transcript) {
     console.log('Processing meal with transcript:', transcript);
     
     // Call our secure serverless function instead of OpenAI directly
-    const response = await fetch('/api/analyze-meal', {
+    const response = await fetch('http://localhost:5173/api/analyze-meal', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

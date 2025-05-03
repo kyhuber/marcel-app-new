@@ -1,82 +1,81 @@
 <template>
-    <div class="empty-state" :class="{ 'first-time': isFirstTimeUser }">
-      <div class="empty-state-content">
-        <!-- First time user experience -->
-        <div v-if="isFirstTimeUser" class="welcome-container">
-          <div class="welcome-icon">
-            <Icon name="meals" size="48" color="#4285F4" />
-          </div>
-          <h2>Welcome to Marcel!</h2>
-          <p>Let's start tracking your nutrition to help you reach your fitness goals.</p>
-          
-          <div class="steps-container">
-            <div class="step">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h3>Log your meals</h3>
-                <p>Use voice or text to record what you eat</p>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h3>Track nutrients</h3>
-                <p>Monitor your calories and protein intake</p>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h3>Reach your goals</h3>
-                <p>Stay consistent with your nutrition plan</p>
-              </div>
-            </div>
-          </div>
+  <div class="empty-state" :class="{ 'first-time': isFirstTimeUser }">
+    <div class="empty-state-content">
+      <!-- First time user experience -->
+      <div v-if="isFirstTimeUser" class="welcome-container">
+        <div class="welcome-icon">
+          <Icon name="meals" size="48" color="#4285F4" />
         </div>
+        <h2>{{ $t('emptyState.welcome') }}</h2>
+        <p>{{ $t('emptyState.welcomeMessage') }}</p>
         
-        <!-- Empty day state -->
-        <div v-else class="empty-day-container">
-          <div class="empty-day-icon">
-            <Icon name="calories" size="40" color="#FBBC05" />
-          </div>
-          <h2>No meals logged today</h2>
-          <p>Track your nutrition to see your progress toward daily goals.</p>
-          <div class="nutrition-goals-preview">
-            <div class="goal-item">
-              <span class="goal-label">Calories Goal:</span>
-              <span class="goal-value">{{ dailyGoals.calories }}cal</span>
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>{{ $t('dashboard.logMeal') }}</h3>
+              <p>{{ $t('voiceRecorder.voiceOrTextInstructions') }}</p>
             </div>
-            <div class="goal-item">
-              <span class="goal-label">Protein Goal:</span>
-              <span class="goal-value">{{ dailyGoals.protein }}g</span>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>{{ $t('dashboard.trackNutrition') }}</h3>
+              <p>{{ $t('emptyState.trackNutrition') }}</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>{{ $t('settings.goals') }}</h3>
+              <p>{{ $t('emptyState.reachGoals') }}</p>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- Empty day state -->
+      <div v-else class="empty-day-container">
+        <div class="empty-day-icon">
+          <Icon name="calories" size="40" color="#FBBC05" />
+        </div>
+        <h2>{{ $t('emptyState.noMeals') }}</h2>
+        <p>{{ $t('emptyState.trackNutrition') }}</p>
+        <div class="nutrition-goals-preview">
+          <div class="goal-item">
+            <span class="goal-label">{{ $t('nutrition.calories') }} {{ $t('nutrition.goal') }}:</span>
+            <span class="goal-value">{{ dailyGoals.calories }}{{ $t('nutrition.units.calories') }}</span>
+          </div>
+          <div class="goal-item">
+            <span class="goal-label">{{ $t('nutrition.protein') }} {{ $t('nutrition.goal') }}:</span>
+            <span class="goal-value">{{ dailyGoals.protein }}{{ $t('nutrition.units.grams') }}</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { defineProps } from 'vue'
-  import Icon from '@/components/IconsLibrary.vue'
-  
-  const props = defineProps({
-    isFirstTimeUser: {
-      type: Boolean,
-      default: false
-    },
-    dailyGoals: {
-      type: Object,
-      default: () => ({
-        calories: 2000,
-        protein: 100,
-        carbs: 250,
-        fat: 70
-      })
-    }
-  })
+  </div>
+</template>
 
-  </script>
+<script setup>
+import { defineProps } from 'vue'
+import Icon from '@/components/IconsLibrary.vue'
+
+const props = defineProps({
+isFirstTimeUser: {
+  type: Boolean,
+  default: false
+},
+dailyGoals: {
+  type: Object,
+  default: () => ({
+    calories: 2000,
+    protein: 100,
+    carbs: 250,
+    fat: 70
+  })
+}
+})
+</script>
   
   <style scoped>
   .empty-state {

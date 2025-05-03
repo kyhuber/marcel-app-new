@@ -1,0 +1,162 @@
+{
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "loading": "Loading...",
+      "error": "An error occurred",
+      "close": "Close",
+      "apply": "Apply",
+      "show": "Show original input",
+      "hide": "Hide original input",
+      "logout": "Logout"
+    },
+    "header": {
+      "appName": "Marcel",
+      "tagline": "Nutrition Tracking with a Flex"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "todayNutrition": "Today's Nutrition",
+      "logMeal": "Log Your Meal",
+      "recentMeals": "Recent Meals",
+      "voiceInstructions": "Speak using the microphone button or type directly in the box below. For example: \"Grilled chicken with rice and vegetables for lunch\"",
+      "viewAll": "View All",
+      "trackNutrition": "Track your nutrition to see your progress toward daily goals."
+    },
+    "mealHistory": {
+      "title": "Meal History"
+    },
+    "analytics": {
+      "title": "Nutrition Analytics",
+      "nutritionalTrends": "Nutritional Trends",
+      "weeklyOverview": "Weekly Overview",
+      "weeklyTrendsComingSoon": "Weekly nutrition trends coming soon",
+      "viewFullHistory": "View Full History",
+      "recentPerformance": "Recent Performance",
+      "sevenDayAverage": "7-Day Average",
+      "goalConsistency": "Goal Consistency",
+      "recommendations": "Recommendations",
+      "addBreakfast": "Try adding breakfast to your daily routine",
+      "increaseProtein": "Increase protein intake to reach your goals",
+      "underCalorieGoal": "You're significantly under your calorie goal today",
+      "startTracking": "Start tracking meals to see insights"
+    },
+    "goals": {
+      "title": "Nutrition Goals",
+      "dailyTargets": "Daily Nutrition Targets",
+      "targetsDescription": "Set your daily nutrition targets to track your progress effectively.",
+      "dailyCalories": "Daily Calories",
+      "dailyProtein": "Daily Protein",
+      "dailyCarbs": "Daily Carbohydrates",
+      "dailyFat": "Daily Fat",
+      "resetToDefaults": "Reset to Defaults",
+      "saveSuccess": "Goals saved successfully!",
+      "resetConfirm": "Are you sure you want to reset all goals to default values?",
+      "notifications": "Notifications",
+      "notificationsDescription": "Set reminders to help you stay on track with your goals.",
+      "enableReminders": "Enable Daily Reminders",
+      "reminderTime": "Reminder Time"
+    },
+    "nutrition": {
+      "calories": "Total Calories",
+      "protein": "Total Protein",
+      "carbs": "Total Carbs",
+      "fat": "Total Fat",
+      "goal": "Goal",
+      "units": {
+        "calories": "cal",
+        "grams": "g"
+      }
+    },
+    "mealTypes": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snack",
+      "dessert": "Dessert",
+      "breakdown": "Meal Type Breakdown",
+      "meals": "Meals",
+      "avgPerMeal": "Avg. Per Meal"
+    },
+    "voiceRecorder": {
+      "startRecording": "Speak Meal",
+      "stopRecording": "Stop Recording",
+      "processing": "Analyzing your meal with AI...",
+      "showInstructions": "Show instructions",
+      "hideInstructions": "Hide instructions",
+      "or": "or",
+      "submit": "Submit",
+      "typePlaceholder": "Type your meal details...",
+      "confirmMeal": "Confirm Your Meal",
+      "confirmQuestion": "Does this look correct?",
+      "confirmSave": "Confirm & Save",
+      "addItem": "+ Add Item",
+      "tryAgain": "Try Again",
+      "howToLog": "How to Log Your Meals",
+      "bestResults": "For best results, try to include:",
+      "whatYouAte": "What you ate",
+      "whatYouAteExample": "\"I had avocado toast and fresh fruit\"",
+      "optionalAmounts": "Optional amounts",
+      "amountsExample": "\"2 slices\" / \"1 cup of berries\"",
+      "whenYouAte": "When you ate it",
+      "whenExample": "\"for breakfast\" / \"yesterday\" / \"this morning\"",
+      "examples": "Examples",
+      "example1": "\"I had chicken and cheetos for dinner tonight\"",
+      "example2": "\"Yesterday morning I ate oatmeal for breakfast\"",
+      "example3": "\"2 slices of detroit-style pizza for lunch today\"",
+      "foodItems": "Food Items",
+      "mealType": "Meal Type",
+      "voiceOrTextInstructions": "Speak your meal details or type them in the text box below. For example: \"I had a chicken sandwich and salad for lunch\""
+    },
+    "settings": {
+      "title": "Settings",
+      "account": "Account Settings",
+      "preferences": "App Preferences",
+      "darkMode": "Dark Mode",
+      "language": "Language",
+      "profile": "Profile Information",
+      "updateProfile": "Update Profile",
+      "emailNote": "Your login email cannot be changed",
+      "units": {
+        "weightUnit": "Weight Units",
+        "volumeUnit": "Volume Units",
+        "kg": "Kilograms",
+        "lb": "Pounds",
+        "ml": "Milliliters",
+        "oz": "Fluid Ounces"
+      },
+      "dataManagement": "Data Management",
+      "exportData": "Export Data",
+      "exportDescription": "Download all your meal data as a CSV file.",
+      "accountActions": "Account Actions",
+      "logout": "Log Out",
+      "logoutDescription": "End your current session and return to the login screen.",
+      "dangerZone": "Danger Zone",
+      "clearData": "Clear All Data",
+      "clearDataWarning": "Clear all your data from the app. This action cannot be undone.",
+      "goals": "Nutrition Goals"
+    },
+    "emptyState": {
+      "noMeals": "No meals logged today",
+      "trackNutrition": "Track your nutrition to see your progress toward daily goals.",
+      "welcome": "Welcome to Marcel!",
+      "welcomeMessage": "Let's start tracking your nutrition to help you reach your fitness goals.",
+      "reachGoals": "Start tracking your meals to reach your nutrition goals."
+    },
+    "errors": {
+      "authFailed": "Authentication failed",
+      "networkError": "Network connection issue. Please check your internet connection.",
+      "processingFailed": "Unable to process meal",
+      "saveFailed": "Failed to save meal"
+    },
+    "dateTime": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This Week",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
+      "thisMonth": "This Month"
+    }
+  }

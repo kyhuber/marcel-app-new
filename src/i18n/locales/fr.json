@@ -5,7 +5,12 @@
       "delete": "Supprimer",
       "edit": "Modifier",
       "loading": "Chargement...",
-      "error": "Une erreur est survenue"
+      "error": "Une erreur est survenue",
+      "close": "Fermer",
+      "apply": "Appliquer",
+      "show": "Afficher l'entrée originale",
+      "hide": "Masquer l'entrée originale",
+      "logout": "Déconnexion"
     },
     "header": {
       "appName": "Marcel",
@@ -13,19 +18,55 @@
     },
     "dashboard": {
       "title": "Tableau de bord",
-      "todayNutrition": "Nutrition d'aujourd'hui",
+      "todayNutrition": "Nutrition du jour",
       "logMeal": "Enregistrer un repas",
       "recentMeals": "Repas récents",
-      "voiceInstructions": "Parlez en utilisant le bouton microphone ou écrivez directement dans la case ci-dessous. Par exemple : \"Poulet grillé avec du riz et des légumes pour le déjeuner\"",
-      "viewAll": "Voir tout"
+      "voiceInstructions": "Parlez via le microphone ou tapez directement dans la zone ci-dessous. Par exemple : \"Poulet grillé avec du riz et des légumes pour le déjeuner\"",
+      "viewAll": "Voir tout",
+      "trackNutrition": "Suivez votre nutrition pour voir vos progrès vers vos objectifs quotidiens."
+    },
+    "mealHistory": {
+      "title": "Historique des repas"
+    },
+    "analytics": {
+      "title": "Analyses nutritionnelles",
+      "nutritionalTrends": "Tendances nutritionnelles",
+      "weeklyOverview": "Aperçu hebdomadaire",
+      "weeklyTrendsComingSoon": "Les tendances nutritionnelles hebdomadaires arrivent bientôt",
+      "viewFullHistory": "Voir l'historique complet",
+      "recentPerformance": "Performance récente",
+      "sevenDayAverage": "Moyenne sur 7 jours",
+      "goalConsistency": "Cohérence des objectifs",
+      "recommendations": "Recommandations",
+      "addBreakfast": "Essayez d'ajouter le petit-déjeuner à votre routine quotidienne",
+      "increaseProtein": "Augmentez votre apport en protéines pour atteindre vos objectifs",
+      "underCalorieGoal": "Vous êtes nettement en dessous de votre objectif calorique aujourd'hui",
+      "startTracking": "Commencez à suivre vos repas pour voir des insights"
+    },
+    "goals": {
+      "title": "Objectifs nutritionnels",
+      "dailyTargets": "Objectifs nutritionnels quotidiens",
+      "targetsDescription": "Définissez vos objectifs nutritionnels quotidiens pour suivre efficacement vos progrès.",
+      "dailyCalories": "Calories quotidiennes",
+      "dailyProtein": "Protéines quotidiennes",
+      "dailyCarbs": "Glucides quotidiens",
+      "dailyFat": "Lipides quotidiens",
+      "resetToDefaults": "Réinitialiser aux valeurs par défaut",
+      "saveSuccess": "Objectifs enregistrés avec succès !",
+      "resetConfirm": "Êtes-vous sûr de vouloir réinitialiser tous les objectifs aux valeurs par défaut ?",
+      "notifications": "Notifications",
+      "notificationsDescription": "Définissez des rappels pour vous aider à atteindre vos objectifs.",
+      "enableReminders": "Activer les rappels quotidiens",
+      "reminderTime": "Heure du rappel"
     },
     "nutrition": {
-      "calories": "Calories",
-      "protein": "Protéines",
-      "carbs": "Glucides",
-      "fat": "Lipides",
+      "calories": "Calories totales",
+      "protein": "Protéines totales",
+      "carbs": "Glucides totaux",
+      "fat": "Lipides totaux",
+      "goal": "Objectif",
       "units": {
-        "calories": "cal",
+        "calories": "kcal",
         "grams": "g"
       }
     },
@@ -34,48 +75,79 @@
       "lunch": "Déjeuner",
       "dinner": "Dîner",
       "snack": "Collation",
-      "dessert": "Dessert"
+      "dessert": "Dessert",
+      "breakdown": "Répartition des repas",
+      "meals": "Repas",
+      "avgPerMeal": "Moyenne par repas"
     },
     "voiceRecorder": {
-      "startRecording": "Dicter le repas",
+      "startRecording": "Parler le repas",
       "stopRecording": "Arrêter l'enregistrement",
-      "processing": "Traitement en cours...",
+      "processing": "Analyse de votre repas avec l'IA...",
       "showInstructions": "Afficher les instructions",
       "hideInstructions": "Masquer les instructions",
       "or": "ou",
-      "submit": "Soumettre",
+      "submit": "Envoyer",
       "typePlaceholder": "Tapez les détails de votre repas...",
       "confirmMeal": "Confirmer votre repas",
       "confirmQuestion": "Est-ce correct ?",
-      "confirmSave": "Confirmer et sauvegarder",
+      "confirmSave": "Confirmer & Enregistrer",
       "addItem": "+ Ajouter un élément",
-      "tryAgain": "Réessayer"
+      "tryAgain": "Réessayer",
+      "howToLog": "Comment enregistrer vos repas",
+      "bestResults": "Pour de meilleurs résultats, essayez d'inclure :",
+      "whatYouAte": "Ce que vous avez mangé",
+      "whatYouAteExample": "\"J'ai mangé du toast à l'avocat et des fruits frais\"",
+      "optionalAmounts": "Quantités optionnelles",
+      "amountsExample": "\"2 tranches\" / \"1 tasse de baies\"",
+      "whenYouAte": "Quand vous avez mangé",
+      "whenExample": "\"pour le petit-déjeuner\" / \"hier\" / \"ce matin\"",
+      "examples": "Exemples",
+      "example1": "\"J'ai mangé du poulet et des Cheetos pour le dîner ce soir\"",
+      "example2": "\"Hier matin, j'ai mangé des flocons d'avoine pour le petit-déjeuner\"",
+      "example3": "\"2 tranches de pizza style Detroit pour le déjeuner aujourd'hui\"",
+      "foodItems": "Aliments",
+      "mealType": "Type de repas",
+      "voiceOrTextInstructions": "Parlez les détails de votre repas ou tapez-les dans la zone de texte ci-dessous. Par exemple : \"J'ai mangé un sandwich au poulet et une salade pour le déjeuner\""
     },
     "settings": {
       "title": "Paramètres",
       "account": "Paramètres du compte",
       "preferences": "Préférences de l'application",
       "darkMode": "Mode sombre",
+      "language": "Langue",
       "profile": "Informations du profil",
       "updateProfile": "Mettre à jour le profil",
-      "units": "Unités",
-      "weightUnit": "Unités de poids",
-      "volumeUnit": "Unités de volume",
+      "emailNote": "Votre adresse e-mail de connexion ne peut pas être modifiée",
+      "units": {
+        "weightUnit": "Unités de poids",
+        "volumeUnit": "Unités de volume",
+        "kg": "Kilogrammes",
+        "lb": "Livres",
+        "ml": "Millilitres",
+        "oz": "Onces liquides"
+      },
       "dataManagement": "Gestion des données",
       "exportData": "Exporter les données",
+      "exportDescription": "Téléchargez toutes vos données de repas au format CSV.",
+      "accountActions": "Actions du compte",
+      "logout": "Déconnexion",
+      "logoutDescription": "Terminez votre session actuelle et revenez à l'écran de connexion.",
       "dangerZone": "Zone dangereuse",
       "clearData": "Effacer toutes les données",
-      "clearDataWarning": "Effacer toutes vos données de l'application. Cette action ne peut pas être annulée."
+      "clearDataWarning": "Effacer toutes vos données de l'application. Cette action ne peut pas être annulée.",
+      "goals": "Objectifs nutritionnels"
     },
     "emptyState": {
       "noMeals": "Aucun repas enregistré aujourd'hui",
-      "trackNutrition": "Suivez votre nutrition pour voir votre progression vers vos objectifs quotidiens.",
+      "trackNutrition": "Suivez votre nutrition pour voir vos progrès vers vos objectifs quotidiens.",
       "welcome": "Bienvenue sur Marcel !",
-      "welcomeMessage": "Commençons à suivre votre nutrition pour vous aider à atteindre vos objectifs de fitness."
+      "welcomeMessage": "Commençons à suivre votre nutrition pour vous aider à atteindre vos objectifs de fitness.",
+      "reachGoals": "Commencez à suivre vos repas pour atteindre vos objectifs nutritionnels."
     },
     "errors": {
       "authFailed": "Échec de l'authentification",
-      "networkError": "Problème de connexion réseau. Veuillez vérifier votre connexion internet.",
+      "networkError": "Problème de connexion réseau. Veuillez vérifier votre connexion Internet.",
       "processingFailed": "Impossible de traiter le repas",
       "saveFailed": "Échec de l'enregistrement du repas"
     },
@@ -85,6 +157,6 @@
       "thisWeek": "Cette semaine",
       "last7Days": "7 derniers jours",
       "last30Days": "30 derniers jours",
-      "thisMonth": "Ce mois-ci"
+      "thisMonth": "Ce mois"
     }
   }

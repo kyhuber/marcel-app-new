@@ -4,7 +4,7 @@
     
     <main class="analytics-main">
       <header class="analytics-header">
-        <h1>Nutrition Analytics</h1>
+        <h1>{{ $t('analytics.title') }}</h1>
         <DateSelector 
           :selectedDate="selectedDate" 
           @update:date="updateSelectedDate"
@@ -15,34 +15,34 @@
         <div class="nutrition-overview">
           <div class="overview-cards">
             <NutritionCard 
-              title="Total Calories" 
+              :title="$t('nutrition.calories')" 
               :current="totalCalories" 
               :target="dailyGoals.calories" 
-              unit="cal" 
+              :unit="$t('nutrition.units.calories')" 
               color="#4285F4"
               icon="calories"
             />
             <NutritionCard 
-              title="Total Protein" 
+              :title="$t('nutrition.protein')" 
               :current="totalProtein" 
               :target="dailyGoals.protein" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#34A853"
               icon="protein"
             />
             <NutritionCard 
-              title="Total Carbs" 
+              :title="$t('nutrition.carbs')" 
               :current="totalCarbs" 
               :target="dailyGoals.carbs" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#FBBC05"
               icon="carbs"
             />
             <NutritionCard 
-              title="Total Fat" 
+              :title="$t('nutrition.fat')" 
               :current="totalFat" 
               :target="dailyGoals.fat" 
-              unit="g" 
+              :unit="$t('nutrition.units.grams')" 
               color="#EA4335"
               icon="fat"
             />
@@ -58,61 +58,61 @@
           </div>
           
           <div class="trend-section">
-            <h2>Nutritional Trends</h2>
+            <h2>{{ $t('analytics.nutritionalTrends') }}</h2>
             <div class="chart-card">
-              <h3>Weekly Overview</h3>
+              <h3>{{ $t('analytics.weeklyOverview') }}</h3>
               <div class="chart-placeholder">
-                <p>Weekly nutrition trends coming soon</p>
-                <button class="cta-button">View Full History</button>
+                <p>{{ $t('analytics.weeklyTrendsComingSoon') }}</p>
+                <button class="cta-button">{{ $t('analytics.viewFullHistory') }}</button>
               </div>
             </div>
           </div>
         </div>
 
         <div class="recent-performance">
-          <h2>Recent Performance</h2>
+          <h2>{{ $t('analytics.recentPerformance') }}</h2>
           <div class="performance-summary">
             <div class="performance-card">
-              <h3>7-Day Average</h3>
+              <h3>{{ $t('analytics.sevenDayAverage') }}</h3>
               <div class="performance-details">
                 <div class="performance-stat">
-                  <span class="stat-label">Calories</span>
-                  <span class="stat-value">{{ averageDailyCalories.toFixed(0) }} cal</span>
+                  <span class="stat-label">{{ $t('nutrition.calories') }}</span>
+                  <span class="stat-value">{{ averageDailyCalories.toFixed(0) }} {{ $t('nutrition.units.calories') }}</span>
                   <span class="stat-percent" :class="getPercentClass(averageDailyCalories, dailyGoals.calories)">
                     {{ calculatePercentage(averageDailyCalories, dailyGoals.calories) }}%
                   </span>
                 </div>
                 <div class="performance-stat">
-                  <span class="stat-label">Protein</span>
-                  <span class="stat-value">{{ averageDailyProtein.toFixed(1) }}g</span>
+                  <span class="stat-label">{{ $t('nutrition.protein') }}</span>
+                  <span class="stat-value">{{ averageDailyProtein.toFixed(1) }}{{ $t('nutrition.units.grams') }}</span>
                   <span class="stat-percent" :class="getPercentClass(averageDailyProtein, dailyGoals.protein)">
                     {{ calculatePercentage(averageDailyProtein, dailyGoals.protein) }}%
                   </span>
                 </div>
                 <div class="performance-stat">
-                  <span class="stat-label">Goal Consistency</span>
+                  <span class="stat-label">{{ $t('analytics.goalConsistency') }}</span>
                   <span class="stat-value">{{ goalComplianceRate.toFixed(0) }}%</span>
                 </div>
               </div>
             </div>
             <div class="performance-card">
-              <h3>Recommendations</h3>
+              <h3>{{ $t('analytics.recommendations') }}</h3>
               <div class="recommendations">
                 <div v-if="mealTypeBreakdown.breakfast && mealTypeBreakdown.breakfast.count === 0" class="recommendation-item">
                   <span class="recommendation-icon">🍳</span>
-                  <span class="recommendation-text">Try adding breakfast to your daily routine</span>
+                  <span class="recommendation-text">{{ $t('analytics.addBreakfast') }}</span>
                 </div>
                 <div v-if="totalProtein < dailyGoals.protein * 0.8" class="recommendation-item">
                   <span class="recommendation-icon">💪</span>
-                  <span class="recommendation-text">Increase protein intake to reach your goals</span>
+                  <span class="recommendation-text">{{ $t('analytics.increaseProtein') }}</span>
                 </div>
                 <div v-if="totalCalories < dailyGoals.calories * 0.7" class="recommendation-item">
                   <span class="recommendation-icon">🔥</span>
-                  <span class="recommendation-text">You're significantly under your calorie goal today</span>
+                  <span class="recommendation-text">{{ $t('analytics.underCalorieGoal') }}</span>
                 </div>
                 <div v-if="Object.values(mealTypeBreakdown).every(m => m.count === 0)" class="recommendation-item">
                   <span class="recommendation-icon">📝</span>
-                  <span class="recommendation-text">Start tracking meals to see insights</span>
+                  <span class="recommendation-text">{{ $t('analytics.startTracking') }}</span>
                 </div>
               </div>
             </div>

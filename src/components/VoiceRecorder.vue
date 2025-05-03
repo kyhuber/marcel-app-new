@@ -1,24 +1,24 @@
 <template>
   <div class="voice-recorder">
     <div class="instruction-toggle" @click="toggleInstructions">
-      <span v-if="showInstructions">Hide instructions</span>
-      <span v-else>Show instructions</span>
+      <span v-if="showInstructions">{{ t('voiceRecorder.hideInstructions') }}</span>
+      <span v-else>{{ t('voiceRecorder.showInstructions') }}</span>
       <Icon :name="showInstructions ? 'chevron-up' : 'chevron-down'" />
     </div>
 
     <div class="instruction-card" v-if="showInstructions">
-      <h3>How to Log Your Meals</h3>
-      <p>For best results, try to include:</p>
+      <h3>{{ t('voiceRecorder.howToLog') }}</h3>
+      <p>{{ t('voiceRecorder.bestResults') }}</p>
       <ul class="instruction-list">
-        <li><strong>What you ate:</strong> "I had avocado toast and fresh fruit"</li>
-        <li><strong>Optional amounts:</strong> "2 slices" / "1 cup of berries"</li>
-        <li><strong>When you ate it:</strong> "for breakfast" / "yesterday" / "this morning"</li>
+        <li><strong>{{ t('voiceRecorder.whatYouAte') }}:</strong> {{ t('voiceRecorder.whatYouAteExample') }}</li>
+        <li><strong>{{ t('voiceRecorder.optionalAmounts') }}:</strong> {{ t('voiceRecorder.amountsExample') }}</li>
+        <li><strong>{{ t('voiceRecorder.whenYouAte') }}:</strong> {{ t('voiceRecorder.whenExample') }}</li>
       </ul>
-      <p class="example-heading">Examples:</p>
+      <p class="example-heading">{{ t('voiceRecorder.examples') }}:</p>
       <div class="examples">
-        <div class="example">"I had chicken and cheetos for dinner tonight"</div>
-        <div class="example">"Yesterday morning I ate oatmeal for breakfast"</div>
-        <div class="example">"2 slices of detroit-style pizza for lunch today"</div>
+        <div class="example">{{ t('voiceRecorder.example1') }}</div>
+        <div class="example">{{ t('voiceRecorder.example2') }}</div>
+        <div class="example">{{ t('voiceRecorder.example3') }}</div>
       </div>
     </div>
 
@@ -33,12 +33,12 @@
 
     <!-- Text Input Option -->
     <div class="text-input-container">
-      <p class="or-divider">or</p>
+      <p class="or-divider">{{ t('voiceRecorder.or') }}</p>
       <div class="text-input-form">
         <input 
           type="text" 
           v-model="mealText" 
-          placeholder="Type your meal details..." 
+          :placeholder="t('voiceRecorder.typePlaceholder')" 
           :disabled="isProcessing || isRecording"
           @keyup.enter="submitText"
         />
@@ -47,7 +47,7 @@
           class="submit-btn"
           :disabled="isProcessing || isRecording || !mealText.trim()"
         >
-          Submit
+          {{ t('voiceRecorder.submit') }}
         </button>
       </div>
     </div>
@@ -56,7 +56,7 @@
       <p>"{{ transcription }}"</p>
       <div class="processing-indicator" v-if="isProcessing">
         <div class="spinner"></div>
-        <span>Analyzing your meal with AI...</span>
+        <span>{{ t('voiceRecorder.processing') }}</span>
       </div>
     </div>
     
@@ -65,7 +65,7 @@
       <div class="error-icon">⚠️</div>
       <div class="error-message">
         <p>{{ processingError }}</p>
-        <button @click="processingError = null" class="try-again-btn">Try Again</button>
+        <button @click="processingError = null" class="try-again-btn">{{ t('voiceRecorder.tryAgain') }}</button>
       </div>
     </div>
     
@@ -74,15 +74,15 @@
       <div class="modal-overlay" @click="resetForm"></div>
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Confirm Your Meal</h3>
+          <h3>{{ t('voiceRecorder.confirmMeal') }}</h3>
           <button @click="resetForm" class="close-btn">×</button>
         </div>
         
         <div class="modal-body">
-          <p class="confirmation-question">Does this look correct?</p>
+          <p class="confirmation-question">{{ t('voiceRecorder.confirmQuestion') }}</p>
 
           <div class="food-items-editor">
-            <label>Food Items:</label>
+            <label>{{ t('voiceRecorder.foodItems') }}:</label>
             <div v-for="(item, index) in mealData.foodItems" :key="index" class="food-item-edit">
               <span class="food-item-display">{{ item }}</span>
               <button @click="removeFood(index)" class="remove-btn">×</button>
@@ -90,42 +90,38 @@
           </div>
           
           <div class="edit-meal-type">
-            <label for="mealType">Meal Type:</label>
+            <label for="mealType">{{ t('voiceRecorder.mealType') }}:</label>
             <select id="mealType" v-model="mealData.mealType" class="edit-select">
-              <option value="breakfast">Breakfast</option>
-              <option value="lunch">Lunch</option>
-              <option value="dinner">Dinner</option>
-              <option value="snack">Snack</option>
-              <option value="dessert">Dessert</option>
+              <option v-for="(type, key) in mealTypes" :key="key" :value="key">{{ t(`mealTypes.${key}`) }}</option>
             </select>
           </div>
           
           <div class="nutrition-summary">
             <div class="nutrition-item">
-              <span class="nutrition-label">Calories:</span>
+              <span class="nutrition-label">{{ t('nutrition.calories') }}:</span>
               <input type="number" v-model.number="mealData.calories" class="nutrition-input" min="0" />
             </div>
             <div class="nutrition-item">
-              <span class="nutrition-label">Protein:</span>
+              <span class="nutrition-label">{{ t('nutrition.protein') }}:</span>
               <input type="number" v-model.number="mealData.protein" class="nutrition-input" min="0" />
-              <span class="unit">g</span>
+              <span class="unit">{{ t('nutrition.units.grams') }}</span>
             </div>
             <div class="nutrition-item">
-              <span class="nutrition-label">Carbs:</span>
+              <span class="nutrition-label">{{ t('nutrition.carbs') }}:</span>
               <input type="number" v-model.number="mealData.carbs" class="nutrition-input" min="0" />
-              <span class="unit">g</span>
+              <span class="unit">{{ t('nutrition.units.grams') }}</span>
             </div>
             <div class="nutrition-item">
-              <span class="nutrition-label">Fat:</span>
+              <span class="nutrition-label">{{ t('nutrition.fat') }}:</span>
               <input type="number" v-model.number="mealData.fat" class="nutrition-input" min="0" />
-              <span class="unit">g</span>
+              <span class="unit">{{ t('nutrition.units.grams') }}</span>
             </div>
           </div>
         </div>
         
         <div class="modal-footer">
-          <button @click="resetForm" class="cancel-btn">Cancel</button>
-          <button @click="saveMeal" class="confirm-btn">Confirm & Save</button>
+          <button @click="resetForm" class="cancel-btn">{{ t('common.cancel') }}</button>
+          <button @click="saveMeal" class="confirm-btn">{{ t('voiceRecorder.confirmSave') }}</button>
         </div>
       </div>
     </div>
@@ -134,10 +130,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Icon from '@/components/IconsLibrary.vue'
 import { aiProcessMeal } from '@/utils/aiMealProcessor'
 import { saveMealEntry } from '@/services/mealService'
 import { getNutritionEstimate } from '@/utils/nutritionDatabase'
+
+const { t } = useI18n()
 
 const props = defineProps({
   disabled: {
@@ -156,6 +155,14 @@ const mealData = ref(null)
 const mealText = ref('')
 const showInstructions = ref(true) // Default to showing instructions
 const processingError = ref(null)
+
+const mealTypes = {
+  breakfast: 'breakfast',
+  lunch: 'lunch',
+  dinner: 'dinner',
+  snack: 'snack',
+  dessert: 'dessert'
+}
 
 // Format meal type with proper capitalization
 const formatMealType = (type) => {
