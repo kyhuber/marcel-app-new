@@ -5,8 +5,8 @@ export async function aiProcessMeal(transcript) {
   try {
     console.log('Processing meal with transcript:', transcript);
     
-    // Call our secure serverless function instead of OpenAI directly
-    const response = await fetch('http://localhost:5173/api/analyze-meal', {
+    // Use relative URL that works in both development and production
+    const response = await fetch('/api/analyze-meal', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
