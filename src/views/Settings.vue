@@ -40,7 +40,7 @@
           <h2>{{ $t('settings.preferences') }}</h2>
           
           <div class="settings-section">
-            <h3>{{ $t('settings.units') }}</h3>
+            <h3>{{ $t('settings.unitsSection') }}</h3>
             <div class="form-group">
               <label>{{ $t('settings.weightUnit') }}</label>
               <div class="unit-selector">
@@ -201,10 +201,9 @@ const changeLanguage = () => {
 }
 
 const toggleDarkMode = () => {
-  const isDark = settings.value.darkMode
-  document.documentElement.classList.toggle('dark-theme', isDark)
-  localStorage.setItem('darkMode', isDark ? 'true' : 'false')
-}
+  // Only update localStorage, do NOT touch the DOM here
+  localStorage.setItem('darkMode', settings.value.darkMode ? 'true' : 'false');
+};
 
 // Load user data and settings
 const loadUserData = () => {
@@ -286,7 +285,7 @@ const saveSettings = async () => {
   
   try {
     await setDoc(doc(db, 'userSettings', currentUser.uid), settings.value)
-    
+    toggleDarkMode()
     alert('Settings saved successfully!')
   } catch (error) {
     console.error('Error saving settings:', error)
@@ -392,13 +391,12 @@ onMounted(() => {
   const savedDarkMode = localStorage.getItem('darkMode')
   if (savedDarkMode !== null) {
     settings.value.darkMode = savedDarkMode === 'true'
-    toggleDarkMode()
   }
   loadUserData()
   loadSettings()
 })
 
-// This watch is critical for the dark mode toggle to work properly
+// This watcher is the ONLY place that toggles the class!
 watch(() => settings.value.darkMode, (isDark) => {
   document.documentElement.classList.toggle('dark-theme', isDark)
   localStorage.setItem('darkMode', isDark ? 'true' : 'false')

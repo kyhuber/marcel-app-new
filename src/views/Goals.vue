@@ -105,10 +105,13 @@
   
   <script setup>
   import { ref, onMounted } from 'vue'
+  import { useI18n } from 'vue-i18n'
   import { getAuth } from 'firebase/auth'
   import { doc, getDoc, setDoc } from 'firebase/firestore'
   import { db } from '@/firebase'
   import Sidebar from '@/components/Sidebar.vue'
+  
+  const { t } = useI18n()
   
   // Default goals
   const defaultGoals = {

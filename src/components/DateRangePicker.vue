@@ -9,7 +9,7 @@
     <div v-if="showPicker" class="date-picker-popup">
       <div class="preset-ranges">
         <button 
-          v-for="preset in presets.value" 
+          v-for="preset in presets" 
           :key="preset.label"
           @click="selectPreset(preset)"
           :class="['preset-btn', { active: isActivePreset(preset) }]"
@@ -40,6 +40,10 @@
               @change="updateCustomRange"
             />
           </div>
+        </div>
+        
+        <div v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
         </div>
         
         <div class="picker-actions">
@@ -80,6 +84,7 @@ const localStartDate = ref(formatDateForInput(props.startDate))
 const localEndDate = ref(formatDateForInput(props.endDate))
 const activePreset = ref('')
 const maxDate = new Date() // Today
+const errorMessage = ref('')
 
 // Preset date ranges with translation support
 const presets = computed(() => [
@@ -208,11 +213,14 @@ const presets = computed(() => [
   // Apply selected range
   function applyRange() {
     const start = new Date(localStartDate.value)
-    start.setHours(0, 0, 0, 0)
-    
     const end = new Date(localEndDate.value)
-    end.setHours(23, 59, 59, 999)
     
+    if (end < start) {
+      errorMessage.value = 'End date must be after start date'
+      return
+    }
+    
+    errorMessage.value = ''
     emit('update:dateRange', { start, end })
     showPicker.value = false
   }
@@ -233,7 +241,7 @@ const presets = computed(() => [
     localEndDate.value = formatDateForInput(props.endDate)
     
     // Check if initial dates match any preset
-    for (const preset of presets) {
+    for (const preset of presets.value) {
       const { start, end } = preset.getRange()
       if (
         formatDateForInput(start) === formatDateForInput(props.startDate) &&
@@ -374,5 +382,12 @@ const presets = computed(() => [
 .cancel-btn:hover {
   background-color: #f5f5f5;
   border-radius: var(--border-radius);
+}
+
+.error-message {
+  color: var(--error-color, #dc3545);
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  text-align: center;
 }
 </style>

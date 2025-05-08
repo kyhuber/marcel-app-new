@@ -22,8 +22,8 @@
           <div class="meal-nutrients">
             <span class="nutrient-pill">{{ meal.calories || 0 }} {{ t('nutrition.units.calories') }}</span>
             <span class="nutrient-pill">{{ meal.protein || 0 }}{{ t('nutrition.units.grams') }} {{ t('nutrition.protein') }}</span>
-            <span v-if="meal.carbs" class="nutrient-pill">{{ meal.carbs }}{{ t('nutrition.units.grams') }} {{ t('nutrition.carbs') }}</span>
-            <span v-if="meal.fat" class="nutrient-pill">{{ meal.fat }}{{ t('nutrition.units.grams') }} {{ t('nutrition.fat') }}</span>
+            <span class="nutrient-pill">{{ meal.carbs || 0 }}{{ t('nutrition.units.grams') }} {{ t('nutrition.carbs') }}</span>
+            <span class="nutrient-pill">{{ meal.fat || 0 }}{{ t('nutrition.units.grams') }} {{ t('nutrition.fat') }}</span>
           </div>
         </div>
         <div class="meal-actions">

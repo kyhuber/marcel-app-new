@@ -119,6 +119,9 @@
       "profile": "Profile Information",
       "updateProfile": "Update Profile",
       "emailNote": "Your login email cannot be changed",
+      "unitsSection": "Units",
+      "weightUnit": "Weight Unit",
+      "volumeUnit": "Volume Unit",
       "units": {
         "weightUnit": "Weight Units",
         "volumeUnit": "Volume Units",
