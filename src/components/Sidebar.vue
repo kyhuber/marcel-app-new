@@ -150,6 +150,7 @@ onMounted(() => {
   left: 0;
   top: 0;
   z-index: 100;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0px);
 }
 
 .sidebar.collapsed {
@@ -294,33 +295,23 @@ onMounted(() => {
     z-index: 1000;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.06);
     border-top: 1px solid #f0f0f0;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0px);
-    transform: translateY(0);
-    transition: transform 0.3s ease;
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   /* Ensure content doesn't get hidden behind bottom nav */
   body {
-    padding-bottom: 70px;
     padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
   }
 
-  /* Adjust for browsers with bottom navigation/UI */
-  @supports (-webkit-touch-callout: none) {
-    .sidebar {
-      padding-bottom: calc(env(safe-area-inset-bottom, 0) + 70px);
-    }
-  }
-
-  /* Hide bottom navigation when browser bottom UI appears */
+  /* Remove the height-based media query that hides the sidebar */
   @media (max-height: 650px) {
     .sidebar {
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
+      /* Remove the transform that hides the sidebar */
+      transform: none;
     }
     
     body {
-      padding-bottom: 0;
+      padding-bottom: calc(70px + env(safe-area-inset-bottom, 0));
     }
   }
   
@@ -360,7 +351,10 @@ onMounted(() => {
     flex: 1;
     height: 100%;
     color: var(--text-light);
-    transition: transform 0.2s ease, color 0.2s ease;
+    /* Add these properties to ensure clickability */
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   
   .nav-item span {

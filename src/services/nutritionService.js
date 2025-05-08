@@ -1,12 +1,40 @@
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getAuth } from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
 
 export function useNutritionTracking() {
+  // This ref is shared across all components that use this composable
   const dailyGoals = ref({
     calories: 2000,
     protein: 100,
     carbs: 250,
     fat: 70
   })
+
+  // Load goals from Firestore
+  const loadGoals = async () => {
+    const auth = getAuth()
+    const user = auth.currentUser
+
+    if (!user) return
+
+    try {
+      const goalsDoc = await getDoc(doc(db, 'userGoals', user.uid))
+      
+      if (goalsDoc.exists()) {
+        dailyGoals.value = {
+          ...dailyGoals.value,
+          ...goalsDoc.data()
+        }
+      }
+    } catch (error) {
+      console.error('Error loading goals:', error)
+    }
+  }
+
+  // Load goals when the service is initialized
+  loadGoals()
 
   const calculateNutrientPercentage = (current, goal) => {
     return Math.min((current / goal) * 100, 100)
@@ -39,6 +67,7 @@ export function useNutritionTracking() {
 
   return {
     dailyGoals,
-    analyzeNutrition
+    analyzeNutrition,
+    loadGoals // Export the loadGoals function so components can refresh goals
   }
 }
