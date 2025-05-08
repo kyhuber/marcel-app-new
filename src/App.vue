@@ -7,8 +7,6 @@
 
 <script setup>
 import { useThemeManager } from './services/themeService'
-
-const { isDarkTheme } = useThemeManager()
 </script>
 
 <style>

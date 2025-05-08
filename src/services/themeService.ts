@@ -13,7 +13,7 @@ export function useThemeManager() {
   }
   
   // Apply theme to document
-  const applyTheme = (isDark) => {
+  const applyTheme = (isDark: boolean) => {
     document.documentElement.classList.toggle('dark-theme', isDark)
   }
   
@@ -26,7 +26,7 @@ export function useThemeManager() {
   }
   
   // Set theme explicitly
-  const setTheme = (isDark) => {
+  const setTheme = (isDark: boolean) => {
     isDarkTheme.value = isDark
     applyTheme(isDarkTheme.value)
     localStorage.setItem('darkMode', isDarkTheme.value ? 'true' : 'false')

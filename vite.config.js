@@ -8,7 +8,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue()],
     define: {
-      'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(env.VITE_OPENAI_API_KEY)
+      'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(env.VITE_OPENAI_API_KEY),
+      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
     },
     build: {
       chunkSizeWarningLimit: 1000,
@@ -30,7 +31,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:5173',
+          target: env.VITE_API_URL || 'http://localhost:5173',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }

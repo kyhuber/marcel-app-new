@@ -1,12 +1,32 @@
-// src/utils/aiMealProcessor.js
 import { getNutritionEstimate } from './nutritionDatabase';
 
-export async function aiProcessMeal(transcript) {
+// Define interfaces for our data structures
+interface MealData {
+  description: string;
+  foodItems: string[];
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  mealType: string;
+  timestamp: Date;
+  processingError?: string;
+  isFallbackData?: boolean;
+  error?: boolean;
+  errorDetails?: string;
+}
+
+interface NutritionEstimate {
+  calories: number;
+  protein: number;
+}
+
+export async function aiProcessMeal(transcript: string): Promise<MealData> {
   try {
     console.log('Processing meal with transcript:', transcript);
     
-    // Use relative URL that works in both development and production
-    const response = await fetch('/api/analyze-meal', {
+    const apiUrl = import.meta.env.VITE_API_URL || '/api';
+    const response = await fetch(`${apiUrl}/analyze-meal`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +52,7 @@ export async function aiProcessMeal(transcript) {
     }
     
     // Try to parse the response as JSON
-    let mealData;
+    let mealData: MealData;
     try {
       mealData = JSON.parse(responseText);
     } catch (parseError) {
@@ -60,22 +80,27 @@ export async function aiProcessMeal(transcript) {
     console.error("Error in aiProcessMeal:", error);
     
     // If the error is a timeout or network error, provide a more specific message
-    if (error.name === 'AbortError') {
-      return createFallbackData(transcript, "The request timed out. Please try again.");
-    } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-      return createFallbackData(transcript, "Network connection issue. Please check your internet connection.");
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        return createFallbackData(transcript, "The request timed out. Please try again.");
+      } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+        return createFallbackData(transcript, "Network connection issue. Please check your internet connection.");
+      }
+      
+      // Return a fallback with error information
+      return createFallbackData(transcript, error.message);
     }
     
-    // Return a fallback with error information
-    return createFallbackData(transcript, error.message);
+    // Handle unknown error types
+    return createFallbackData(transcript, "An unknown error occurred");
   }
 }
 
 // Helper function to create consistent fallback data
-function createFallbackData(transcript, errorMessage) {
+function createFallbackData(transcript: string, errorMessage: string): MealData {
   // Use local database as fallback
   const foodItems = transcript.split(/and|,/).map(item => item.trim()).filter(Boolean);
-  let fallbackData = {
+  let fallbackData: MealData = {
     description: transcript,
     foodItems: foodItems.length > 0 ? foodItems : [transcript],
     calories: 0,
@@ -90,7 +115,7 @@ function createFallbackData(transcript, errorMessage) {
   
   // Try to estimate nutrition from local database
   try {
-    const estimate = getNutritionEstimate(foodItems);
+    const estimate: NutritionEstimate = getNutritionEstimate(foodItems);
     fallbackData.calories = estimate.calories;
     fallbackData.protein = estimate.protein;
   } catch (err) {
@@ -98,4 +123,4 @@ function createFallbackData(transcript, errorMessage) {
   }
   
   return fallbackData;
-}
+} 

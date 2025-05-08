@@ -3,17 +3,42 @@ import { getAuth } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 
+// Define interfaces for our data structures
+interface DailyGoals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+interface Meal {
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+}
+
+interface NutritionTotals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+interface NutritionAnalysis {
+  totals: NutritionTotals;
+  percentages: NutritionTotals;
+}
+
 export function useNutritionTracking() {
-  // This ref is shared across all components that use this composable
-  const dailyGoals = ref({
+  const dailyGoals = ref<DailyGoals>({
     calories: 2000,
     protein: 100,
     carbs: 250,
     fat: 70
   })
 
-  // Load goals from Firestore
-  const loadGoals = async () => {
+  const loadGoals = async (): Promise<void> => {
     const auth = getAuth()
     const user = auth.currentUser
 
@@ -25,7 +50,7 @@ export function useNutritionTracking() {
       if (goalsDoc.exists()) {
         dailyGoals.value = {
           ...dailyGoals.value,
-          ...goalsDoc.data()
+          ...goalsDoc.data() as DailyGoals
         }
       }
     } catch (error) {
@@ -33,15 +58,14 @@ export function useNutritionTracking() {
     }
   }
 
-  // Load goals when the service is initialized
   loadGoals()
 
-  const calculateNutrientPercentage = (current, goal) => {
+  const calculateNutrientPercentage = (current: number, goal: number): number => {
     return Math.min((current / goal) * 100, 100)
   }
 
-  const analyzeNutrition = (meals) => {
-    const totals = meals.reduce((acc, meal) => {
+  const analyzeNutrition = (meals: Meal[]): NutritionAnalysis => {
+    const totals = meals.reduce((acc: NutritionTotals, meal: Meal) => {
       acc.calories += meal.calories || 0
       acc.protein += meal.protein || 0
       acc.carbs += meal.carbs || 0
@@ -68,6 +92,6 @@ export function useNutritionTracking() {
   return {
     dailyGoals,
     analyzeNutrition,
-    loadGoals // Export the loadGoals function so components can refresh goals
+    loadGoals
   }
 }
